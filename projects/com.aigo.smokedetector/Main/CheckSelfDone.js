@@ -13,119 +13,110 @@ import { Device, Package, Host, Entrance, Service, DeviceEvent, PackageEvent } f
 
 export default class CheckSelfDone extends React.Component {
 
-    static navigationOptions = ({ navigation }) => {
-      return {
+  static navigationOptions = ({ navigation }) => {
+    return {
 
-        headerTransparent: true
-      };
+      headerTransparent: true
     };
+  };
 
-    constructor(props) {
-      super(props);
+  constructor(props) {
+    super(props);
 
-      this.state = {
-        deviceStatus: '["01"]',
-        recentLog: '暂无日志'
-      };
-    }
-
-
-
-    componentWillUnmount() {
-
-    }
-
-    componentWillMount() {
-
-      console.log(this.props.navigation.state.params.status);
-      // let id = this.props.navigation.state.params.id;
-      // let name = this.props.navigation.state.params.name;
-    }
+    this.state = {
+      deviceStatus: '["01"]',
+      recentLog: '暂无日志'
+    };
+  }
 
 
-    _checkAgain() {
 
-      console.log('_checkAgain');
-    }
+  componentWillUnmount() {
 
-    _checkEnd() {
+  }
 
-      console.log('_checkEnd');
-    }
+  componentWillMount() {
 
-    // 创建状态页面
-    _createResultView() {
+    // console.log(this.props.navigation.state.params.status);
+    // let id = this.props.navigation.state.params.id;
+    // let name = this.props.navigation.state.params.name;
+  }
 
-      let resultStatus = this.props.navigation.state.params.status;
-      let successImage = require('../resources/CheckSelf_Success.png');
-      let errorImage = require('../resources/CheckSelf_Error.png');
-      return (
 
-        <View
+
+  // 创建状态页面
+  _createResultView() {
+
+    let resultStatus = this.props.navigation.state.params.status;
+    let successImage = require('../resources/CheckSelf_Success.png');
+    let errorImage = require('../resources/CheckSelf_Error.png');
+    return (
+
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center"
+        }}>
+        <Image
           style={{
-            flex: 1,
-            justifyContent: "center"
-          }}>
-          <Image
-            style={{
-              width: 292,
-              height: 292
-            }}
-            source={resultStatus ? successImage : errorImage}
-          />
+            width: 292,
+            height: 292
+          }}
+          source={resultStatus ? successImage : errorImage}
+        />
 
+      </View>
+    );
+  }
+
+
+
+  render() {
+    const { navigation } = this.props;
+
+    let resultStatus = this.props.navigation.state.params.status;
+
+    return (
+
+
+      <View
+        style={{
+          flex: 1,
+          // justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#FFF"
+
+          // alignItems: 'center',
+          // paddingVertical: 20
+        }} >
+
+        {this._createResultView()}
+
+        <View style={{
+          marginBottom: 0,
+
+          height: 42,
+          width: 327,
+          borderRadius: 10
+
+        }}>
+          <Button title={resultStatus ? '完成' : '重试'} color={'#32BAC0'} onPress={() => {
+            // this.props.router.callBack('I am a Student');
+            resultStatus ? this.props.navigation.goBack(this.props.navigation.state.params.navKey) : this.props.navigation.goBack();
+          }} />
         </View>
-      );
-    }
-
-
-
-    render() {
-      const { navigation } = this.props;
-
-      let resultStatus = this.props.navigation.state.params.status;
-
-      return (
-
-
-        <View
-          style={{
-            flex: 1,
-            // justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#FFF"
-
-            // alignItems: 'center',
-            // paddingVertical: 20
-          }} >
-
-          {this._createResultView()}
-
-          <View style={{
-            marginBottom: 0,
-
-            height: 42,
-            width: 327,
-            borderRadius: 10
-
-          }}>
-            <Button title={resultStatus ? '完成' : '重试'} color={'#32BAC0'} onPress={() => {
-              // this.props.router.callBack('I am a Student');
-              resultStatus ? this.props.navigation.goBack(this.props.navigation.state.params.navKey) : this.props.navigation.goBack();
-            }} />
-          </View>
 
 
 
 
 
-          < View
-            style={{ height: 35 }}
-          />
+        < View
+          style={{ height: 35 }}
+        />
 
-        </View >
+      </View >
 
-      );
-    }
+    );
+  }
 
 }
