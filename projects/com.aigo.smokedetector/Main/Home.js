@@ -48,7 +48,7 @@ export default class Home extends React.Component {
       a[i] = code;
     }
 
-    return a.reduce(function(acc, c) {
+    return a.reduce(function (acc, c) {
       acc = 16 * acc + c;
       return acc;
     }, 0);
@@ -64,6 +64,9 @@ export default class Home extends React.Component {
     // if (this.msgSubscription) {
     //     this.msgSubscription.remove()
     // }
+
+    this.subcription.remove();
+    this.deviceReceivedMessages.remove();
   }
 
   componentWillMount() {
@@ -72,6 +75,30 @@ export default class Home extends React.Component {
     console.log(Math.round(Date.now() / 1000));
 
 
+    Device.getDeviceWifi().subscribeMessages("event.13").then((subcription) => {
+      this.subcription = subcription;
+      // console.log('event.13成功添加监听');
+    }).catch((error) => {
+      console.log(error)
+    });
+
+    Device.getDeviceWifi().subscribeMessages("prop.4117").then((subcription) => {
+      this.subcription = subcription;
+      // console.log('prop.4117成功添加监听');
+    }).catch((error) => {
+
+    });
+
+    this.deviceReceivedMessages = DeviceEvent.deviceReceivedMessages.addListener(
+      (device, map, data) => {
+        alert(data[0]['key'] + ' ' + data[0]['value']);
+        console.log('Device.addListener', device, map, data);
+        if (data[0].hasOwnProperty('value')) {
+          this.setState({
+            deviceStatus: data[0]['value']
+          });
+        }
+      });
 
 
     Service.smarthome.getDeviceData({
@@ -141,8 +168,6 @@ export default class Home extends React.Component {
             break;
           default: break;
         }
-
-
       }
 
     }).catch((err) => {
@@ -152,6 +177,25 @@ export default class Home extends React.Component {
 
 
   }
+
+  _changeStatus(value) {
+
+    switch (value) {
+      case '["00"]':
+        this.setState({
+          recentLog: '工作正常'
+        });
+        break;
+      case '["01"]':
+        this.setState({
+          recentLog: '烟雾报警'
+        });
+        break;
+      default: break;
+    }
+
+  }
+
 
   // 创建状态页面
   _createStatusView(image) {
@@ -315,7 +359,7 @@ export default class Home extends React.Component {
           // width: null,
           // height: null,
         }}
-        source={this.state.deviceStatus == '["01"]' ? bgWarningImage : bgNormalImage}>
+          source={this.state.deviceStatus == '["01"]' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 

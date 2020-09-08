@@ -1,6 +1,7 @@
 {
     "package_path": "com.aigo.smokedetector",
     "models": "aigo.sensor_smoke.by01",
+    // "models": "aigo.sensor_gas.bq01",
     "min_sdk_api_level": 10040,
     "developer_id": "",
     "version_code": 1,
