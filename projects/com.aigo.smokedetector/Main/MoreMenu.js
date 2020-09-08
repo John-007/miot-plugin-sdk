@@ -245,10 +245,10 @@ export default class MoreMenu extends React.Component {
 
 
 
-  componentDidMount() {
+  UNSAFE_componentDidMount() {
 
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
 
     // Device.getBluetoothLE()
     //     .connect(5, { peripheralID: "1-a-b-3-c", timeout: 12000 })
@@ -259,7 +259,7 @@ export default class MoreMenu extends React.Component {
     //     });
   }
 
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
 
 
     // if (bt.isConnected) {
@@ -381,9 +381,9 @@ export default class MoreMenu extends React.Component {
         options: BUTTONS,
         destructiveButtonIndex: 1
       },
-      (buttonIndex) => {
+        (buttonIndex) => {
 
-      });
+        });
   }
 }
 

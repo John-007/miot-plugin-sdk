@@ -13,17 +13,6 @@ import CheckSelfDone from './CheckSelfDone';
 
 
 
-class BackImage extends React.Component { // 创建一个返回按钮的组件
-  render() {
-    return (
-      <Image
-        source={require('../resources/back.png')}
-        style={{ width: 40, height: 40 }}
-      />
-    );
-  }
-}
-
 const RootStack = createStackNavigator(
   {
 

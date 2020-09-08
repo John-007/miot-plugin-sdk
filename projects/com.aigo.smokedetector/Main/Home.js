@@ -55,7 +55,7 @@ export default class Home extends React.Component {
   }
 
 
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
     // this._deviceOnlineListener && this._deviceOnlineListener.remove();
     // msgSubscription && msgSubscription.remove();
 
@@ -69,7 +69,7 @@ export default class Home extends React.Component {
     this.deviceReceivedMessages.remove();
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
 
 
     console.log(Math.round(Date.now() / 1000));

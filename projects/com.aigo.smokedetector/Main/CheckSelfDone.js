@@ -31,11 +31,11 @@ export default class CheckSelfDone extends React.Component {
 
 
 
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
 
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
 
     // console.log(this.props.navigation.state.params.status);
     // let id = this.props.navigation.state.params.id;

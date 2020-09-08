@@ -1,0 +1,10 @@
+{
+        "name": "project-com-aigo-gasdetector",
+        "version": "1.0.42",
+        "scripts":{
+            "start":"node ../../bin/runProject.js"
+        },
+        "dependencies":{
+            
+        }
+    }
