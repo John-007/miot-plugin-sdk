@@ -94,10 +94,10 @@ export default class MainPage extends React.Component {
         // console.log('Device.addListener', device, map, data);
         console.log(data[0]['value'] + ' ' + this.state.deviceStatus);
         if (data[0].hasOwnProperty('value')) {
-          let timeMap = this.formatDate(model['time']);
+          let timeMap = this.formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
-            recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '燃气报警'
+            recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + this.subtitleString(data[0]['value'])
           });
 
         }
@@ -128,25 +128,46 @@ export default class MainPage extends React.Component {
 
         let timeMap = this.formatDate(model['time']);
 
-        switch (model['value']) {
-          case '["00"]':
-            this.setState({
-              recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '工作正常'
-            });
-            break;
-          case '["01"]':
-            this.setState({
-              recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '燃气报警'
-            });
-            break;
-          default: break;
-        }
+        this.setState({
+          recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
+        });
+
+        // switch (model['value']) {
+        //   case '["00"]':
+        //     this.setState({
+        //       recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '工作正常'
+        //     });
+        //     break;
+        //   case '["01"]':
+        //     this.setState({
+        //       recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '燃气报警'
+        //     });
+        //     break;
+        //   default: break;
+        // }
       }
     }).catch((err) => {
       console.log(err);
     });
   }
 
+  subtitleString(typeStr) {
+
+    var typeString = typeStr
+    if (typeString.length > 2) {
+
+      typeString = typeString.substring(2, 4)
+    }
+
+    if (typeString == '00') {
+      return '工作正常'
+    } else if (typeString == '01') {
+      return '燃气报警'
+    } else if (typeString == '02') {
+      return '设备故障'
+    }
+
+  }
 
   formatDate(date) {
 
