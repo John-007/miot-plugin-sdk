@@ -75,13 +75,16 @@ export default class Home extends React.Component {
     console.log(Math.round(Date.now() / 1000));
 
 
-    Device.getDeviceWifi().subscribeMessages("event.13").then((subcription) => {
-      this.subcription = subcription;
-      // console.log('event.13成功添加监听');
-    }).catch((error) => {
-      console.log(error)
-    });
 
+    //监听：烟雾事件
+    // Device.getDeviceWifi().subscribeMessages("event.13").then((subcription) => {
+    //   this.subcription = subcription;
+    //   // console.log('event.13成功添加监听');
+    // }).catch((error) => {
+    //   console.log(error)
+    // });
+
+    //监听：烟雾属性
     Device.getDeviceWifi().subscribeMessages("prop.4117").then((subcription) => {
       this.subcription = subcription;
       // console.log('prop.4117成功添加监听');
@@ -89,6 +92,7 @@ export default class Home extends React.Component {
 
     });
 
+    //接收监听事件
     this.deviceReceivedMessages = DeviceEvent.deviceReceivedMessages.addListener(
       (device, map, data) => {
         alert(data[0]['key'] + ' ' + data[0]['value']);
@@ -101,45 +105,46 @@ export default class Home extends React.Component {
       });
 
 
-    Service.smarthome.getDeviceData({
-      did: Device.deviceID,
-      type: "prop",
-      // key: "4106",
-      key: "4117",
+    // //请求：电量
+    // Service.smarthome.getDeviceData({
+    //   did: Device.deviceID,
+    //   type: "prop",
+    //   // key: "4106",
+    //   key: "4117",
 
-      // type: "event",
-      // key: "13", //Object ID 0x1004 温度 电量4106 烟感4117
-      time_start: 0,
-      time_end: Math.round(Date.now() / 1000),
-      limit: 1
-    }).then((res) => {
-      console.log(res);
+    //   // type: "event",
+    //   // key: "13", //Object ID 0x1004 温度 电量4106 烟感4117
+    //   time_start: 0,
+    //   time_end: Math.round(Date.now() / 1000),
+    //   limit: 1
+    // }).then((res) => {
+    //   console.log(res);
 
-      if (res[0].hasOwnProperty("value")) {
-        // this.setState({
-        //   deviceStatus: res[0]['value']
-        // })
-      }
+    //   if (res[0].hasOwnProperty("value")) {
+    //     // this.setState({
+    //     //   deviceStatus: res[0]['value']
+    //     // })
+    //   }
 
-      // const a = res[0]
+    //   // const a = res[0]
 
-      // // console.log(a.hasOwnProperty("value"));
-      // // console.log(a['value']);
-      // if (a.hasOwnProperty("value")) {
-      //     var power = a['value'].substring(2, 4)
-      //     console.log(this.hex2int(power));
-      //     var powerInt = this.hex2int(power)
-      // }
+    //   // // console.log(a.hasOwnProperty("value"));
+    //   // // console.log(a['value']);
+    //   // if (a.hasOwnProperty("value")) {
+    //   //     var power = a['value'].substring(2, 4)
+    //   //     console.log(this.hex2int(power));
+    //   //     var powerInt = this.hex2int(power)
+    //   // }
 
-      // else {
+    //   // else {
 
-      // }
-    }).catch((err) => {
-      console.log(err);
-    });
+    //   // }
+    // }).catch((err) => {
+    //   console.log(err);
+    // });
 
 
-    // 请求数据
+    //请求：第一条事件
     Service.smarthome.getDeviceData({
       did: Device.deviceID,
 
@@ -155,15 +160,17 @@ export default class Home extends React.Component {
 
       if (model.hasOwnProperty("value")) {
 
+        let timeMap = this.formatDate(model['time']);
+
         switch (model['value']) {
           case '["00"]':
             this.setState({
-              recentLog: '工作正常'
+              recentLog: timeMap['time'] + '  ' + '工作正常'
             });
             break;
           case '["01"]':
             this.setState({
-              recentLog: '烟雾报警'
+              recentLog: timeMap['time'] + '  ' + '烟雾报警'
             });
             break;
           default: break;
@@ -178,24 +185,20 @@ export default class Home extends React.Component {
 
   }
 
-  _changeStatus(value) {
+  formatDate(date) {
 
-    switch (value) {
-      case '["00"]':
-        this.setState({
-          recentLog: '工作正常'
-        });
-        break;
-      case '["01"]':
-        this.setState({
-          recentLog: '烟雾报警'
-        });
-        break;
-      default: break;
+    var date = new Date(parseInt(date) * 1000);
+    if (date.length == 13) {
+      date = new Date(parseInt(date));
     }
 
+    let MM = (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
+    let DD = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
+    let hh = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`;
+    let mm = (date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes());
+    // return MM + '月' + DD + '日' + '_' + hh + mm;
+    return { 'date': `${MM}月${DD}日`, 'time': hh + mm };
   }
-
 
   // 创建状态页面
   _createStatusView(image) {
