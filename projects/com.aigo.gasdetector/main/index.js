@@ -5,9 +5,10 @@ import { FirmwareUpgrade, MoreSetting } from 'miot/ui/CommonSetting';
 
 import MainPage from './MainPage';
 import SettingPage from './setting/SettingPage';
-import ScenePage from './scene/ScenePage';
 import NavigationBar from 'miot/ui/NavigationBar';
 import Protocol from '../resources/protocol';
+import CheckSelf from './checkself/CheckSelf';
+import CheckSelfDone from './checkself/CheckSelfDone';
 
 export default class App extends React.Component {
 
@@ -26,9 +27,6 @@ export default class App extends React.Component {
       case Entrance.Main:
         this.initPage = 'MainPage';
         break;
-      case Entrance.Scene:
-        this.initPage = 'ScenePage';
-        break;
       default:
         this.initPage = 'MainPage';
         break;
@@ -42,7 +40,7 @@ export default class App extends React.Component {
      * 具体文档可以查看：
      * https://iot.mi.com/new/doc/app-development/extension-development/law-info.html
      */
-    this.checkToAlertLegalInformationAuthorization();
+    // this.checkToAlertLegalInformationAuthorization();
   }
 
   render() {
@@ -78,7 +76,7 @@ export default class App extends React.Component {
       this.alertLegalInformationAuthorization();
 
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${JSON.stringify(error)}`);
     });
   }
 
@@ -95,10 +93,10 @@ export default class App extends React.Component {
         }
       }).catch((error) => {
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
       });
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
     });
 
   }
@@ -109,9 +107,10 @@ function createRootStack(initPage) {
     {
       MainPage: MainPage,
       SettingPage: SettingPage,
-      ScenePage: ScenePage,
       FirmwareUpgrade: FirmwareUpgrade,
-      MoreSetting: MoreSetting
+      MoreSetting: MoreSetting,
+      checkSelf: CheckSelf,
+      checkSelfDone: CheckSelfDone,
     },
     {
       initialRouteName: initPage,

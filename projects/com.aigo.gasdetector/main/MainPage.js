@@ -1,5 +1,5 @@
 import React from 'react';
-import { API_LEVEL, Package, Host, Device, PackageEvent, Service } from 'miot';
+import { API_LEVEL, Package, Host, Device, DeviceEvent, PackageEvent, Service } from 'miot';
 import { View, Text, Image, ImageBackground, StyleSheet } from 'react-native';
 import NavigationBar from 'miot/ui/NavigationBar';
 import Separator from 'miot/ui/Separator';
@@ -34,7 +34,7 @@ export default class MainPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      deviceStatus: '["00"]',
+      deviceStatus: '00',
       recentLog: '暂无日志'
     };
 
@@ -65,6 +65,12 @@ export default class MainPage extends React.Component {
       }
     });
   }
+  UNSAFE_componentWillUnmount() {
+
+
+    this.subcription.remove();
+    this.deviceReceivedMessages.remove();
+  }
 
   UNSAFE_componentWillMount() {
     this.packageAuthorizationAgreed = PackageEvent.packageAuthorizationAgreed.addListener(() => {
@@ -72,10 +78,36 @@ export default class MainPage extends React.Component {
       console.log('user agree protocol...');
     });
 
-    //请求：第一条事件
+
+    //监听：燃气事件
+    Device.getDeviceWifi().subscribeMessages("event.14").then((subcription) => {
+      this.subcription = subcription;
+      // console.log('prop.4118成功添加监听');
+    }).catch((error) => {
+
+    });
+
+    //接收监听事件
+    this.deviceReceivedMessages = DeviceEvent.deviceReceivedMessages.addListener(
+      (device, map, data) => {
+        // alert(data[0]['value'] + ' ' + this.state.deviceStatus);
+        // console.log('Device.addListener', device, map, data);
+        console.log(data[0]['value'] + ' ' + this.state.deviceStatus);
+        if (data[0].hasOwnProperty('value')) {
+          let timeMap = this.formatDate(model['time']);
+          this.setState({
+            deviceStatus: data[0]['value'],
+            recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '燃气报警'
+          });
+
+        }
+      });
+
+
+    // 请求：第一条事件
     // Object ID 燃气事件14（）   气感4118
-    //燃气状态	有泄漏（0x01）、无泄漏（0x00）
-    //燃气事件	正常监测(0x00)、燃气泄漏报警(0x01)、设备故障(0x02)、传感器寿命到期(0x03)、传感器预热(0x04)
+    // 燃气状态	有泄漏（0x01）、无泄漏（0x00）
+    // 燃气事件	正常监测(0x00)、燃气泄漏报警(0x01)、设备故障(0x02)、传感器寿命到期(0x03)、传感器预热(0x04)
 
 
     Service.smarthome.getDeviceData({
@@ -84,17 +116,53 @@ export default class MainPage extends React.Component {
       // type: "prop",
       // key: "4118",
       type: "event",
-      key: "13",
+      key: "14",
       time_start: 0,
       time_end: Math.round(Date.now() / 1000),
-      limit: 50
+      limit: 1
     }).then((res) => {
 
-      console.log(res);
+      const model = res[0];
+
+      if (model.hasOwnProperty("value")) {
+
+        let timeMap = this.formatDate(model['time']);
+
+        switch (model['value']) {
+          case '["00"]':
+            this.setState({
+              recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '工作正常'
+            });
+            break;
+          case '["01"]':
+            this.setState({
+              recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '燃气报警'
+            });
+            break;
+          default: break;
+        }
+      }
     }).catch((err) => {
       console.log(err);
     });
   }
+
+
+  formatDate(date) {
+
+    var date = new Date(parseInt(date) * 1000);
+    if (date.length == 13) {
+      date = new Date(parseInt(date));
+    }
+
+    let MM = (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
+    let DD = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
+    let hh = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`;
+    let mm = (date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes());
+    // return MM + '月' + DD + '日' + '_' + hh + mm;
+    return { 'date': `${MM}月${DD}日`, 'time': hh + mm };
+  }
+
 
   // 创建状态页面
   _createStatusView(image) {
@@ -111,7 +179,7 @@ export default class MainPage extends React.Component {
           source={image}
         />
 
-        {this.state.deviceStatus == '["01"]' ? this._createAlarmText() : <Text></Text>}
+        {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
 
       </View>
     );
@@ -204,31 +272,31 @@ export default class MainPage extends React.Component {
 
     const { navigation } = this.props;
 
-    let cellStatusImage = '';
-    let cellLogIconImage = '';
-    let cellScenesIconImage = '';
+    var cellStatusImage = '';
+    var cellLogIconImage = '';
+    var cellScenesIconImage = '';
     let bgNormalImage = require('../resources/images/Home_BG_Normal.jpg');
     let bgWarningImage = require('../resources/images/Home_BG_Warning.png');
 
-    switch (this.state.deviceStatus) {
-      case '["00"]':// 正常
-        cellStatusImage = require('../resources/images/Home_StatusNormal.png');
-        cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
-        cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
-        break;
-      case '["01"]':// 报警
-        cellStatusImage = require('../resources/images/Home_StatusAlarm.png');
-        cellLogIconImage = require('../resources/images/Home_LogIcon_Alarm.png');
-        cellScenesIconImage = require('../resources/images/Home_Scenes_Alarm.png');
+    if (this.state.deviceStatus == '00') {
 
-        break;
-      case '["02"]':// 故障
-        cellStatusImage = require('../resources/images/Home_StatusBreakdown.png');
-        cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
-        cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
-        break;
-      default: break;
+      cellStatusImage = require('../resources/images/Home_StatusNormal.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
+
+    } else if (this.state.deviceStatus == '01') {
+
+      cellStatusImage = require('../resources/images/Home_StatusAlarm.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Alarm.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Alarm.png');
+
+    } else if (this.state.deviceStatus == '02') {
+
+      cellStatusImage = require('../resources/images/Home_StatusBreakdown.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
     }
+
 
     return (
       <View
@@ -248,7 +316,7 @@ export default class MainPage extends React.Component {
           // width: null,
           // height: null,
         }}
-          source={this.state.deviceStatus == '["01"]' ? bgWarningImage : bgNormalImage}>
+          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 
@@ -259,6 +327,7 @@ export default class MainPage extends React.Component {
               this._createCard({
                 mainTitleStr: '日志',
                 subTitleStr: this.state.recentLog,
+
                 // iconImg: require("../resources/images/Home_LogIcon_Normal.png")
                 iconImg: cellLogIconImage
               })
@@ -300,6 +369,11 @@ export default class MainPage extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  statusImage: {
+    marginTop: 50,
+    width: 250,
+    height: 250
+  },
   container: {
     backgroundColor: SdkStyles.common.backgroundColor,
     flex: 1

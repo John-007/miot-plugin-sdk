@@ -31,7 +31,7 @@ export default class Home extends React.Component {
     super(props);
 
     this.state = {
-      deviceStatus: '["00"]',
+      deviceStatus: '00',
       recentLog: '暂无日志'
     };
   }
@@ -77,25 +77,25 @@ export default class Home extends React.Component {
 
 
     //监听：烟雾事件
-    // Device.getDeviceWifi().subscribeMessages("event.13").then((subcription) => {
-    //   this.subcription = subcription;
-    //   // console.log('event.13成功添加监听');
-    // }).catch((error) => {
-    //   console.log(error)
-    // });
+    Device.getDeviceWifi().subscribeMessages("event.13").then((subcription) => {
+      this.subcription = subcription;
+      // console.log('event.13成功添加监听');
+    }).catch((error) => {
+      console.log(error)
+    });
 
     //监听：烟雾属性
-    Device.getDeviceWifi().subscribeMessages("prop.4117").then((subcription) => {
-      this.subcription = subcription;
-      // console.log('prop.4117成功添加监听');
-    }).catch((error) => {
+    // Device.getDeviceWifi().subscribeMessages("prop.4117").then((subcription) => {
+    //   this.subcription = subcription;
+    //   // console.log('prop.4117成功添加监听');
+    // }).catch((error) => {
 
-    });
+    // });
 
     //接收监听事件
     this.deviceReceivedMessages = DeviceEvent.deviceReceivedMessages.addListener(
       (device, map, data) => {
-        alert(data[0]['key'] + ' ' + data[0]['value']);
+        // alert(data[0]['key'] + ' ' + data[0]['value']);
         console.log('Device.addListener', device, map, data);
         if (data[0].hasOwnProperty('value')) {
           this.setState({
@@ -165,12 +165,12 @@ export default class Home extends React.Component {
         switch (model['value']) {
           case '["00"]':
             this.setState({
-              recentLog: timeMap['time'] + '  ' + '工作正常'
+              recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '工作正常'
             });
             break;
           case '["01"]':
             this.setState({
-              recentLog: timeMap['time'] + '  ' + '烟雾报警'
+              recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '烟雾报警'
             });
             break;
           default: break;
@@ -215,7 +215,7 @@ export default class Home extends React.Component {
           source={image}
         />
 
-        {this.state.deviceStatus == '["01"]' ? this._createAlarmText() : <Text></Text>}
+        {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
 
       </View>
     );
@@ -313,24 +313,24 @@ export default class Home extends React.Component {
     let bgNormalImage = require('../resources/Home_BG_Normal.jpg');
     let bgWarningImage = require('../resources/Home_BG_Warning.png');
 
-    switch (this.state.deviceStatus) {
-      case '["00"]':// 正常
-        cellStatusImage = require('../resources/Home_StatusNormal.png');
-        cellLogIconImage = require('../resources/Home_LogIcon_Normal.png');
-        cellScenesIconImage = require('../resources/Home_Scenes_Normal.png');
-        break;
-      case '["01"]':// 报警
-        cellStatusImage = require('../resources/Home_StatusAlarm.png');
-        cellLogIconImage = require('../resources/Home_LogIcon_Alarm.png');
-        cellScenesIconImage = require('../resources/Home_Scenes_Alarm.png');
 
-        break;
-      case '["02"]':// 故障
-        cellStatusImage = require('../resources/Home_StatusBreakdown.png');
-        cellLogIconImage = require('../resources/Home_LogIcon_Normal.png');
-        cellScenesIconImage = require('../resources/Home_Scenes_Normal.png');
-        break;
-      default: break;
+    if (this.state.deviceStatus == '00') {
+
+      cellStatusImage = require('../resources/images/Home_StatusNormal.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
+
+    } else if (this.state.deviceStatus == '01') {
+
+      cellStatusImage = require('../resources/images/Home_StatusAlarm.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Alarm.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Alarm.png');
+
+    } else if (this.state.deviceStatus == '02') {
+
+      cellStatusImage = require('../resources/images/Home_StatusBreakdown.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
     }
 
     return (
@@ -339,12 +339,8 @@ export default class Home extends React.Component {
       <View
         style={{
           flex: 1,
-          // justifyContent: "center",
-          // alignItems: "center",
           backgroundColor: "#F7F7F7"
 
-          // alignItems: 'center',
-          // paddingVertical: 20
         }} >
         {/* <StatusBar backgroundColor={'#eae9f1'} //状态栏背景颜色
 
@@ -362,7 +358,7 @@ export default class Home extends React.Component {
           // width: null,
           // height: null,
         }}
-          source={this.state.deviceStatus == '["01"]' ? bgWarningImage : bgNormalImage}>
+          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 
