@@ -20,10 +20,17 @@ const radiusValue = 10;
 
 export default class Home extends React.Component {
 
-  static navigationOptions = ({ navigation }) => {
-    return {
+  // static navigationOptions = ({ navigation }) => {
+  //   return {
 
-      headerTransparent: true
+  //     headerTransparent: true
+  //   };
+  // };
+  static navigationOptions = ({ navigation }) => {
+    const { titleProps } = navigation.state.params || {};
+    if (!titleProps) return { header: null };
+    return {
+      header: <NavigationBar {...titleProps} />
     };
   };
 
@@ -34,6 +41,33 @@ export default class Home extends React.Component {
       deviceStatus: '00',
       recentLog: '暂无日志'
     };
+
+    this.initNavigationBar();
+  }
+
+  initNavigationBar() {
+    this.props.navigation.setParams({
+      titleProps: {
+        title: Device.name,
+        left: [
+          {
+            key: NavigationBar.ICON.BACK,
+            onPress: () => {
+              Package.exit();
+            }
+          }
+        ],
+        right: [
+          {
+            key: NavigationBar.ICON.MORE,
+            onPress: () => {
+              // 跳转到设置页
+              this.props.navigation.navigate('moreMenu', { title: '设置' });
+            }
+          }
+        ]
+      }
+    });
   }
 
   hex2int(hex) {
@@ -101,7 +135,8 @@ export default class Home extends React.Component {
           let timeMap = this.formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
-            recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + this.subtitleString(data[0]['value'])
+
+            recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(data[0]['value'])
           });
         }
       });
@@ -165,7 +200,8 @@ export default class Home extends React.Component {
         let timeMap = this.formatDate(model['time']);
 
         this.setState({
-          recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
+
+          recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
         });
 
         // switch (model['value']) {
@@ -191,6 +227,17 @@ export default class Home extends React.Component {
 
   }
 
+  judgeDate(dateStr) {
+
+    // 先判断是不是今天
+    let nowDate = Date.parse(new Date());
+    let nowDateStr = this.formatDate(parseInt(nowDate) / 1000);
+
+    if (dateStr == nowDateStr['date']) {
+      return '今天';
+    }
+    return dateStr;
+  }
 
   subtitleString(typeStr) {
 
@@ -341,21 +388,21 @@ export default class Home extends React.Component {
 
     if (this.state.deviceStatus == '00') {
 
-      cellStatusImage = require('../resources/images/Home_StatusNormal.png');
-      cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
-      cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
+      cellStatusImage = require('../resources/Home_StatusNormal.png');
+      cellLogIconImage = require('../resources/Home_LogIcon_Normal.png');
+      cellScenesIconImage = require('../resources/Home_Scenes_Normal.png');
 
     } else if (this.state.deviceStatus == '01') {
 
-      cellStatusImage = require('../resources/images/Home_StatusAlarm.png');
-      cellLogIconImage = require('../resources/images/Home_LogIcon_Alarm.png');
-      cellScenesIconImage = require('../resources/images/Home_Scenes_Alarm.png');
+      cellStatusImage = require('../resources/Home_StatusAlarm.png');
+      cellLogIconImage = require('../resources/Home_LogIcon_Alarm.png');
+      cellScenesIconImage = require('../resources/Home_Scenes_Alarm.png');
 
     } else if (this.state.deviceStatus == '02') {
 
-      cellStatusImage = require('../resources/images/Home_StatusBreakdown.png');
-      cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
-      cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
+      cellStatusImage = require('../resources/Home_StatusBreakdown.png');
+      cellLogIconImage = require('../resources/Home_LogIcon_Normal.png');
+      cellScenesIconImage = require('../resources/Home_Scenes_Normal.png');
     }
 
     return (

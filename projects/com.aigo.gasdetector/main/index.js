@@ -127,6 +127,7 @@ function createRootStack(initPage) {
           };
         }
 
+        console.log(title)
         if (!titleProps.left) {
           titleProps.left = [
             {

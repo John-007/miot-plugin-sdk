@@ -97,7 +97,7 @@ export default class MainPage extends React.Component {
           let timeMap = this.formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
-            recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + this.subtitleString(data[0]['value'])
+            recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(data[0]['value'])
           });
 
         }
@@ -129,7 +129,7 @@ export default class MainPage extends React.Component {
         let timeMap = this.formatDate(model['time']);
 
         this.setState({
-          recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
+          recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
         });
 
         // switch (model['value']) {
@@ -149,6 +149,18 @@ export default class MainPage extends React.Component {
     }).catch((err) => {
       console.log(err);
     });
+  }
+
+  judgeDate(dateStr) {
+
+    // 先判断是不是今天
+    let nowDate = Date.parse(new Date());
+    let nowDateStr = this.formatDate(parseInt(nowDate) / 1000);
+
+    if (dateStr == nowDateStr['date']) {
+      return '今天';
+    }
+    return dateStr;
   }
 
   subtitleString(typeStr) {
