@@ -24,7 +24,7 @@ export default class CheckSelfDone extends React.Component {
     super(props);
 
     this.state = {
-      deviceStatus: '["01"]',
+      deviceStatus: '["00"]',
       recentLog: '暂无日志'
     };
   }

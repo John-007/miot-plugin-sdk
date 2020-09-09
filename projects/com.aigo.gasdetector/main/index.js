@@ -4,6 +4,7 @@ import { createStackNavigator } from 'react-navigation';
 import { FirmwareUpgrade, MoreSetting } from 'miot/ui/CommonSetting';
 
 import MainPage from './MainPage';
+import DeviceLog from './DeviceLog';
 import SettingPage from './setting/SettingPage';
 import NavigationBar from 'miot/ui/NavigationBar';
 import Protocol from '../resources/protocol';
@@ -106,6 +107,7 @@ function createRootStack(initPage) {
   return createStackNavigator(
     {
       MainPage: MainPage,
+      deviceLog: DeviceLog,
       SettingPage: SettingPage,
       FirmwareUpgrade: FirmwareUpgrade,
       MoreSetting: MoreSetting,
@@ -127,7 +129,6 @@ function createRootStack(initPage) {
           };
         }
 
-        console.log(title)
         if (!titleProps.left) {
           titleProps.left = [
             {
