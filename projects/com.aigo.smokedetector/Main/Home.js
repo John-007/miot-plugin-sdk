@@ -70,23 +70,7 @@ export default class Home extends React.Component {
     });
   }
 
-  hex2int(hex) {
-    let len = hex.length, a = new Array(len), code;
-    for (let i = 0; i < len; i++) {
-      code = hex.charCodeAt(i);
-      if (48 <= code && code < 58) {
-        code -= 48;
-      } else {
-        code = (code & 0xdf) - 65 + 10;
-      }
-      a[i] = code;
-    }
 
-    return a.reduce(function (acc, c) {
-      acc = 16 * acc + c;
-      return acc;
-    }, 0);
-  }
 
 
   UNSAFE_componentWillUnmount() {
@@ -131,7 +115,7 @@ export default class Home extends React.Component {
       (device, map, data) => {
         // alert(data[0]['key'] + ' ' + data[0]['value']);
         console.log('Device.addListener', device, map, data);
-        if (data[0].hasOwnProperty('value')) {
+        if (data[0].hasOwnProperty('vlaue')) {
           let timeMap = this.formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
@@ -195,7 +179,7 @@ export default class Home extends React.Component {
 
       const model = res[0];
 
-      if (res.length != 0 && model.hasOwnProperty("value")) {
+      if (model.hasOwnProperty("value")) {
 
         let timeMap = this.formatDate(model['time']);
 
@@ -203,20 +187,6 @@ export default class Home extends React.Component {
 
           recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
         });
-
-        // switch (model['value']) {
-        //   case '["00"]':
-        //     this.setState({
-        //       recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '工作正常'
-        //     });
-        //     break;
-        //   case '["01"]':
-        //     this.setState({
-        //       recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '烟雾报警'
-        //     });
-        //     break;
-        //   default: break;
-        // }
       }
 
     }).catch((err) => {

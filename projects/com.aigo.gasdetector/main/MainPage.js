@@ -138,22 +138,22 @@ export default class MainPage extends React.Component {
     });
 
 
-    Service.smarthome.getDeviceData({
-      did: Device.deviceID,
+    // Service.smarthome.getDeviceData({
+    //   did: Device.deviceID,
 
-      type: "prop",
-      key: "4118",
-      // type: "event",
-      // key: "14",
-      time_start: 0,
-      time_end: Math.round(Date.now() / 1000),
-      limit: 10
-    }).then((res) => {
+    //   type: "prop",
+    //   key: "4118",
+    //   // type: "event",
+    //   // key: "14",
+    //   time_start: 0,
+    //   time_end: Math.round(Date.now() / 1000),
+    //   limit: 10
+    // }).then((res) => {
 
-      console.log(res);
-    }).catch((err) => {
-      console.log(err);
-    });
+    //   console.log(res);
+    // }).catch((err) => {
+    //   console.log(err);
+    // });
   }
 
   judgeDate(dateStr) {
