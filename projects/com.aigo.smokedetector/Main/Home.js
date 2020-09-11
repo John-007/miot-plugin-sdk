@@ -195,7 +195,7 @@ export default class Home extends React.Component {
 
       const model = res[0];
 
-      if (model.hasOwnProperty("value")) {
+      if (res.length != 0 && model.hasOwnProperty("value")) {
 
         let timeMap = this.formatDate(model['time']);
 

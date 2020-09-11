@@ -92,7 +92,7 @@ export default class MainPage extends React.Component {
       (device, map, data) => {
         // alert(data[0]['value'] + ' ' + this.state.deviceStatus);
         // console.log('Device.addListener', device, map, data);
-        console.log(data[0]['value'] + ' ' + this.state.deviceStatus);
+        // console.log(data[0]['value'] + ' ' + this.state.deviceStatus);
         if (data[0].hasOwnProperty('value')) {
           let timeMap = this.formatDate(data[0]['time']);
           this.setState({
@@ -132,20 +132,25 @@ export default class MainPage extends React.Component {
           recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
         });
 
-        // switch (model['value']) {
-        //   case '["00"]':
-        //     this.setState({
-        //       recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '工作正常'
-        //     });
-        //     break;
-        //   case '["01"]':
-        //     this.setState({
-        //       recentLog: timeMap['date'] + '  ' + timeMap['time'] + '  ' + '燃气报警'
-        //     });
-        //     break;
-        //   default: break;
-        // }
       }
+    }).catch((err) => {
+      console.log(err);
+    });
+
+
+    Service.smarthome.getDeviceData({
+      did: Device.deviceID,
+
+      type: "prop",
+      key: "4118",
+      // type: "event",
+      // key: "14",
+      time_start: 0,
+      time_end: Math.round(Date.now() / 1000),
+      limit: 10
+    }).then((res) => {
+
+      console.log(res);
     }).catch((err) => {
       console.log(err);
     });

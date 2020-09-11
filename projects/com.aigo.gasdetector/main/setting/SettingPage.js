@@ -13,7 +13,8 @@ export default class SettingPage extends React.Component {
     super(props);
 
     this.state = {
-      protocol: null
+      protocol: null,
+      powerString: '暂无数据'
     };
   }
 
@@ -44,6 +45,31 @@ export default class SettingPage extends React.Component {
   UNSAFE_componentWillMount() {
     this.initCommonSettingParams();
     this.initProtocol();
+
+    //请求：第一条事件
+    Service.smarthome.getDeviceData({
+      did: Device.deviceID,
+      type: "prop",
+      key: "4106", // Object ID 0x1004 温度 电量4106 烟感4117
+      time_start: 0,
+      time_end: Math.round(Date.now() / 1000),
+      limit: 1
+    }).then((res) => {
+
+      console.log(res);
+      const model = res[0];
+      if (model.hasOwnProperty("value")) {
+        var power = model['value'].substring(2, 4)
+        console.log(this.hex2int(power));
+        // var powerInt = this.hex2int(power)
+        this.setState = ({
+          powerString: '1234%'
+        });
+      }
+
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 
   initProtocol() {
@@ -107,6 +133,23 @@ export default class SettingPage extends React.Component {
           accessible={true}
           accessibilityHint="press title"
         />
+
+        <ListItem
+          title="电池寿命"
+          value={this.state.powerString}
+          containerStyle={{ height: 44, backgroundColor: 'white' }}
+          titleStyle={{ fontSize: 16 }}
+          valueStyle={{ fontSize: 14 }}
+          separator={<Separator />}
+          hideArrow={true}
+          onPress={() => {
+            console.log('设置电量')
+            this.setState = ({
+              powerString: '1234%'
+            })
+          }}
+        />
+
 
         <View style={[styles.blank, { borderTopWidth: 0 }]} />
 

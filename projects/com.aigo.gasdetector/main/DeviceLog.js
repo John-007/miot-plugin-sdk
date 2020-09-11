@@ -52,6 +52,7 @@ export default class DeviceLog extends React.Component {
       limit: 50
     }).then((res) => {
 
+      console.log(res);
       const a = res[0];
 
       if (a.hasOwnProperty("time")) {

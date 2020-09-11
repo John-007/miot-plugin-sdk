@@ -7,9 +7,9 @@ import React from 'react';
 // } from 'react-native';
 
 import { ListItem, ListItemWithSlider, ListItemWithSwitch } from 'miot/ui/ListItem';
-import { Bluetooth, BluetoothEvent, Device, DeviceEvent, Host } from "miot";
+import { Service, Device, DeviceEvent, Host } from "miot";
 import { CommonSetting, SETTING_KEYS } from "miot/ui/CommonSetting";
-import { ActionSheetIOS, Image, ListView, PixelRatio, StyleSheet, Text, ScrollView, TouchableHighlight, View } from 'react-native';
+import { Dimensions, Image, ListView, PixelRatio, StyleSheet, Text, ScrollView, TouchableHighlight, View } from 'react-native';
 let BUTTONS = [
   '测试对话框',
   '确定'
@@ -19,7 +19,7 @@ import Separator from 'miot/ui/Separator';
 // 此ble对象，即为IBluetooth对象或者IBluetoothLock对象
 
 
-
+const { width, height } = Dimensions.get('window');
 
 export default class MoreMenu extends React.Component {
 
@@ -27,6 +27,10 @@ export default class MoreMenu extends React.Component {
   constructor(props) {
     super(props);
     // console.warn('强烈推荐使用「通用设置项」: `miot/ui/CommonSetting`, 你可以在「首页」-「教程」-「插件通用设置项」中查看使用示例')
+
+    this.state = {
+      powerString: '暂无数据'
+    };
 
     this._createMenuData();
 
@@ -50,13 +54,63 @@ export default class MoreMenu extends React.Component {
 
   componentDidMount() {
 
+    console.log('设置state');
+    this.setState = ({
+
+      powerString: '1234%'
+    });
+
   }
   UNSAFE_componentWillMount() {
+
+
+    //请求：第一条事件
+    Service.smarthome.getDeviceData({
+      did: Device.deviceID,
+      type: "prop",
+      key: "4106", // Object ID 0x1004 温度 电量4106 烟感4117
+      time_start: 0,
+      time_end: Math.round(Date.now() / 1000),
+      limit: 1
+    }).then((res) => {
+
+      console.log(res);
+      const model = res[0];
+      if (model.hasOwnProperty("value")) {
+        var power = model['value'].substring(2, 4)
+        console.log(this.hex2int(power));
+        // var powerInt = this.hex2int(power)
+        this.setState = ({
+          powerString: '1234%'
+        });
+      }
+
+    }).catch((err) => {
+      console.log(err);
+    });
 
   }
 
   UNSAFE_componentWillUnmount() {
 
+  }
+
+  hex2int(hex) {
+    let len = hex.length, a = new Array(len), code;
+    for (let i = 0; i < len; i++) {
+      code = hex.charCodeAt(i);
+      if (48 <= code && code < 58) {
+        code -= 48;
+      } else {
+        code = (code & 0xdf) - 65 + 10;
+      }
+      a[i] = code;
+    }
+
+    return a.reduce(function (acc, c) {
+      acc = 16 * acc + c;
+      return acc;
+    }, 0);
   }
 
   render() {
@@ -101,6 +155,22 @@ export default class MoreMenu extends React.Component {
           onPress={() => navigation.navigate('checkSelf', { 'title': '设备自检' })}
           accessible={true}
           accessibilityHint="press title"
+        // containerStyle={{ height: 44 }}
+        />
+        <ListItem
+          title="电池寿命"
+          value={this.state.powerString}
+          containerStyle={{ height: 44, backgroundColor: 'white' }}
+          titleStyle={{ fontSize: 16 }}
+          valueStyle={{ fontSize: 14 }}
+          separator={<Separator />}
+          hideArrow={true}
+          onPress={() => {
+            console.log('设置电量')
+            this.setState = ({
+              powerString: '1234%'
+            })
+          }}
         />
 
         <View style={[styles.blank, { borderTopWidth: 0 }]} />
