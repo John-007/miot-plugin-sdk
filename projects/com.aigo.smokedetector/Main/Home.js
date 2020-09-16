@@ -92,6 +92,8 @@ export default class Home extends React.Component {
 
     console.log(Math.round(Date.now() / 1000));
 
+    console.log(123);
+
 
 
     //监听：烟雾事件
@@ -125,44 +127,47 @@ export default class Home extends React.Component {
         }
       });
 
+    console.log(Device.deviceID);
 
-    // //请求：电量
-    // Service.smarthome.getDeviceData({
-    //   did: Device.deviceID,
-    //   type: "prop",
-    //   // key: "4106",
-    //   key: "4117",
 
-    //   // type: "event",
-    //   // key: "13", //Object ID 0x1004 温度 电量4106 烟感4117
-    //   time_start: 0,
-    //   time_end: Math.round(Date.now() / 1000),
-    //   limit: 1
-    // }).then((res) => {
-    //   console.log(res);
 
-    //   if (res[0].hasOwnProperty("value")) {
-    //     // this.setState({
-    //     //   deviceStatus: res[0]['value']
-    //     // })
-    //   }
+    //请求：电量
+    Service.smarthome.getDeviceData({
+      did: Device.deviceID,
+      type: "prop",
+      // key: "4106",
+      key: "4117",
 
-    //   // const a = res[0]
+      // type: "event",
+      // key: "13", //Object ID 0x1004 温度 电量4106 烟感4117
+      time_start: 0,
+      time_end: Math.round(Date.now() / 1000),
+      limit: 1
+    }).then((res) => {
+      console.log(res);
 
-    //   // // console.log(a.hasOwnProperty("value"));
-    //   // // console.log(a['value']);
-    //   // if (a.hasOwnProperty("value")) {
-    //   //     var power = a['value'].substring(2, 4)
-    //   //     console.log(this.hex2int(power));
-    //   //     var powerInt = this.hex2int(power)
-    //   // }
+      if (res[0].hasOwnProperty("value")) {
+        // this.setState({
+        //   deviceStatus: res[0]['value']
+        // })
+      }
 
-    //   // else {
+      // const a = res[0]
 
-    //   // }
-    // }).catch((err) => {
-    //   console.log(err);
-    // });
+      // // console.log(a.hasOwnProperty("value"));
+      // // console.log(a['value']);
+      // if (a.hasOwnProperty("value")) {
+      //     var power = a['value'].substring(2, 4)
+      //     console.log(this.hex2int(power));
+      //     var powerInt = this.hex2int(power)
+      // }
+
+      // else {
+
+      // }
+    }).catch((err) => {
+      console.log(err);
+    });
 
 
     //请求：第一条事件
@@ -170,11 +175,12 @@ export default class Home extends React.Component {
       did: Device.deviceID,
 
       type: "event",
-      key: "13", // Object ID 0x1004 温度 电量4106 烟感4117
+      key: "13", // Object ID 0x1004 温度 电量4106 烟感4117    
       time_start: 0,
       time_end: Math.round(Date.now() / 1000),
       limit: 1
     }).then((res) => {
+
 
 
       const model = res[0];

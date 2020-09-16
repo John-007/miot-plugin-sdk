@@ -1,11 +1,11 @@
-{ 
-        "package_path": "com.aigo.gasdetector",
-        "models": "aigo.sensor_gas.bq01",
-        "min_sdk_api_level":10042,
-        "developer_id": "",
-        "version_code":1,
-        "entrance_scene":{
-            "action_ids":[],
-            "trigger_ids":[]
-        }
+{
+    "package_path": "com.aigo.gasdetector",
+    "models": "aigo.sensor_gas.bq01",
+    "min_sdk_api_level": 10040,
+    "developer_id": "",
+    "version_code": 1,
+    "entrance_scene": {
+        "action_ids": [],
+        "trigger_ids": []
     }
+}

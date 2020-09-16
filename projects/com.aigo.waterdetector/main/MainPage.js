@@ -109,6 +109,7 @@ export default class MainPage extends React.Component {
     // 水浸事件		水浸报警（0x01）、水浸报警解除（0x00）
 
 
+    console.log(Device.deviceID);
     Service.smarthome.getDeviceData({
       did: Device.deviceID,
 

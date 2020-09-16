@@ -126,13 +126,13 @@ export default class SettingPage extends React.Component {
 
         </View>
 
-        <ListItem
+        {/* <ListItem
           title="设备自检"
           // showDot={true}
           onPress={() => navigation.navigate('checkSelf', { 'title': '设备自检' })}
           accessible={true}
           accessibilityHint="press title"
-        />
+        /> */}
 
         <ListItem
           title="电池寿命"

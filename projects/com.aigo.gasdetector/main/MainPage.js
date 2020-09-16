@@ -6,6 +6,8 @@ import Separator from 'miot/ui/Separator';
 
 import Card from 'miot/ui/Card';
 
+import Protocol from '../resources/protocol';
+
 /**
  * SDK 提供的多语言 和 插件提供的多语言
  */
@@ -82,14 +84,17 @@ export default class MainPage extends React.Component {
     //监听：燃气事件
     Device.getDeviceWifi().subscribeMessages("event.14").then((subcription) => {
       this.subcription = subcription;
-      // console.log('prop.4118成功添加监听');
+      console.log('prop.4118成功添加监听');
     }).catch((error) => {
 
     });
+    console.log(111);
+
 
     //接收监听事件
     this.deviceReceivedMessages = DeviceEvent.deviceReceivedMessages.addListener(
       (device, map, data) => {
+        console.log(data);
         // alert(data[0]['value'] + ' ' + this.state.deviceStatus);
         // console.log('Device.addListener', device, map, data);
         // console.log(data[0]['value'] + ' ' + this.state.deviceStatus);
@@ -108,6 +113,37 @@ export default class MainPage extends React.Component {
     // Object ID 燃气事件14（）   气感4118
     // 燃气状态	有泄漏（0x01）、无泄漏（0x00）
     // 燃气事件	正常监测(0x00)、燃气泄漏报警(0x01)、设备故障(0x02)、传感器寿命到期(0x03)、传感器预热(0x04)
+
+    console.log(Device.deviceID);
+    console.log(222);
+
+    Service.smarthome.batchGetDeviceDatas([{ did: Device.deviceID, props: ["prop.s_auth_config"] }]).then((res) => {
+      let alreadyAuthed = true;
+      let result = res[Device.deviceID];
+      let config;
+      if (result && result['prop.s_auth_config']) {
+        config = result['prop.s_auth_config'];
+      }
+      if (config) {
+        try {
+          let authJson = JSON.parse(config);
+          alreadyAuthed = authJson.privacyAuthed && true;
+        } catch (err) {
+          // json解析失败，不处理
+        }
+      } else {
+        alreadyAuthed = false;
+      }
+      if (alreadyAuthed) {
+        return;
+      }
+
+      // 需要弹出隐私弹出
+      this.alertLegalInformationAuthorization();
+
+    }).catch((error) => {
+      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${JSON.stringify(error)}`);
+    });
 
 
     Service.smarthome.getDeviceData({
@@ -154,6 +190,30 @@ export default class MainPage extends React.Component {
     // }).catch((err) => {
     //   console.log(err);
     // });
+  }
+
+
+  alertLegalInformationAuthorization() {
+
+    console.log(333);
+    Protocol.getProtocol().then((protocol) => {
+      console.log(protocol);
+      Host.ui.alertLegalInformationAuthorization(protocol).then((res) => {
+        console.log(res);
+        if (res === 'ok' || res === true || res === 'true') {
+          Service.smarthome.batchSetDeviceDatas([{ did: Device.deviceID, props: { "prop.s_auth_config": JSON.stringify({ 'privacyAuthed': true }) } }]);
+          PackageEvent.packageAuthorizationAgreed.emit();
+        }
+      }).catch((error) => {
+        console.log(error);
+        // 打开弹出过程中出现了意外错误, 进行上报
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+      });
+    }).catch((error) => {
+      console.log(error);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+    });
+
   }
 
   judgeDate(dateStr) {
