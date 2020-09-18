@@ -66,12 +66,16 @@ export default class MainPage extends React.Component {
 
   UNSAFE_componentWillUnmount() {
 
-
     this.subcription.remove();
     this.deviceReceivedMessages.remove();
   }
 
+  componentDidMount() {
+
+  }
+
   UNSAFE_componentWillMount() {
+
     this.packageAuthorizationAgreed = PackageEvent.packageAuthorizationAgreed.addListener(() => {
       // 隐私弹窗-用户点击同意
       console.log('user agree protocol...');
@@ -81,14 +85,17 @@ export default class MainPage extends React.Component {
     //监听：燃气事件
     Device.getDeviceWifi().subscribeMessages("event.12").then((subcription) => {
       this.subcription = subcription;
-      // console.log('prop.4118成功添加监听');
+      console.log('prop.4118成功添加监听');
     }).catch((error) => {
 
     });
 
+
     //接收监听事件
     this.deviceReceivedMessages = DeviceEvent.deviceReceivedMessages.addListener(
       (device, map, data) => {
+
+        console.log('接收监听事件');
         // alert(data[0]['value'] + ' ' + this.state.deviceStatus);
         // console.log('Device.addListener', device, map, data);
         // console.log(data[0]['value'] + ' ' + this.state.deviceStatus);
@@ -98,10 +105,8 @@ export default class MainPage extends React.Component {
             deviceStatus: data[0]['value'],
             recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(data[0]['value'])
           });
-
         }
       });
-
 
     // 请求：第一条事件
     // Object ID 水浸事件12（）   水浸属性4116
@@ -113,29 +118,27 @@ export default class MainPage extends React.Component {
     Service.smarthome.getDeviceData({
       did: Device.deviceID,
 
-      // type: "prop",
-      // key: "4116",
-      type: "event",
-      key: "12",
+      type: "prop",
+      key: "4116",
+      // type: "event",
+      // key: "12",
       time_start: 0,
       time_end: Math.round(Date.now() / 1000),
       limit: 1
     }).then((res) => {
 
-      const model = res[0];
-
-      if (model.hasOwnProperty("value")) {
-
-        let timeMap = this.formatDate(model['time']);
-
-        this.setState({
-          recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
-        });
-
-      }
+      console.log(res);
+      // const model = res[0];
+      // if (model.hasOwnProperty("value")) {
+      //   let timeMap = this.formatDate(model['time']);
+      //   this.setState({
+      //     recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
+      //   });
+      // }
     }).catch((err) => {
       console.log(err);
     });
+
   }
 
   judgeDate(dateStr) {
