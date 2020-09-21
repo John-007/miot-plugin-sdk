@@ -85,7 +85,7 @@ export default class MainPage extends React.Component {
     //监听：燃气事件
     Device.getDeviceWifi().subscribeMessages("event.12").then((subcription) => {
       this.subcription = subcription;
-      console.log('prop.4118成功添加监听');
+      console.log('event.12成功添加监听');
     }).catch((error) => {
 
     });
@@ -114,30 +114,89 @@ export default class MainPage extends React.Component {
     // 水浸事件		水浸报警（0x01）、水浸报警解除（0x00）
 
 
-    console.log(Device.deviceID);
+    // console.log(Device.deviceID);
+    // Service.smarthome.getDeviceData({
+    //   did: Device.deviceID,
+
+    //   type: "prop",
+    //   key: "4116",
+    //   // type: "event",
+    //   // key: "12",
+    //   time_start: 0,
+    //   time_end: Math.round(Date.now() / 1000),
+    //   limit: 1
+    // }).then((res) => {
+
+    //   console.log(res);
+    //   // const model = res[0];
+    //   // if (model.hasOwnProperty("value")) {
+    //   //   let timeMap = this.formatDate(model['time']);
+    //   //   this.setState({
+    //   //     recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
+    //   //   });
+    //   // }
+    // }).catch((err) => {
+    //   console.log(err);
+    // });
+
+    let params = {
+      'did': Device.deviceID,
+      'props': {
+        "prop.s_SynchronizedAlarm": "true"
+      }
+    }
+    Service.smarthome.batchSetDeviceDatas([params]).then((res) => {
+
+      console.log('batchSetDeviceDatas');
+      console.log(res);
+
+    })
+
+    // Service.smarthome.setDeviceData({
+    //   did: Device.deviceID,
+    //   uid: Device.ownerId,
+    //   type: "prop",
+    //   key: "SynchronizedAlarm",
+    //   value: true,
+    //   time: Math.round(Date.now() / 1000)
+    // }).then((res) => {
+
+    //   console.log(res);
+
+    // }).catch((err) => {
+    //   console.log(err);
+    // });
+
+    Service.smarthome.batchGetDeviceDatas(
+      [{ did: Device.deviceID, props: ["prop.s_SynchronizedAlarm"] }]
+    ).then((res) => {
+
+      console.log('batchGetDeviceDatas');
+      console.log(res);
+    }).catch({});
+
+
     Service.smarthome.getDeviceData({
       did: Device.deviceID,
 
-      type: "prop",
-      key: "4116",
-      // type: "event",
-      // key: "12",
+      // type: "prop",
+      // key: "SynchronizedAlarm",
+      type: "event",
+      key: "12",
       time_start: 0,
-      time_end: Math.round(Date.now() / 1000),
+      // time_end: Math.round(Date.now() / 1000),
+      time_end: Math.round(Date.now()),
       limit: 1
     }).then((res) => {
 
+      console.log('getDeviceData');
       console.log(res);
-      // const model = res[0];
-      // if (model.hasOwnProperty("value")) {
-      //   let timeMap = this.formatDate(model['time']);
-      //   this.setState({
-      //     recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
-      //   });
-      // }
+
     }).catch((err) => {
       console.log(err);
     });
+
+
 
   }
 
@@ -297,7 +356,6 @@ export default class MainPage extends React.Component {
     var cellLogIconImage = '';
     var cellScenesIconImage = '';
     let bgNormalImage = require('../resources/images/Home_BG_Normal.jpg');
-    let bgWarningImage = require('../resources/images/Home_BG_Warning.png');
 
     if (this.state.deviceStatus == '00') {
 
@@ -337,7 +395,8 @@ export default class MainPage extends React.Component {
           // width: null,
           // height: null,
         }}
-          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
+
+          source={bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 
@@ -361,7 +420,6 @@ export default class MainPage extends React.Component {
             }}
           />
           < Card
-
             underlayColor="rgba(0,0,0,.05)"
             cardStyle={{ borderRadius: 10, height: 70 }}
             innerView={

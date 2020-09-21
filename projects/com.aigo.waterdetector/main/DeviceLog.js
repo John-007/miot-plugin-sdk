@@ -118,7 +118,6 @@ export default class DeviceLog extends React.Component {
 
         } else {
 
-
           // 第一组的组头元素
           subData['imageType'] = 0;
           dayLogList.push(subData);
