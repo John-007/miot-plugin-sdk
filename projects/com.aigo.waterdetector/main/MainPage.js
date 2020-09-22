@@ -1,5 +1,5 @@
 import React from 'react';
-import { API_LEVEL, Package, Host, Service, Device, DeviceEvent, PackageEvent } from 'miot';
+import { API_LEVEL, Package, Host, Service, SceneType, Device, DeviceEvent, PackageEvent } from 'miot';
 import { View, Text, ImageBackground, Image, StyleSheet } from 'react-native';
 import NavigationBar from 'miot/ui/NavigationBar';
 import Separator from 'miot/ui/Separator';
@@ -139,41 +139,92 @@ export default class MainPage extends React.Component {
     //   console.log(err);
     // });
 
-    let params = {
-      'did': Device.deviceID,
-      'props': {
-        "prop.s_SynchronizedAlarm": "true"
-      }
-    }
-    Service.smarthome.batchSetDeviceDatas([params]).then((res) => {
 
-      console.log('batchSetDeviceDatas');
+    //属性的设置与获取
+    Service.smarthome.setDeviceData({
+      did: Device.deviceID,
+      uid: Device.ownerId,
+      type: "event",
+      key: "12",
+      time: Math.round(Date.now() / 1000)
+    }).then((res) => {
+
       console.log(res);
 
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    // let params = {
+    //   'did': Device.deviceID,
+    //   'props': {
+    //     "prop.s_SynchronizedAlarm": "true"
+    //   }
+    // }
+    // Service.smarthome.batchSetDeviceDatas([params]).then((res) => {
+
+    //   console.log('batchSetDeviceDatas');
+    //   console.log(res);
+
+    // })
+
+
+
+    // Service.smarthome.batchGetDeviceDatas(
+    //   [{ did: Device.deviceID, props: ["prop.s_SynchronizedAlarm"] }]
+    // ).then((res) => {
+
+    //   console.log('batchGetDeviceDatas');
+    //   console.log(res);
+    // }).catch({});
+
+    //结束5230d83ceeb65ed8fb214615c4b8ad72497a6178
+
+
+
+
+    const setting = {
+      // onMethod: 'method_name', //咨询硬件工程师,指硬件端，打开开关的方法。miot-spec下，一般为：set_properties
+      // on_param: 'param', //咨询硬件工程师，指硬件端，打开开关应该传入的参数。miot-spec下，一般为：[{did,siid,piid,value}]
+      // off_method: 'method_name', //咨询硬件工程师，指硬件端，关闭开关的方法。miot-spec下，一般为：set_properties
+      // off_param: 'param', //咨询硬件工程师，关闭开关应该传入的参数。 miot-spec下，一般为：[{did,siid,piid,value}]
+    }
+    const scene = Service.scene.createScene(Device.deviceID, SceneType.Automatic, {
+      identify: 'identify',
+      name: 'myTimer',
+      setting: setting
+    });
+
+    Service.scene.loadScenes(Device.deviceID, SceneType.Automatic).then((scenes) => {
+      console.log('scenes', scenes)
+      if (scenes && scenes.length > 0) {
+        let scene = {
+          sceneID: scenes[0].sceneID,
+          createTime: scenes[0].createTime,
+          status: scenes[0].status,
+          name: scenes[0].name,
+          type: scenes[0].type,
+        }
+        alert(JSON.stringify(scene))
+      } else {
+        alert("该设备没有自动场景")
+      }
+    }).catch((error) => {
+      console.log('error', error)
     })
+    // console.log('sceneID' + Device.authorizedDeviceIDs);
 
-    // Service.smarthome.setDeviceData({
-    //   did: Device.deviceID,
-    //   uid: Device.ownerId,
-    //   type: "prop",
-    //   key: "SynchronizedAlarm",
-    //   value: true,
-    //   time: Math.round(Date.now() / 1000)
-    // }).then((res) => {
 
+    // Device.isNew().then((res) => {
+
+    //   console.log('isNew');
     //   console.log(res);
 
     // }).catch((err) => {
+
     //   console.log(err);
     // });
 
-    Service.smarthome.batchGetDeviceDatas(
-      [{ did: Device.deviceID, props: ["prop.s_SynchronizedAlarm"] }]
-    ).then((res) => {
-
-      console.log('batchGetDeviceDatas');
-      console.log(res);
-    }).catch({});
 
 
     Service.smarthome.getDeviceData({
@@ -261,36 +312,11 @@ export default class MainPage extends React.Component {
           source={image}
         />
 
-        {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
 
       </View>
     );
   }
 
-  // 创建状态页面
-  _createAlarmText() {
-
-    return (
-
-      <View
-        style={{
-          marginTop: 25,
-          justifyContent: "center",
-          alignItems: 'center'
-        }}>
-        <Text style={{
-          fontSize: 17,
-          color: '#fff'
-        }}>烟雾触发报警</Text>
-        <Text style={{
-          marginTop: 5,
-          fontSize: 15,
-          color: '#fff'
-        }}>请及时检查家庭情况</Text>
-
-      </View >
-    );
-  }
 
   // 生成卡片
   _createCard = (cardProps = {}) => {
