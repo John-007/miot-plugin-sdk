@@ -84,11 +84,9 @@ export default class MainPage extends React.Component {
     //监听：燃气事件
     Device.getDeviceWifi().subscribeMessages("event.14").then((subcription) => {
       this.subcription = subcription;
-      console.log('prop.4118成功添加监听');
     }).catch((error) => {
 
     });
-    console.log(111);
 
 
     //接收监听事件
@@ -114,8 +112,6 @@ export default class MainPage extends React.Component {
     // 燃气状态	有泄漏（0x01）、无泄漏（0x00）
     // 燃气事件	正常监测(0x00)、燃气泄漏报警(0x01)、设备故障(0x02)、传感器寿命到期(0x03)、传感器预热(0x04)
 
-    console.log(Device.deviceID);
-    console.log(222);
 
     Service.smarthome.batchGetDeviceDatas([{ did: Device.deviceID, props: ["prop.s_auth_config"] }]).then((res) => {
       let alreadyAuthed = true;
@@ -157,6 +153,8 @@ export default class MainPage extends React.Component {
       time_end: Math.round(Date.now() / 1000),
       limit: 1
     }).then((res) => {
+
+      console.log(res);
 
       const model = res[0];
 
@@ -242,6 +240,10 @@ export default class MainPage extends React.Component {
       return '燃气报警'
     } else if (typeString == '02') {
       return '设备故障'
+    } else if (typeString == '03') {
+      return '传感器寿命到期'
+    } else if (typeString == '04') {
+      return '传感器预热'
     }
 
   }
@@ -393,6 +395,19 @@ export default class MainPage extends React.Component {
       cellStatusImage = require('../resources/images/Home_StatusBreakdown.png');
       cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
       cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
+
+    } else if (this.state.deviceStatus == '03') {
+
+      cellStatusImage = require('../resources/images/Home_StatusBreakdown.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
+
+    } else if (this.state.deviceStatus == '04') {
+
+      cellStatusImage = require('../resources/images/Home_StatusWarmUp.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
+
     }
 
 

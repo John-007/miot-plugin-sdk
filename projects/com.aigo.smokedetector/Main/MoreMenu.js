@@ -52,15 +52,7 @@ export default class MoreMenu extends React.Component {
   }
 
 
-  componentDidMount() {
 
-    console.log('设置state');
-    this.setState = ({
-
-      powerString: '1234%'
-    });
-
-  }
   UNSAFE_componentWillMount() {
 
 
@@ -80,8 +72,8 @@ export default class MoreMenu extends React.Component {
         var power = model['value'].substring(2, 4)
         console.log(this.hex2int(power));
         // var powerInt = this.hex2int(power)
-        this.setState = ({
-          powerString: '1234%'
+        this.setState({
+          powerString: this.hex2int(power) + '%'
         });
       }
 
@@ -165,12 +157,12 @@ export default class MoreMenu extends React.Component {
           valueStyle={{ fontSize: 14 }}
           separator={<Separator />}
           hideArrow={true}
-          onPress={() => {
-            console.log('设置电量')
-            this.setState = ({
-              powerString: '1234%'
-            })
-          }}
+        // onPress={() => {
+        //   console.log('设置电量')
+        //   this.setState = ({
+        //     powerString: '1234%'
+        //   })
+        // }}
         />
 
         <View style={[styles.blank, { borderTopWidth: 0 }]} />

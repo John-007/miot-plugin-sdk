@@ -82,7 +82,7 @@ export default class MainPage extends React.Component {
     });
 
 
-    //监听：燃气事件
+    //监听：水浸事件
     Device.getDeviceWifi().subscribeMessages("event.12").then((subcription) => {
       this.subcription = subcription;
       console.log('event.12成功添加监听');
@@ -141,24 +141,25 @@ export default class MainPage extends React.Component {
 
 
     //属性的设置与获取
-    Service.smarthome.setDeviceData({
-      did: Device.deviceID,
-      uid: Device.ownerId,
-      type: "event",
-      key: "12",
-      time: Math.round(Date.now() / 1000)
-    }).then((res) => {
+    // Service.smarthome.setDeviceData({
+    //   did: Device.deviceID,
+    //   uid: Device.ownerId,
+    //   type: "prop",
+    //   key: "4106",
+    //   value: "10",
+    //   time: Math.round(Date.now() / 1000)
+    // }).then((res) => {
 
-      console.log(res);
+    //   console.log(res);
 
-    }).catch((err) => {
-      console.log(err);
-    });
+    // }).catch((err) => {
+    //   console.log(err);
+    // });
 
     // let params = {
     //   'did': Device.deviceID,
     //   'props': {
-    //     "prop.s_SynchronizedAlarm": "true"
+    //     "event.s_selfCheck": "123"
     //   }
     // }
     // Service.smarthome.batchSetDeviceDatas([params]).then((res) => {
@@ -171,47 +172,75 @@ export default class MainPage extends React.Component {
 
 
     // Service.smarthome.batchGetDeviceDatas(
-    //   [{ did: Device.deviceID, props: ["prop.s_SynchronizedAlarm"] }]
+    //   [{ did: Device.deviceID, props: ["event.s_selfCheck", "selfCheck", "12"] }]
     // ).then((res) => {
 
     //   console.log('batchGetDeviceDatas');
     //   console.log(res);
     // }).catch({});
 
-    //结束5230d83ceeb65ed8fb214615c4b8ad72497a6178
+
+    // let eventName = 'selfCheck';
+    // let params = { 'key1': 'value1', 'key2': 'value2', 'tip': 'tips' };
+    // Service.smarthome.reportEvent(eventName, params)
 
 
-
-
-    const setting = {
-      // onMethod: 'method_name', //咨询硬件工程师,指硬件端，打开开关的方法。miot-spec下，一般为：set_properties
-      // on_param: 'param', //咨询硬件工程师，指硬件端，打开开关应该传入的参数。miot-spec下，一般为：[{did,siid,piid,value}]
-      // off_method: 'method_name', //咨询硬件工程师，指硬件端，关闭开关的方法。miot-spec下，一般为：set_properties
-      // off_param: 'param', //咨询硬件工程师，关闭开关应该传入的参数。 miot-spec下，一般为：[{did,siid,piid,value}]
-    }
-    const scene = Service.scene.createScene(Device.deviceID, SceneType.Automatic, {
-      identify: 'identify',
-      name: 'myTimer',
-      setting: setting
-    });
-
-    Service.scene.loadScenes(Device.deviceID, SceneType.Automatic).then((scenes) => {
-      console.log('scenes', scenes)
-      if (scenes && scenes.length > 0) {
-        let scene = {
-          sceneID: scenes[0].sceneID,
-          createTime: scenes[0].createTime,
-          status: scenes[0].status,
-          name: scenes[0].name,
-          type: scenes[0].type,
-        }
-        alert(JSON.stringify(scene))
-      } else {
-        alert("该设备没有自动场景")
+    let params = {
+      'did': Device.deviceID,
+      'props': {
+        "prop.s_synchronizedAlarm": "true"
       }
-    }).catch((error) => {
-      console.log('error', error)
+    }
+    Service.smarthome.batchSetDeviceDatas([params]).then((res) => {
+
+      console.log('batchSetDeviceDatas');
+      console.log(res);
+
     })
+
+
+    Service.smarthome.batchGetDeviceDatas(
+      [{ did: Device.deviceID, props: ["prop.s_synchronizedAlarm", "4106"] }]
+    ).then((res) => {
+
+      console.log('batchGetDeviceDatas');
+      console.log(res);
+    }).catch({});
+
+    //结束
+
+
+
+
+    // const setting = {
+    //   // onMethod: 'method_name', //咨询硬件工程师,指硬件端，打开开关的方法。miot-spec下，一般为：set_properties
+    //   // on_param: 'param', //咨询硬件工程师，指硬件端，打开开关应该传入的参数。miot-spec下，一般为：[{did,siid,piid,value}]
+    //   // off_method: 'method_name', //咨询硬件工程师，指硬件端，关闭开关的方法。miot-spec下，一般为：set_properties
+    //   // off_param: 'param', //咨询硬件工程师，关闭开关应该传入的参数。 miot-spec下，一般为：[{did,siid,piid,value}]
+    // }
+    // const scene = Service.scene.createScene(Device.deviceID, SceneType.Automatic, {
+    //   identify: 'identify',
+    //   name: 'myTimer',
+    //   setting: setting
+    // });
+
+    // Service.scene.loadScenes(Device.deviceID, SceneType.Automatic).then((scenes) => {
+    //   console.log('scenes', scenes)
+    //   if (scenes && scenes.length > 0) {
+    //     let scene = {
+    //       sceneID: scenes[0].sceneID,
+    //       createTime: scenes[0].createTime,
+    //       status: scenes[0].status,
+    //       name: scenes[0].name,
+    //       type: scenes[0].type,
+    //     }
+    //     alert(JSON.stringify(scene))
+    //   } else {
+    //     alert("该设备没有自动场景")
+    //   }
+    // }).catch((error) => {
+    //   console.log('error', error)
+    // })
     // console.log('sceneID' + Device.authorizedDeviceIDs);
 
 
@@ -227,21 +256,53 @@ export default class MainPage extends React.Component {
 
 
 
+    // Service.smarthome.getDeviceData({
+    //   did: Device.deviceID,
+
+    //   // type: "prop",
+    //   // key: "synchronizedAlarm",
+    //   type: "event",
+    //   key: "12",
+    //   time_start: 0,
+    //   // time_end: Math.round(Date.now() / 1000),
+    //   time_end: Math.round(Date.now()),
+    //   limit: 1
+    // }).then((res) => {
+
+    //   console.log('getDeviceData');
+    //   console.log(res);
+
+    // }).catch((err) => {
+    //   console.log(err);
+    // });
+
+
     Service.smarthome.getDeviceData({
       did: Device.deviceID,
 
       // type: "prop",
-      // key: "SynchronizedAlarm",
+      // key: "synchronizedAlarm",
       type: "event",
       key: "12",
       time_start: 0,
-      // time_end: Math.round(Date.now() / 1000),
-      time_end: Math.round(Date.now()),
+      time_end: Math.round(Date.now() / 1000),
+      // time_end: Math.round(Date.now()),
       limit: 1
     }).then((res) => {
 
       console.log('getDeviceData');
       console.log(res);
+      const model = res[0];
+
+      if (model.hasOwnProperty("value")) {
+
+        let timeMap = this.formatDate(model['time']);
+
+        this.setState({
+
+          recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
+        });
+      }
 
     }).catch((err) => {
       console.log(err);
@@ -274,7 +335,7 @@ export default class MainPage extends React.Component {
     if (typeString == '00') {
       return '工作正常'
     } else if (typeString == '01') {
-      return '燃气报警'
+      return '水浸报警'
     } else if (typeString == '02') {
       return '设备故障'
     }

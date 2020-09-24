@@ -104,13 +104,6 @@ export default class Home extends React.Component {
       console.log(error)
     });
 
-    //监听：烟雾属性
-    // Device.getDeviceWifi().subscribeMessages("prop.4117").then((subcription) => {
-    //   this.subcription = subcription;
-    //   // console.log('prop.4117成功添加监听');
-    // }).catch((error) => {
-
-    // });
 
     //接收监听事件
     this.deviceReceivedMessages = DeviceEvent.deviceReceivedMessages.addListener(
@@ -127,48 +120,6 @@ export default class Home extends React.Component {
         }
       });
 
-    console.log(Device.deviceID);
-
-
-
-    //请求：电量
-    Service.smarthome.getDeviceData({
-      did: Device.deviceID,
-      type: "prop",
-      // key: "4106",
-      key: "4117",
-
-      // type: "event",
-      // key: "13", //Object ID 0x1004 温度 电量4106 烟感4117
-      time_start: 0,
-      time_end: Math.round(Date.now() / 1000),
-      limit: 1
-    }).then((res) => {
-      console.log(res);
-
-      if (res[0].hasOwnProperty("value")) {
-        // this.setState({
-        //   deviceStatus: res[0]['value']
-        // })
-      }
-
-      // const a = res[0]
-
-      // // console.log(a.hasOwnProperty("value"));
-      // // console.log(a['value']);
-      // if (a.hasOwnProperty("value")) {
-      //     var power = a['value'].substring(2, 4)
-      //     console.log(this.hex2int(power));
-      //     var powerInt = this.hex2int(power)
-      // }
-
-      // else {
-
-      // }
-    }).catch((err) => {
-      console.log(err);
-    });
-
 
     //请求：第一条事件
     Service.smarthome.getDeviceData({
@@ -181,16 +132,12 @@ export default class Home extends React.Component {
       limit: 1
     }).then((res) => {
 
-
-
       const model = res[0];
 
       if (model.hasOwnProperty("value")) {
 
         let timeMap = this.formatDate(model['time']);
-
         this.setState({
-
           recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
         });
       }

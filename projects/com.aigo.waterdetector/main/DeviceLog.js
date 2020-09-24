@@ -162,7 +162,7 @@ export default class DeviceLog extends React.Component {
         cellStatus = '工作正常';
         break;
       case '["01"]':
-        cellStatus = '烟雾报警';
+        cellStatus = '水浸报警';
         cellImageType += 3;
         break;
       default: break;
@@ -214,7 +214,7 @@ export default class DeviceLog extends React.Component {
           }}
             source={cellImage}
           />
-          <Text style={cellStatus == '烟雾报警' ? styles.warningText : styles.normalText}>{cellStatus}</Text>
+          <Text style={cellStatus == '水浸报警' ? styles.warningText : styles.normalText}>{cellStatus}</Text>
         </View >
       </View >
     );

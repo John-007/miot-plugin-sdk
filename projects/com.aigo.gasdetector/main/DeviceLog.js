@@ -164,11 +164,17 @@ export default class DeviceLog extends React.Component {
         cellStatus = '工作正常';
         break;
       case '["01"]':
-        cellStatus = '烟雾报警';
+        cellStatus = '燃气报警';
         cellImageType += 3;
         break;
       case '["02"]':
         cellStatus = '设备故障';
+        break;
+      case '["03"]':
+        cellStatus = '传感器寿命到期';
+        break;
+      case '["04"]':
+        cellStatus = '传感器预热';
         break;
       default: break;
     }

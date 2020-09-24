@@ -62,14 +62,32 @@ export default class SettingPage extends React.Component {
         var power = model['value'].substring(2, 4)
         console.log(this.hex2int(power));
         // var powerInt = this.hex2int(power)
-        this.setState = ({
-          powerString: '1234%'
+        this.setState({
+          powerString: this.hex2int(power) + '%'
         });
       }
 
     }).catch((err) => {
       console.log(err);
     });
+  }
+
+  hex2int(hex) {
+    let len = hex.length, a = new Array(len), code;
+    for (let i = 0; i < len; i++) {
+      code = hex.charCodeAt(i);
+      if (48 <= code && code < 58) {
+        code -= 48;
+      } else {
+        code = (code & 0xdf) - 65 + 10;
+      }
+      a[i] = code;
+    }
+
+    return a.reduce(function (acc, c) {
+      acc = 16 * acc + c;
+      return acc;
+    }, 0);
   }
 
   initProtocol() {
@@ -126,14 +144,6 @@ export default class SettingPage extends React.Component {
 
         </View>
 
-        {/* <ListItem
-          title="设备自检"
-          // showDot={true}
-          onPress={() => navigation.navigate('checkSelf', { 'title': '设备自检' })}
-          accessible={true}
-          accessibilityHint="press title"
-        /> */}
-
         <ListItem
           title="电池寿命"
           value={this.state.powerString}
@@ -142,12 +152,12 @@ export default class SettingPage extends React.Component {
           valueStyle={{ fontSize: 14 }}
           separator={<Separator />}
           hideArrow={true}
-          onPress={() => {
-            console.log('设置电量')
-            this.setState = ({
-              powerString: '1234%'
-            })
-          }}
+        // onPress={() => {
+        //   console.log('设置电量')
+        //   this.setState({
+        //     powerString: '1234%'
+        //   });
+        // }}
         />
 
 

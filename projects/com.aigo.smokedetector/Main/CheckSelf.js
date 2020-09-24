@@ -55,34 +55,15 @@ const CheckStatusView = (props) => {
       />
       <Text
         style={{
-          // justifyContent: "center",
 
-          // width: 240,
-          // height: 240,
           marginTop: 20,
           fontSize: 16
-          // color: '#32BAC0'
+
         }}
         numberOfLines={0}
         ellipsizeMode="tail"
         accessible={false}
       >{props.text}</Text>
-      {/* <Text
-        style={{
-          // justifyContent: "center",设备自检中，请稍候...
-          checkStatus
-          // width: 240,
-          // height: 240,
-          fontSize: 44,
-          color: '#32BAC0'
-        }}
-        numberOfLines={0}
-        ellipsizeMode="tail"
-        accessible={false}
-      >
-        {props.text}
-      </Text> */}
-
 
     </View>
   );
@@ -108,7 +89,7 @@ export default class CheckSelf extends React.Component {
 
   }
 
-  UNSAFE_componentDidMount() {
+  componentDidMount() {
     // this.listenter = DeviceEvent.deviceTimeZoneChanged.addListener((val) => {
     //     console.log("deviceTimeZoneChanged", val);
     // })
