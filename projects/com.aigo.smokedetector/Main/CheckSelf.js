@@ -264,10 +264,10 @@ export default class CheckSelf extends React.Component {
       console.log('bluetoothSeviceDiscoverFailed', data);
       //   this.setState({ buttonText: 'bluetoothSeviceDiscoverFailed :' + data });
     });
-    this._s5 = BluetoothEvent.bluetoothCharacteristicDiscoverFailed.addListener((blut, data) => {
-      console.log('bluetoothCharacteristicDiscoverFailed', data);
-      //   this.setState({ buttonText: 'bluetoothCharacteristicDiscoverFailed:' + data });
-    });
+    // this._s5 = BluetoothEvent.bluetoothCharacteristicDiscoverFailed.addListener((blut, data) => {
+    //   console.log('bluetoothCharacteristicDiscoverFailed', data);
+    //   //   this.setState({ buttonText: 'bluetoothCharacteristicDiscoverFailed:' + data });
+    // });
     this._s6 = BluetoothEvent.bluetoothConnectionStatusChanged.addListener((blut, isConnect) => {
       console.log('bluetoothConnectionStatusChanged', blut, isConnect);
       if (bt.mac === blut.mac) {
@@ -291,8 +291,13 @@ export default class CheckSelf extends React.Component {
     });
   }
 
-  UNSAFE_componentWillUnmount() {
+  componentWillUnmount() {
 
+    this.setState = (state, callback) => {
+      return
+    }
+
+    clearTimeout(this.timeoutID)
 
     if (bt.isConnected) {
       bt.disconnect();

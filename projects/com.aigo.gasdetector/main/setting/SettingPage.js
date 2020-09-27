@@ -134,6 +134,14 @@ export default class SettingPage extends React.Component {
           accessibilityHint="press title"
         />
 
+        <ListItem
+          title="消音"
+          // showDot={true}
+          onPress={() => navigation.navigate('silencer', { 'title': '设备消音' })}
+          accessible={true}
+          accessibilityHint="press title"
+        />
+
         {/* <ListItem
           title="电池寿命"
           value={this.state.powerString}

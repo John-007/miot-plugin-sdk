@@ -311,8 +311,13 @@ export default class CheckSelf extends React.Component {
     });
   }
 
-  UNSAFE_componentWillUnmount() {
+  componentWillUnmount() {
 
+    this.setState = (state, callback) => {
+      return
+    }
+
+    clearTimeout(this.timeoutID)
 
     if (bt.isConnected) {
       bt.disconnect();

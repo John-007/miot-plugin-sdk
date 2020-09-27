@@ -185,18 +185,18 @@ export default class MainPage extends React.Component {
     // Service.smarthome.reportEvent(eventName, params)
 
 
-    let params = {
-      'did': Device.deviceID,
-      'props': {
-        "prop.s_synchronizedAlarm": "true"
-      }
-    }
-    Service.smarthome.batchSetDeviceDatas([params]).then((res) => {
+    // let params = {
+    //   'did': Device.deviceID,
+    //   'props': {
+    //     "prop.s_synchronizedAlarm": "true"
+    //   }
+    // }
+    // Service.smarthome.batchSetDeviceDatas([params]).then((res) => {
 
-      console.log('batchSetDeviceDatas');
-      console.log(res);
+    //   console.log('batchSetDeviceDatas');
+    //   console.log(res);
 
-    })
+    // })
 
 
     Service.smarthome.batchGetDeviceDatas(
@@ -205,7 +205,9 @@ export default class MainPage extends React.Component {
 
       console.log('batchGetDeviceDatas');
       console.log(res);
-    }).catch({});
+    }).catch({
+
+    });
 
     //结束
 
@@ -299,7 +301,6 @@ export default class MainPage extends React.Component {
         let timeMap = this.formatDate(model['time']);
 
         this.setState({
-
           recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
         });
       }

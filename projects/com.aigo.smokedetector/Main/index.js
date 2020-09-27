@@ -10,6 +10,7 @@ import DeviceLog from './DeviceLog';
 import MoreMenu from './MoreMenu';
 import CheckSelf from './CheckSelf';
 import CheckSelfDone from './CheckSelfDone';
+import Silencer from './Silencer';
 
 export default class App extends React.Component {
 
@@ -58,7 +59,8 @@ function createRootStack(initPage) {
       moreMenu: MoreMenu,
       checkSelf: CheckSelf,
       checkSelfDone: CheckSelfDone,
-      home: Home
+      home: Home,
+      silencer: Silencer
     },
     {
       initialRouteName: initPage,

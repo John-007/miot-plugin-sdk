@@ -80,6 +80,30 @@ export default class MainPage extends React.Component {
       console.log('user agree protocol...');
     });
 
+    // let params = {
+    //   'did': Device.deviceID,
+    //   'props': {
+    //     "prop.s_synchronizedAlarm": "true"
+    //   }
+    // }
+    // Service.smarthome.batchSetDeviceDatas([params]).then((res) => {
+
+    //   console.log('batchSetDeviceDatas');
+    //   console.log(res);
+
+    // })
+
+
+    Service.smarthome.batchGetDeviceDatas(
+      [{ did: Device.deviceID, props: ["prop.s_synchronizedAlarm", "prop.4106"] }]
+    ).then((res) => {
+
+      console.log('batchGetDeviceDatas');
+      console.log(res);
+    }).catch({
+
+    });
+
 
     //监听：燃气事件
     Device.getDeviceWifi().subscribeMessages("event.14").then((subcription) => {
@@ -189,6 +213,8 @@ export default class MainPage extends React.Component {
     //   console.log(err);
     // });
   }
+
+
 
 
   alertLegalInformationAuthorization() {

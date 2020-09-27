@@ -10,6 +10,7 @@ import NavigationBar from 'miot/ui/NavigationBar';
 import Protocol from '../resources/protocol';
 import CheckSelf from './checkself/CheckSelf';
 import CheckSelfDone from './checkself/CheckSelfDone';
+import Silencer from './checkself/Silencer';
 
 export default class App extends React.Component {
 
@@ -113,6 +114,7 @@ function createRootStack(initPage) {
       MoreSetting: MoreSetting,
       checkSelf: CheckSelf,
       checkSelfDone: CheckSelfDone,
+      silencer: Silencer
     },
     {
       initialRouteName: initPage,
