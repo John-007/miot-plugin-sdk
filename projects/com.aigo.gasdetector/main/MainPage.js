@@ -2,7 +2,9 @@ import React from 'react';
 import { API_LEVEL, Package, Host, Device, DeviceEvent, PackageEvent, Service } from 'miot';
 import { View, Text, Image, ImageBackground, StyleSheet } from 'react-native';
 import NavigationBar from 'miot/ui/NavigationBar';
-import Separator from 'miot/ui/Separator';
+import {
+  AbstractDialog
+} from 'miot/ui/Dialog';
 
 import Card from 'miot/ui/Card';
 
@@ -80,29 +82,17 @@ export default class MainPage extends React.Component {
       console.log('user agree protocol...');
     });
 
-    // let params = {
-    //   'did': Device.deviceID,
-    //   'props': {
-    //     "prop.s_synchronizedAlarm": "true"
-    //   }
-    // }
-    // Service.smarthome.batchSetDeviceDatas([params]).then((res) => {
+    //获取自检提醒开关
+    Service.storage.getThirdUserConfigsForOneKey(Device.model, 101).then((res) => {
 
-    //   console.log('batchSetDeviceDatas');
-    //   console.log(res);
+      if (res.hasOwnProperty('data') && res['data'] === 'true') {
+        this.judgeCheckSelf()
+      }
 
-    // })
+    }).catch((error) => {
+      console.log("error", error)
+    })
 
-
-    Service.smarthome.batchGetDeviceDatas(
-      [{ did: Device.deviceID, props: ["prop.s_synchronizedAlarm", "prop.4106"] }]
-    ).then((res) => {
-
-      console.log('batchGetDeviceDatas');
-      console.log(res);
-    }).catch({
-
-    });
 
 
     //监听：燃气事件
@@ -169,8 +159,6 @@ export default class MainPage extends React.Component {
     Service.smarthome.getDeviceData({
       did: Device.deviceID,
 
-      // type: "prop",
-      // key: "4118",
       type: "event",
       key: "14",
       time_start: 0,
@@ -195,31 +183,69 @@ export default class MainPage extends React.Component {
       console.log(err);
     });
 
-
-    // Service.smarthome.getDeviceData({
-    //   did: Device.deviceID,
-
-    //   type: "prop",
-    //   key: "4118",
-    //   // type: "event",
-    //   // key: "14",
-    //   time_start: 0,
-    //   time_end: Math.round(Date.now() / 1000),
-    //   limit: 10
-    // }).then((res) => {
-
-    //   console.log(res);
-    // }).catch((err) => {
-    //   console.log(err);
-    // });
   }
 
+  judgeCheckSelf() {
+
+    //获取上次自检时间
+    Service.storage.getThirdUserConfigsForOneKey(Device.model, 100).then((res) => {
+
+      // alert(JSON.stringify(res))
+
+      console.log("res100", res)
+
+      if (res.hasOwnProperty('data')) {
+
+
+        var date1 = new Date(Number(res['data']));
+        var date2 = new Date();
+        var date = (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24);
+
+        if (date > 30) {
+          //弹窗提醒用户自检
+
+          this.setState({
+            visibleRemindCheckSelf: true
+          });
+
+        } else {
+          console.log("30天内自检过")
+        }
+
+
+      }
+    }).catch((error) => {
+      console.log("error", error)
+    })
+  }
+
+  alertCheckSelf() {
+
+    console.log(333);
+    Protocol.getProtocol().then((protocol) => {
+      console.log(protocol);
+      Host.ui.alertLegalInformationAuthorization(protocol).then((res) => {
+        console.log(res);
+        if (res === 'ok' || res === true || res === 'true') {
+          Service.smarthome.batchSetDeviceDatas([{ did: Device.deviceID, props: { "prop.s_auth_config": JSON.stringify({ 'privacyAuthed': true }) } }]);
+          PackageEvent.packageAuthorizationAgreed.emit();
+        }
+      }).catch((error) => {
+        console.log(error);
+        // 打开弹出过程中出现了意外错误, 进行上报
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+      });
+    }).catch((error) => {
+      console.log(error);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+    });
+
+  }
 
 
 
   alertLegalInformationAuthorization() {
 
-    console.log(333);
     Protocol.getProtocol().then((protocol) => {
       console.log(protocol);
       Host.ui.alertLegalInformationAuthorization(protocol).then((res) => {
@@ -497,6 +523,42 @@ export default class MainPage extends React.Component {
           />
 
         </ImageBackground>
+
+        <AbstractDialog
+          visible={this.state.visibleRemindCheckSelf}
+          title={'温馨提示：建议您进行设备自检'}
+          buttons={[
+            {
+              text: '好',
+              style: { color: '#32BAC0' },
+              callback: (_) => {
+                this.setState({
+                  visibleRemindCheckSelf: false
+                });
+
+                //保存当前自检时间
+                Service.storage.setThirdUserConfigsForOneKey(Device.model, 100, Number(new Date())).then((res) => {
+                  console.log("res", res)
+                }).catch((error) => {
+                  console.log("error", error)
+                })
+              }
+            }
+          ]}
+        // onDismiss={(_) => this.onDismiss('0')}
+        >
+          <View
+            style={{
+              flex: 1,
+              height: 0.5,
+              backgroundColor: '#D9D9D9',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {/* <Text>有蜂鸣声吗</Text> */}
+          </View>
+        </AbstractDialog >
       </View>
     );
   }

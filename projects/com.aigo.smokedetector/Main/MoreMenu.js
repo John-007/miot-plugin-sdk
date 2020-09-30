@@ -29,7 +29,9 @@ export default class MoreMenu extends React.Component {
     // console.warn('强烈推荐使用「通用设置项」: `miot/ui/CommonSetting`, 你可以在「首页」-「教程」-「插件通用设置项」中查看使用示例')
 
     this.state = {
-      powerString: '暂无数据'
+      powerString: '暂无数据',
+      switchOn: ''
+      // switchOn: this.props.navigation.state.params.checkSelfSwitchOn == "true" ? true : false
     };
 
     this._createMenuData();
@@ -39,6 +41,14 @@ export default class MoreMenu extends React.Component {
 
   _createMenuData() {
     const { navigation } = this.props;
+
+    // this.state({
+
+    //   switchOn: this.props.navigation.state.params.checkSelfSwitchOn
+    // })
+
+    console.log(this.props.navigation.state.params.checkSelfSwitchOn)
+
     this._menuData = [
 
       {
@@ -54,6 +64,20 @@ export default class MoreMenu extends React.Component {
 
 
   UNSAFE_componentWillMount() {
+
+    //获取自检提醒开关
+    Service.storage.getThirdUserConfigsForOneKey(Device.model, 101).then((res) => {
+
+      // alert(JSON.stringify(res))
+
+      console.log("res101", res)
+      this.setState({
+        switchOn: res['data'] === 'true' ? true : false
+      });
+
+    }).catch((error) => {
+      console.log("error", error)
+    })
 
 
     //请求：第一条事件
@@ -76,6 +100,21 @@ export default class MoreMenu extends React.Component {
           powerString: this.hex2int(power) + '%'
         });
       }
+
+    }).catch((err) => {
+      console.log(err);
+    });
+
+
+    // Service.smarthome.getAvailableFirmwareForDids(Device.deviceID).then(res => {
+    //   console.log(res);
+    // }).catch((err) => {
+    //   console.log(err);
+    // });
+
+    Service.smarthome.getLatestVersionV2(Device.deviceID).then((res) => {
+
+      console.log(res);
 
     }).catch((err) => {
       console.log(err);
@@ -138,7 +177,6 @@ export default class MoreMenu extends React.Component {
             }}>{"功能设置"}</Text>
           </View>
           <Separator style={{ marginLeft: 0 }} />
-
         </View>
 
         <ListItem
@@ -158,6 +196,28 @@ export default class MoreMenu extends React.Component {
           accessibilityHint="press title"
         // containerStyle={{ height: 44 }}
         />
+
+        <ListItemWithSwitch
+          title="每月自检提醒"
+          value={this.state.switchOn}
+          // value={false}
+          onValueChange={(value) => {
+            console.log(value)
+            // this.setState({
+            //   switchOn: value
+            // });
+            Service.storage.setThirdUserConfigsForOneKey(Device.model, 101, value).then((res) => {
+              console.log("res", res)
+              this.setState({
+                switchOn: value
+              });
+            }).catch((error) => {
+              console.log("error", error)
+            })
+          }}
+        />
+
+
         <ListItem
           title="电池寿命"
           value={this.state.powerString}

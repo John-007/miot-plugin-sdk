@@ -5,7 +5,7 @@ import { CommonSetting, SETTING_KEYS } from "miot/ui/CommonSetting";
 import Separator from 'miot/ui/Separator';
 import Protocol from '../../resources/protocol';
 import { strings as SdkStrings, Styles as SdkStyles } from "miot/resources";
-import { ListItem } from "miot/ui/ListItem";
+import { ListItem, ListItemWithSwitch } from "miot/ui/ListItem";
 
 export default class SettingPage extends React.Component {
 
@@ -14,7 +14,8 @@ export default class SettingPage extends React.Component {
 
     this.state = {
       protocol: null,
-      powerString: '暂无数据'
+      powerString: '暂无数据',
+      switchOn: ''
     };
   }
 
@@ -46,30 +47,29 @@ export default class SettingPage extends React.Component {
     this.initCommonSettingParams();
     this.initProtocol();
 
-    // //请求：第一条事件
-    // Service.smarthome.getDeviceData({
-    //   did: Device.deviceID,
-    //   type: "prop",
-    //   key: "4106", // Object ID 0x1004 温度 电量4106 烟感4117
-    //   time_start: 0,
-    //   time_end: Math.round(Date.now() / 1000),
-    //   limit: 1
-    // }).then((res) => {
+    Service.smarthome.getLatestVersionV2(Device.deviceID).then((res) => {
 
+      console.log(res);
+
+    }).catch((err) => {
+      console.log(err);
+    });
+
+
+    Device.getBluetoothLE().getVersion(true, true).then((version) => {
+      Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then(data => {
+        console.log('设备版本为：' + version + ', 解析结果：' + JSON.stringify(data));
+      });
+      console.log(version);
+    }).catch((err) => {
+      // console.log(err, '-------');
+    });
+
+    // Device.checkFirmwareUpdateAndAlert().then(res => {
     //   console.log(res);
-    //   const model = res[0];
-    //   if (model.hasOwnProperty("value")) {
-    //     var power = model['value'].substring(2, 4)
-    //     console.log(this.hex2int(power));
-    //     // var powerInt = this.hex2int(power)
-    //     this.setState({
-    //       powerString: this.hex2int(power) + '%'
-    //     });
-    //   }
-
-    // }).catch((err) => {
+    // }).catch(err => {
     //   console.log(err);
-    // });
+    // })
   }
 
   initProtocol() {
@@ -142,21 +142,25 @@ export default class SettingPage extends React.Component {
           accessibilityHint="press title"
         />
 
-        {/* <ListItem
-          title="电池寿命"
-          value={this.state.powerString}
-          containerStyle={{ height: 44, backgroundColor: 'white' }}
-          titleStyle={{ fontSize: 16 }}
-          valueStyle={{ fontSize: 14 }}
-          separator={<Separator />}
-          hideArrow={true}
-        // onPress={() => {
-        //   console.log('设置电量')
-        //   this.setState = ({
-        //     powerString: '1234%'
-        //   })
-        // }}
-        /> */}
+        <ListItemWithSwitch
+          title="每月自检提醒"
+          value={this.state.switchOn}
+          // value={false}
+          onValueChange={(value) => {
+            console.log(value)
+            // this.setState({
+            //   switchOn: value
+            // });
+            Service.storage.setThirdUserConfigsForOneKey(Device.model, 101, value).then((res) => {
+              console.log("res", res)
+              this.setState({
+                switchOn: value
+              });
+            }).catch((error) => {
+              console.log("error", error)
+            })
+          }}
+        />
 
 
         <View style={[styles.blank, { borderTopWidth: 0 }]} />

@@ -229,9 +229,9 @@ export default class CheckSelf extends React.Component {
         });
       }
       Device.getBluetoothLE().getVersion(true, true).then((version) => {
-        // Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then(data => {
-        //   this.addLog('设备版本为：' + version + ', 解析结果：' + JSON.stringify(data));
-        // });
+        Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then(data => {
+          this.addLog('设备版本为：' + version + ', 解析结果：' + JSON.stringify(data));
+        });
       }).catch((err) => {
         // console.log(err, '-------');
       });
@@ -388,8 +388,6 @@ export default class CheckSelf extends React.Component {
           this.setState({ checkStatus: '连接失败，请点击返回重试' });
           this.addLog(`JLDebug ----- 连接err${JSON.stringify(err)}`);
         });
-
-
     }
   }
 
@@ -542,17 +540,7 @@ export default class CheckSelf extends React.Component {
                 </View>
               )
           }
-          {/* <Button
-            style={{
-              // display: this.state.buttonVisible
-              display: false
-            }}
-            title={'开始自检'}
-            color={'#32BAC0'}
-            onPress={() => {
-              this.sendTestText();
-              this.setState({ visible0: true });
-            }} /> */}
+
         </View>
 
         <AbstractDialog
@@ -577,6 +565,21 @@ export default class CheckSelf extends React.Component {
                 this.setState({
                   visible0: false
                 });
+
+                //保存当前自检时间
+                var date = new Date();
+                var year = date.getFullYear().toString();
+                var month = (date.getMonth() + 1).toString();
+                var day = date.getDate().toString();
+
+                console.log(year + '年' + month + '月' + day + '日')
+
+                Service.storage.setThirdUserConfigsForOneKey(Device.model, 100, month).then((res) => {
+                  console.log("res", res)
+                }).catch((error) => {
+                  console.log("error", error)
+                })
+
                 navigation.navigate('checkSelfDone', { title: '自检成功', status: true, navKey: this.props.navigation.state.key });
               }
             }

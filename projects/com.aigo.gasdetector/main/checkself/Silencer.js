@@ -417,52 +417,14 @@ export default class CheckSelf extends React.Component {
             this.addLog('蓝牙尚未连接或者service未发现');
             return;
         }
-        // if (!this.state.testCharNotify) {
-        //   this.addLog('蓝牙通知尚未开启，请点击 开启数据交互 之后尝试写入测试数据');
-        //   return;
-        // }
-        // let text = this.state.testEncrptText;
-        // if (text === '' || text === undefined) {
-        //   text = '01010101';
-        // }
 
 
         bt.getService(UUID_SERVICE).getCharacteristic(UUID_BUTTON_READ_WRITE_NOTIFY).setNotify(true);
 
-
-
-
-        // let text = 'ZIJIAN';
-        let text = '5A494A49414E';
+        let text = '5849414f59494e';
         bt.getService(UUID_SERVICE).getCharacteristic(UUID_LED_READ_WRITE).writeWithoutResponse(text);
         this.addLog('自检发送完成');
-        //  -1: 自动判断，0: 普通小米蓝牙协议设备，1: 安全芯片小米蓝牙设备（比如锁类产品），2: 分享的安全芯片小米蓝牙设备，3: 普通的BLE蓝牙设备(无 mibeacon，无小米 FE95 service)， 4: Standard Auth 标准蓝牙认证协议(通常2019.10.1之后上线的新设备，使用的都是该蓝牙协议，具体详情可以与设备端开发沟通)
-        // if (this.state.scType === 0) {
-        //   this.addLog('使用Token加密传输，' + text);
-        //   bt.securityLock.encryptMessageWithToken(text).then(res => {
-        //     const { result } = res;
-        //     bt.getService(UUID_SERVICE).getCharacteristic(UUID_LED_READ_WRITE).writeWithoutResponse(result);
-        //   })
-        //     .then(res => {
-        //       this.addLog('write res: ' + JSON.stringify(res));
-        //     })
-        //     .catch(err => {
-        //       this.addLog('write error: ' + JSON.stringify(err));
-        //     });
-        // }
-        // else {
-        //   this.addLog('使用Session加密传输，' + text);
-        //   bt.securityLock.encryptMessage(text)
-        //     .then(hex => {
-        //       bt.getService(UUID_SERVICE).getCharacteristic(UUID_LED_READ_WRITE).writeWithoutResponse(hex);
-        //     })
-        //     .then(res => {
-        //       this.addLog('write res: ' + JSON.stringify(res));
-        //     })
-        //     .catch(err => {
-        //       this.addLog('write error: ' + JSON.stringify(err));
-        //     });
-        // }
+
     }
 
     // `Modal` 隐藏了，父组件必须要同步更新状态，但不必用 `setState` 触发 `render`
@@ -557,27 +519,16 @@ export default class CheckSelf extends React.Component {
 
                 <AbstractDialog
                     visible={this.state.visible0}
-                    title={'有蜂鸣声吗?'}
+                    title={'消音命令发送完成'}
                     buttons={[
                         {
-                            text: '没有',
-                            style: { color: '#757575' },
-                            callback: (_) => {
-
-                                this.setState({
-                                    visible0: false
-                                });
-                                navigation.navigate('checkSelfDone', { title: '自检失败', status: false, navKey: this.props.navigation.state.key });
-                            }
-                        },
-                        {
-                            text: '有',
+                            text: '好',
                             style: { color: '#32BAC0' },
                             callback: (_) => {
                                 this.setState({
                                     visible0: false
                                 });
-                                navigation.navigate('checkSelfDone', { title: '自检成功', status: true, navKey: this.props.navigation.state.key });
+                                // navigation.navigate('checkSelfDone', { title: '自检成功', status: true, navKey: this.props.navigation.state.key });
                             }
                         }
                     ]}
@@ -591,7 +542,6 @@ export default class CheckSelf extends React.Component {
                             justifyContent: 'center'
                         }}
                     >
-                        {/* <Text>有蜂鸣声吗</Text> */}
                     </View>
                 </AbstractDialog>
 

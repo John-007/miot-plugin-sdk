@@ -8,6 +8,9 @@ import {
   StatusBar,
   Button
 } from 'react-native';
+import {
+  AbstractDialog
+} from 'miot/ui/Dialog';
 import Card from 'miot/ui/Card';
 import { Device, Package, Host, Entrance, Service, DeviceEvent, PackageEvent } from 'miot';
 import NavigationBar from 'miot/ui/NavigationBar';
@@ -39,7 +42,8 @@ export default class Home extends React.Component {
 
     this.state = {
       deviceStatus: '00',
-      recentLog: '暂无日志'
+      recentLog: '暂无日志',
+      visibleRemindCheckSelf: false
     };
 
     this.initNavigationBar();
@@ -62,7 +66,7 @@ export default class Home extends React.Component {
             key: NavigationBar.ICON.MORE,
             onPress: () => {
               // 跳转到设置页
-              this.props.navigation.navigate('moreMenu', { title: '设置' });
+              this.props.navigation.navigate('moreMenu', { title: '设置', checkSelfSwitchOn: this.state.checkSelfSwitchOn });
             }
           }
         ]
@@ -91,9 +95,6 @@ export default class Home extends React.Component {
 
 
     console.log(Math.round(Date.now() / 1000));
-
-    console.log(123);
-
 
 
     //监听：烟雾事件
@@ -147,7 +148,53 @@ export default class Home extends React.Component {
     });
 
 
+    //获取自检提醒开关
+    Service.storage.getThirdUserConfigsForOneKey(Device.model, 101).then((res) => {
 
+      if (res.hasOwnProperty('data') && res['data'] === 'true') {
+        this.judgeCheckSelf()
+      }
+
+    }).catch((error) => {
+      console.log("error", error)
+    })
+
+  }
+
+  judgeCheckSelf() {
+
+    //获取上次自检时间
+    Service.storage.getThirdUserConfigsForOneKey(Device.model, 100).then((res) => {
+
+      // alert(JSON.stringify(res))
+
+      console.log("res100", res)
+
+      if (res.hasOwnProperty('data')) {
+
+
+        var date1 = new Date(Number(res['data']));
+        var date2 = new Date();
+        var date = (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24);
+
+        console.log("时间相差：", date1, date2, date)
+
+        if (date > 30) {
+          //弹窗提醒用户自检
+
+          this.setState({
+            visibleRemindCheckSelf: true
+          });
+
+        } else {
+          console.log("30天内自检过")
+        }
+
+
+      }
+    }).catch((error) => {
+      console.log("error", error)
+    })
   }
 
   judgeDate(dateStr) {
@@ -337,14 +384,6 @@ export default class Home extends React.Component {
           backgroundColor: "#F7F7F7"
 
         }} >
-        {/* <StatusBar backgroundColor={'#eae9f1'} //状态栏背景颜色
-
-          barStyle={'dark-content'} //状态栏样式（黑字）
-
-        /> */}
-
-
-
 
         <ImageBackground style={{
           flex: 1,
@@ -395,6 +434,45 @@ export default class Home extends React.Component {
           />
 
         </ImageBackground>
+
+
+        <AbstractDialog
+          visible={this.state.visibleRemindCheckSelf}
+          title={'温馨提示：建议您进行设备自检'}
+          buttons={[
+            {
+              text: '好',
+              style: { color: '#32BAC0' },
+              callback: (_) => {
+                this.setState({
+                  visibleRemindCheckSelf: false
+                });
+
+                //保存当前自检时间
+                Service.storage.setThirdUserConfigsForOneKey(Device.model, 100, Number(new Date())).then((res) => {
+                  console.log("res", res)
+                }).catch((error) => {
+                  console.log("error", error)
+                })
+              }
+            }
+          ]}
+        // onDismiss={(_) => this.onDismiss('0')}
+        >
+          <View
+            style={{
+              flex: 1,
+              height: 0.5,
+              backgroundColor: '#D9D9D9',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {/* <Text>有蜂鸣声吗</Text> */}
+          </View>
+        </AbstractDialog >
+
+
       </View >
 
     );

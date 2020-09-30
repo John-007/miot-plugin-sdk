@@ -557,6 +557,23 @@ export default class CheckSelf extends React.Component {
                 this.setState({
                   visible0: false
                 });
+
+
+                //保存当前自检时间
+                var date = new Date();
+                var year = date.getFullYear().toString();
+                var month = (date.getMonth() + 1).toString();
+                var day = date.getDate().toString();
+
+                Number(new Date())
+                console.log(Number(new Date()))
+
+                Service.storage.setThirdUserConfigsForOneKey(Device.model, 100, Number(new Date())).then((res) => {
+                  console.log("res", res)
+                }).catch((error) => {
+                  console.log("error", error)
+                })
+
                 navigation.navigate('checkSelfDone', { title: '自检成功', status: true, navKey: this.props.navigation.state.key });
               }
             }
