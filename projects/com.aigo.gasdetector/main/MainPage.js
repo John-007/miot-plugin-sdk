@@ -39,7 +39,8 @@ export default class MainPage extends React.Component {
     super(props);
     this.state = {
       deviceStatus: '00',
-      recentLog: '暂无日志'
+      recentLog: '暂无日志',
+      visibleRemindCheckSelf: false
     };
 
     this.initNavigationBar();
@@ -289,13 +290,17 @@ export default class MainPage extends React.Component {
     if (typeString == '00') {
       return '工作正常'
     } else if (typeString == '01') {
-      return '燃气报警'
+      return '燃气泄漏报警'
     } else if (typeString == '02') {
       return '设备故障'
     } else if (typeString == '03') {
       return '传感器寿命到期'
     } else if (typeString == '04') {
       return '传感器预热'
+    } else if (typeString == '05') {
+      return '设备自检'
+    } else if (typeString == '06') {
+      return '模拟报警'
     }
 
   }
@@ -351,7 +356,7 @@ export default class MainPage extends React.Component {
         <Text style={{
           fontSize: 17,
           color: '#fff'
-        }}>烟雾触发报警</Text>
+        }}>燃气触发报警</Text>
         <Text style={{
           marginTop: 5,
           fontSize: 15,
@@ -424,9 +429,9 @@ export default class MainPage extends React.Component {
 
     const { navigation } = this.props;
 
-    var cellStatusImage = '';
-    var cellLogIconImage = '';
-    var cellScenesIconImage = '';
+    var cellStatusImage = require('../resources/images/Home_StatusNormal.png');
+    var cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+    var cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
     let bgNormalImage = require('../resources/images/Home_BG_Normal.jpg');
     let bgWarningImage = require('../resources/images/Home_BG_Warning.png');
 

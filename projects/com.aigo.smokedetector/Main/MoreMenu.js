@@ -9,6 +9,7 @@ import React from 'react';
 import { ListItem, ListItemWithSlider, ListItemWithSwitch } from 'miot/ui/ListItem';
 import { Service, Device, DeviceEvent, Host } from "miot";
 import { CommonSetting, SETTING_KEYS } from "miot/ui/CommonSetting";
+import { NordicDFU, DFUEmitter } from "react-native-nordic-dfu";
 import { Dimensions, Image, ListView, PixelRatio, StyleSheet, Text, ScrollView, TouchableHighlight, View } from 'react-native';
 let BUTTONS = [
   '测试对话框',
@@ -47,6 +48,7 @@ export default class MoreMenu extends React.Component {
     //   switchOn: this.props.navigation.state.params.checkSelfSwitchOn
     // })
 
+
     console.log(this.props.navigation.state.params.checkSelfSwitchOn)
 
     this._menuData = [
@@ -59,6 +61,14 @@ export default class MoreMenu extends React.Component {
       }
 
     ];
+
+    this.commonSettingParams = {
+
+      extraOptions: {
+        option: "",
+        showUpgrade: true
+      }
+    };
   }
 
 
@@ -112,13 +122,86 @@ export default class MoreMenu extends React.Component {
     //   console.log(err);
     // });
 
-    Service.smarthome.getLatestVersionV2(Device.deviceID).then((res) => {
+    // Service.smarthome.getLatestVersionV2(Device.deviceID).then((res) => {
 
-      console.log(res);
+    //   console.log('getLatestVersionV2', res);
+    //   var versionString = res['version']
+    //   if (Device.lastVersion != versionString) {
+    //     //需要更新
+    //     Device.needUpgrade = true
 
-    }).catch((err) => {
-      console.log(err);
-    });
+    //     Device.force = true
+    //   }
+
+    // }).catch((err) => {
+    //   console.log(err);
+    // });
+
+    // console.log('lastVersion', Device.lastVersion);
+    // console.log('needUpgrade', Device.needUpgrade);
+
+    // Device.lastVersion().then(res => {
+    //   console.log('lastVersion', res);
+    // }).catch(err => {
+    //   console.log(err);
+    // })
+
+    // Device.needUpgrade().then(res => {
+    //   console.log('needUpgrade', res);
+    // }).catch(err => {
+    //   console.log(err);
+    // })
+
+
+
+    // Device.checkFirmwareUpdateAndAlert().then(res => {
+    //   console.log('checkFirmwareUpdateAndAlert', res);
+
+
+    // }).catch(err => {
+    //   console.log(err);
+    // })
+
+
+    // Device.getDeviceWifi().startUpgradingFirmware()
+    //   .then(res => console.log('success:', res))
+    //   .catch(err => console.log('failed:', err))
+
+    // Device.getBluetoothLE()
+    // require("../resources/CheckSelf_Smoke.png")
+    // // 获取最新版本信息
+    // Service.smarthome.getLatestVersionV2(Device.deviceID).then(newest => {
+    //   // 获取当前版本信息
+    //   Device.getBluetoothLE().getVersion(current => {
+    //     // 比较版本
+    //     if (newest.version > current.version) {
+    //       console.log('需要升级文件');
+    //       // 下载升级文件
+    //       Host.file.downloadFile(newest.filePath, myfile)
+    //         .then(res => {
+    //           // nordic升级
+    //           NordicDFU.startDFU({
+
+    //             deviceAddress: "C3:53:C0:39:2F:99", // MAC address (Android) / UUID (iOS)
+    //             name: "Pilloxa Pillbox",
+    //             filePath: myfile
+    //           }).then(res => console.log("Transfer done:", res)).catch(console.log);
+    //         }).catch(err => { })
+    //     }
+    //   })
+    // })
+
+    // DFUEmitter.addlistener("DFUProgress", ({ percent, currentPart, partsTotal, avgSpeed, speed }) => {
+    //   console.log("DFU progress: " + percent + "%");
+    // });
+
+    // DFUEmitter.addListener("DFUStateChanged", ({ state }) => {
+    //   console.log("DFU State:", state);
+    //   if (state === "completed") {
+    //     Device.needUpgrade = false;
+    //     console.log("updated");
+    //   }
+    // })
 
   }
 
@@ -145,6 +228,14 @@ export default class MoreMenu extends React.Component {
   }
 
   render() {
+
+
+    this.commonSettingParams.extraOptions.option = {
+      option: "",
+      showUpgrade: true, // 跳转到 sdk 提供的固件升级页面
+      bleOtaAuthType: 1 // 蓝牙设备类型, 有哪些取值可以参考CommonSetting 注释
+    };
+
     const { navigation } = this.props;
     const { first_options, second_options } = SETTING_KEYS; // 一级页面和二级页面可选项的keys
     // 比如我想在一级页面按顺序显示「设备共享」「智能场景」和「固件升级」

@@ -223,6 +223,10 @@ export default class Home extends React.Component {
       return '烟雾报警'
     } else if (typeString == '02') {
       return '设备故障'
+    } else if (typeString == '03') {
+      return '设备自检'
+    } else if (typeString == '04') {
+      return '模拟报警'
     }
 
   }

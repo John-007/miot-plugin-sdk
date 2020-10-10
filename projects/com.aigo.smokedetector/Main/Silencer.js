@@ -401,7 +401,7 @@ export default class CheckSelf extends React.Component {
         bt.getService(UUID_SERVICE).getCharacteristic(UUID_BUTTON_READ_WRITE_NOTIFY).setNotify(true);
         let text = '5849414f59494e';
         bt.getService(UUID_SERVICE).getCharacteristic(UUID_LED_READ_WRITE).writeWithoutResponse(text);
-        this.addLog('自检发送完成');
+        this.addLog('消音发送完成');
     }
 
     // `Modal` 隐藏了，父组件必须要同步更新状态，但不必用 `setState` 触发 `render`

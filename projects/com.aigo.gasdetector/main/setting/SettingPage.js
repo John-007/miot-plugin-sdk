@@ -47,6 +47,22 @@ export default class SettingPage extends React.Component {
     this.initCommonSettingParams();
     this.initProtocol();
 
+
+    //获取自检提醒开关
+    Service.storage.getThirdUserConfigsForOneKey(Device.model, 101).then((res) => {
+
+      // alert(JSON.stringify(res))
+      console.log("res101", res)
+      this.setState({
+        switchOn: res['data'] === 'true' ? true : false
+      });
+
+    }).catch((error) => {
+      console.log("error", error)
+    })
+
+
+    //固件更新相关
     Service.smarthome.getLatestVersionV2(Device.deviceID).then((res) => {
 
       console.log(res);

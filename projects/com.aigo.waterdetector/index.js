@@ -9,7 +9,14 @@ import App from './main';
  * Package.disableAutoCheckUpgrade = false  表示会自动检测， 当发现需要强制升级时，进入插件会自动出现强制升级的弹窗,反之则不会
  * @type {boolean}
  */
-Package.disableAutoCheckUpgrade = false;
+Package.disableAutoCheckUpgrade = true;
 
-Package.entry(App, () => {});
+Package.BLEAutoCheckUpgradeOptions = {
+    enable: true,
+    redPoint: true,
+    alertDialog: true,
+    authType: 4 // 此处值需要开发者根据具体蓝牙设备类型来做相关修改
+};
+
+Package.entry(App, () => { });
 

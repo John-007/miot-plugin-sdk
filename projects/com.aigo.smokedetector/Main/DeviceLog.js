@@ -166,6 +166,15 @@ export default class DeviceLog extends React.Component {
         cellStatus = '烟雾报警';
         cellImageType += 3;
         break;
+      case '["02"]':
+        cellStatus = '设备故障';
+        break;
+      case '["03"]':
+        cellStatus = '设备自检';
+        break;
+      case '["04"]':
+        cellStatus = '模拟报警';
+        break;
       default: break;
     }
 
