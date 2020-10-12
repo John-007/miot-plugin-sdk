@@ -12,10 +12,10 @@ import App from './main';
 Package.disableAutoCheckUpgrade = true;
 
 Package.BLEAutoCheckUpgradeOptions = {
-    enable: true,
-    redPoint: true,
-    alertDialog: true,
-    authType: 4 // 此处值需要开发者根据具体蓝牙设备类型来做相关修改
+  enable: true,
+  redPoint: true,
+  alertDialog: true,
+  authType: 4 // 此处值需要开发者根据具体蓝牙设备类型来做相关修改
 };
 
 Package.entry(App, () => { });

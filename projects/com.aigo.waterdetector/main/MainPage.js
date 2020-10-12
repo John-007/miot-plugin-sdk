@@ -82,7 +82,7 @@ export default class MainPage extends React.Component {
     });
 
 
-    //监听：水浸事件
+    // 监听：水浸事件
     Device.getDeviceWifi().subscribeMessages("event.12").then((subcription) => {
       this.subcription = subcription;
       console.log('event.12成功添加监听');
@@ -91,7 +91,7 @@ export default class MainPage extends React.Component {
     });
 
 
-    //接收监听事件
+    // 接收监听事件
     this.deviceReceivedMessages = DeviceEvent.deviceReceivedMessages.addListener(
       (device, map, data) => {
 
@@ -103,7 +103,7 @@ export default class MainPage extends React.Component {
           let timeMap = this.formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
-            recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(data[0]['value'])
+            recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(data[0]['value']) }`
           });
         }
       });
@@ -140,7 +140,7 @@ export default class MainPage extends React.Component {
     // });
 
 
-    //属性的设置与获取
+    // 属性的设置与获取
     // Service.smarthome.setDeviceData({
     //   did: Device.deviceID,
     //   uid: Device.ownerId,
@@ -209,7 +209,7 @@ export default class MainPage extends React.Component {
 
     });
 
-    //结束
+    // 结束
 
 
 
@@ -301,7 +301,7 @@ export default class MainPage extends React.Component {
         let timeMap = this.formatDate(model['time']);
 
         this.setState({
-          recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
+          recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(model['value']) }`
         });
       }
 
@@ -327,18 +327,18 @@ export default class MainPage extends React.Component {
 
   subtitleString(typeStr) {
 
-    var typeString = typeStr
+    let typeString = typeStr;
     if (typeString.length > 2) {
 
-      typeString = typeString.substring(2, 4)
+      typeString = typeString.substring(2, 4);
     }
 
     if (typeString == '00') {
-      return '工作正常'
+      return '工作正常';
     } else if (typeString == '01') {
-      return '水浸报警'
+      return '水浸报警';
     } else if (typeString == '02') {
-      return '设备故障'
+      return '设备故障';
     }
 
   }
@@ -350,12 +350,12 @@ export default class MainPage extends React.Component {
       date = new Date(parseInt(date));
     }
 
-    let MM = (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
-    let hh = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`;
-    let mm = (date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes());
+    let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
+    let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
+    let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
+    let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
     // return MM + '月' + DD + '日' + '_' + hh + mm;
-    return { 'date': `${MM}月${DD}日`, 'time': hh + mm };
+    return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
   }
 
 
@@ -440,9 +440,9 @@ export default class MainPage extends React.Component {
 
     const { navigation } = this.props;
 
-    var cellStatusImage = '';
-    var cellLogIconImage = '';
-    var cellScenesIconImage = '';
+    let cellStatusImage = '';
+    let cellLogIconImage = '';
+    let cellScenesIconImage = '';
     let bgNormalImage = require('../resources/images/Home_BG_Normal.jpg');
 
     if (this.state.deviceStatus == '00') {
@@ -484,7 +484,7 @@ export default class MainPage extends React.Component {
           // height: null,
         }}
 
-          source={bgNormalImage}>
+        source={bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 

@@ -48,21 +48,21 @@ export default class SettingPage extends React.Component {
     this.initProtocol();
 
 
-    //获取自检提醒开关
+    // 获取自检提醒开关
     Service.storage.getThirdUserConfigsForOneKey(Device.model, 101).then((res) => {
 
       // alert(JSON.stringify(res))
-      console.log("res101", res)
+      console.log("res101", res);
       this.setState({
         switchOn: res['data'] === 'true' ? true : false
       });
 
     }).catch((error) => {
-      console.log("error", error)
-    })
+      console.log("error", error);
+    });
 
 
-    //固件更新相关
+    // 固件更新相关
     Service.smarthome.getLatestVersionV2(Device.deviceID).then((res) => {
 
       console.log(res);
@@ -73,8 +73,8 @@ export default class SettingPage extends React.Component {
 
 
     Device.getBluetoothLE().getVersion(true, true).then((version) => {
-      Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then(data => {
-        console.log('设备版本为：' + version + ', 解析结果：' + JSON.stringify(data));
+      Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then((data) => {
+        console.log(`设备版本为：${ version }, 解析结果：${ JSON.stringify(data) }`);
       });
       console.log(version);
     }).catch((err) => {
@@ -95,7 +95,7 @@ export default class SettingPage extends React.Component {
       });
     }).catch((error) => {
       // 错误信息上报， 通过米家app反馈可以上报到服务器
-      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${ JSON.stringify(error) }`);
     });
   }
 
@@ -163,18 +163,18 @@ export default class SettingPage extends React.Component {
           value={this.state.switchOn}
           // value={false}
           onValueChange={(value) => {
-            console.log(value)
+            console.log(value);
             // this.setState({
             //   switchOn: value
             // });
             Service.storage.setThirdUserConfigsForOneKey(Device.model, 101, value).then((res) => {
-              console.log("res", res)
+              console.log("res", res);
               this.setState({
                 switchOn: value
               });
             }).catch((error) => {
-              console.log("error", error)
-            })
+              console.log("error", error);
+            });
           }}
         />
 

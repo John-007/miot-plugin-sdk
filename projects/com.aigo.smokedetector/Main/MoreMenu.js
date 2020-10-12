@@ -49,7 +49,7 @@ export default class MoreMenu extends React.Component {
     // })
 
 
-    console.log(this.props.navigation.state.params.checkSelfSwitchOn)
+    console.log(this.props.navigation.state.params.checkSelfSwitchOn);
 
     this._menuData = [
 
@@ -75,22 +75,22 @@ export default class MoreMenu extends React.Component {
 
   UNSAFE_componentWillMount() {
 
-    //获取自检提醒开关
+    // 获取自检提醒开关
     Service.storage.getThirdUserConfigsForOneKey(Device.model, 101).then((res) => {
 
       // alert(JSON.stringify(res))
 
-      console.log("res101", res)
+      console.log("res101", res);
       this.setState({
         switchOn: res['data'] === 'true' ? true : false
       });
 
     }).catch((error) => {
-      console.log("error", error)
-    })
+      console.log("error", error);
+    });
 
 
-    //请求：第一条事件
+    // 请求：第一条事件
     Service.smarthome.getDeviceData({
       did: Device.deviceID,
       type: "prop",
@@ -103,11 +103,11 @@ export default class MoreMenu extends React.Component {
       console.log(res);
       const model = res[0];
       if (model.hasOwnProperty("value")) {
-        var power = model['value'].substring(2, 4)
+        let power = model['value'].substring(2, 4);
         console.log(this.hex2int(power));
         // var powerInt = this.hex2int(power)
         this.setState({
-          powerString: this.hex2int(power) + '%'
+          powerString: `${ this.hex2int(power) }%`
         });
       }
 
@@ -221,7 +221,7 @@ export default class MoreMenu extends React.Component {
       a[i] = code;
     }
 
-    return a.reduce(function (acc, c) {
+    return a.reduce(function(acc, c) {
       acc = 16 * acc + c;
       return acc;
     }, 0);
@@ -293,18 +293,18 @@ export default class MoreMenu extends React.Component {
           value={this.state.switchOn}
           // value={false}
           onValueChange={(value) => {
-            console.log(value)
+            console.log(value);
             // this.setState({
             //   switchOn: value
             // });
             Service.storage.setThirdUserConfigsForOneKey(Device.model, 101, value).then((res) => {
-              console.log("res", res)
+              console.log("res", res);
               this.setState({
                 switchOn: value
               });
             }).catch((error) => {
-              console.log("error", error)
-            })
+              console.log("error", error);
+            });
           }}
         />
 

@@ -90,7 +90,7 @@ function createRootStack(initPage) {
         return {
           header: <NavigationBar {...titleProps} />
         };
-      },
+      }
       // // 控制页面切换的动画
       // transitionConfig: () => ({
       //   screenInterpolator: interpolator

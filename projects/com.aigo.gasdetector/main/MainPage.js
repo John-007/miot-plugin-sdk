@@ -83,20 +83,20 @@ export default class MainPage extends React.Component {
       console.log('user agree protocol...');
     });
 
-    //获取自检提醒开关
+    // 获取自检提醒开关
     Service.storage.getThirdUserConfigsForOneKey(Device.model, 101).then((res) => {
 
       if (res.hasOwnProperty('data') && res['data'] === 'true') {
-        this.judgeCheckSelf()
+        this.judgeCheckSelf();
       }
 
     }).catch((error) => {
-      console.log("error", error)
-    })
+      console.log("error", error);
+    });
 
 
 
-    //监听：燃气事件
+    // 监听：燃气事件
     Device.getDeviceWifi().subscribeMessages("event.14").then((subcription) => {
       this.subcription = subcription;
     }).catch((error) => {
@@ -104,7 +104,7 @@ export default class MainPage extends React.Component {
     });
 
 
-    //接收监听事件
+    // 接收监听事件
     this.deviceReceivedMessages = DeviceEvent.deviceReceivedMessages.addListener(
       (device, map, data) => {
         console.log(data);
@@ -115,7 +115,7 @@ export default class MainPage extends React.Component {
           let timeMap = this.formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
-            recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(data[0]['value'])
+            recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(data[0]['value']) }`
           });
 
         }
@@ -153,7 +153,7 @@ export default class MainPage extends React.Component {
       this.alertLegalInformationAuthorization();
 
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${ JSON.stringify(error) }`);
     });
 
 
@@ -176,7 +176,7 @@ export default class MainPage extends React.Component {
         let timeMap = this.formatDate(model['time']);
 
         this.setState({
-          recentLog: this.judgeDate(timeMap['date']) + '  ' + timeMap['time'] + '  ' + this.subtitleString(model['value'])
+          recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(model['value']) }`
         });
 
       }
@@ -188,36 +188,36 @@ export default class MainPage extends React.Component {
 
   judgeCheckSelf() {
 
-    //获取上次自检时间
+    // 获取上次自检时间
     Service.storage.getThirdUserConfigsForOneKey(Device.model, 100).then((res) => {
 
       // alert(JSON.stringify(res))
 
-      console.log("res100", res)
+      console.log("res100", res);
 
       if (res.hasOwnProperty('data')) {
 
 
-        var date1 = new Date(Number(res['data']));
-        var date2 = new Date();
-        var date = (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24);
+        let date1 = new Date(Number(res['data']));
+        let date2 = new Date();
+        let date = (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24);
 
         if (date > 30) {
-          //弹窗提醒用户自检
+          // 弹窗提醒用户自检
 
           this.setState({
             visibleRemindCheckSelf: true
           });
 
         } else {
-          console.log("30天内自检过")
+          console.log("30天内自检过");
         }
 
 
       }
     }).catch((error) => {
-      console.log("error", error)
-    })
+      console.log("error", error);
+    });
   }
 
   alertCheckSelf() {
@@ -234,11 +234,11 @@ export default class MainPage extends React.Component {
       }).catch((error) => {
         console.log(error);
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
       });
     }).catch((error) => {
       console.log(error);
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
     });
 
   }
@@ -258,11 +258,11 @@ export default class MainPage extends React.Component {
       }).catch((error) => {
         console.log(error);
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
       });
     }).catch((error) => {
       console.log(error);
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
     });
 
   }
@@ -281,26 +281,26 @@ export default class MainPage extends React.Component {
 
   subtitleString(typeStr) {
 
-    var typeString = typeStr
+    let typeString = typeStr;
     if (typeString.length > 2) {
 
-      typeString = typeString.substring(2, 4)
+      typeString = typeString.substring(2, 4);
     }
 
     if (typeString == '00') {
-      return '工作正常'
+      return '工作正常';
     } else if (typeString == '01') {
-      return '燃气泄漏报警'
+      return '燃气泄漏报警';
     } else if (typeString == '02') {
-      return '设备故障'
+      return '设备故障';
     } else if (typeString == '03') {
-      return '传感器寿命到期'
+      return '传感器寿命到期';
     } else if (typeString == '04') {
-      return '传感器预热'
+      return '传感器预热';
     } else if (typeString == '05') {
-      return '设备自检'
+      return '设备自检';
     } else if (typeString == '06') {
-      return '模拟报警'
+      return '模拟报警';
     }
 
   }
@@ -312,12 +312,12 @@ export default class MainPage extends React.Component {
       date = new Date(parseInt(date));
     }
 
-    let MM = (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
-    let hh = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`;
-    let mm = (date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes());
+    let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
+    let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
+    let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
+    let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
     // return MM + '月' + DD + '日' + '_' + hh + mm;
-    return { 'date': `${MM}月${DD}日`, 'time': hh + mm };
+    return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
   }
 
 
@@ -429,9 +429,9 @@ export default class MainPage extends React.Component {
 
     const { navigation } = this.props;
 
-    var cellStatusImage = require('../resources/images/Home_StatusNormal.png');
-    var cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
-    var cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
+    let cellStatusImage = require('../resources/images/Home_StatusNormal.png');
+    let cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+    let cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
     let bgNormalImage = require('../resources/images/Home_BG_Normal.jpg');
     let bgWarningImage = require('../resources/images/Home_BG_Warning.png');
 
@@ -486,7 +486,7 @@ export default class MainPage extends React.Component {
           // width: null,
           // height: null,
         }}
-          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
+        source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 
@@ -541,12 +541,12 @@ export default class MainPage extends React.Component {
                   visibleRemindCheckSelf: false
                 });
 
-                //保存当前自检时间
+                // 保存当前自检时间
                 Service.storage.setThirdUserConfigsForOneKey(Device.model, 100, Number(new Date())).then((res) => {
-                  console.log("res", res)
+                  console.log("res", res);
                 }).catch((error) => {
-                  console.log("error", error)
-                })
+                  console.log("error", error);
+                });
               }
             }
           ]}
@@ -601,10 +601,10 @@ const styles = StyleSheet.create({
 
 
 
-    // <View style={styles.container}>
-      //   <Separator />
-      //   <View style={{ marginTop: 20, justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-      //     <Image
-      //       style={{ width: 350, height: 200 }}
-      //       source={require('../resources/images/welcome.png')} />
-      //   </View>
+// <View style={styles.container}>
+//   <Separator />
+//   <View style={{ marginTop: 20, justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+//     <Image
+//       style={{ width: 350, height: 200 }}
+//       source={require('../resources/images/welcome.png')} />
+//   </View>
