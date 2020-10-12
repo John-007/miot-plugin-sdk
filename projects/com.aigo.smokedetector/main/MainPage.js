@@ -15,20 +15,11 @@ import Card from 'miot/ui/Card';
 import { Device, Package, Host, Entrance, Service, DeviceEvent, PackageEvent } from 'miot';
 import NavigationBar from 'miot/ui/NavigationBar';
 
-// logo页面
-const radiusValue = 10;
 
-
-
-
-export default class Home extends React.Component {
-
-  // static navigationOptions = ({ navigation }) => {
-  //   return {
-
-  //     headerTransparent: true
-  //   };
-  // };
+/**
+ * 蓝牙模块 通用api使用
+ */
+export default class MainPage extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { titleProps } = navigation.state.params || {};
     if (!titleProps) return { header: null };
@@ -231,11 +222,11 @@ export default class Home extends React.Component {
 
   }
 
-  formatDate(date) {
+  formatDate(rawDate) {
 
-    var date = new Date(parseInt(date) * 1000);
+    let date = new Date(parseInt(rawDate) * 1000);
     if (date.length == 13) {
-      date = new Date(parseInt(date));
+      date = new Date(parseInt(rawDate));
     }
 
     let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
@@ -356,27 +347,27 @@ export default class Home extends React.Component {
     let cellStatusImage = '';
     let cellLogIconImage = '';
     let cellScenesIconImage = '';
-    let bgNormalImage = require('../resources/Home_BG_Normal.jpg');
-    let bgWarningImage = require('../resources/Home_BG_Warning.png');
+    let bgNormalImage = require('../resources/images/Home_BG_Normal.jpg');
+    let bgWarningImage = require('../resources/images/Home_BG_Warning.png');
 
 
     if (this.state.deviceStatus == '00') {
 
-      cellStatusImage = require('../resources/Home_StatusNormal.png');
-      cellLogIconImage = require('../resources/Home_LogIcon_Normal.png');
-      cellScenesIconImage = require('../resources/Home_Scenes_Normal.png');
+      cellStatusImage = require('../resources/images/Home_StatusNormal.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
 
     } else if (this.state.deviceStatus == '01') {
 
-      cellStatusImage = require('../resources/Home_StatusAlarm.png');
-      cellLogIconImage = require('../resources/Home_LogIcon_Alarm.png');
-      cellScenesIconImage = require('../resources/Home_Scenes_Alarm.png');
+      cellStatusImage = require('../resources/images/Home_StatusAlarm.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Alarm.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Alarm.png');
 
     } else if (this.state.deviceStatus == '02') {
 
-      cellStatusImage = require('../resources/Home_StatusBreakdown.png');
-      cellLogIconImage = require('../resources/Home_LogIcon_Normal.png');
-      cellScenesIconImage = require('../resources/Home_Scenes_Normal.png');
+      cellStatusImage = require('../resources/images/Home_StatusBreakdown.png');
+      cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+      cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
     }
 
     return (
@@ -500,3 +491,6 @@ const styles = StyleSheet.create({
     color: '#333'
   }
 });
+
+
+

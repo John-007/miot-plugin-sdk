@@ -50,20 +50,39 @@ const CheckStatusView = (props) => {
           height: 100
           // marginRight: 10
         }}
-        source={require("../resources/CheckSelf_Smoke.png")}
+        source={require("../../resources/images/CheckSelf_Smoke.png")}
         resizeMode="contain"
       />
       <Text
         style={{
+          // justifyContent: "center",
 
+          // width: 240,
+          // height: 240,
           marginTop: 20,
           fontSize: 16
-
+          // color: '#32BAC0'
         }}
         numberOfLines={0}
         ellipsizeMode="tail"
         accessible={false}
       >{props.text}</Text>
+      {/* <Text
+        style={{
+          // justifyContent: "center",设备自检中，请稍候...
+          checkStatus
+          // width: 240,
+          // height: 240,
+          fontSize: 44,
+          color: '#32BAC0'
+        }}
+        numberOfLines={0}
+        ellipsizeMode="tail"
+        accessible={false}
+      >
+        {props.text}
+      </Text> */}
+
 
     </View>
   );
@@ -87,6 +106,7 @@ export default class CheckSelf extends React.Component {
 
   UNSAFE_componentWillMount() {
 
+    console.log(bt.UUID);
   }
 
   componentDidMount() {
@@ -209,9 +229,9 @@ export default class CheckSelf extends React.Component {
         });
       }
       Device.getBluetoothLE().getVersion(true, true).then((version) => {
-        // Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then(data => {
-        //   this.addLog('设备版本为：' + version + ', 解析结果：' + JSON.stringify(data));
-        // });
+        Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then((data) => {
+          this.addLog(`设备版本为：${ version }, 解析结果：${ JSON.stringify(data) }`);
+        });
       }).catch((err) => {
         // console.log(err, '-------');
       });
@@ -232,7 +252,7 @@ export default class CheckSelf extends React.Component {
         });
 
         console.log('jl--连接成功');
-        this.setState({ checkStatus: '已连接,请点击“消音”按钮', buttonVisible: true });
+        this.setState({ checkStatus: '已连接,请点击“开始自检”按钮', buttonVisible: true });
       }
 
 
@@ -264,10 +284,10 @@ export default class CheckSelf extends React.Component {
       console.log('bluetoothSeviceDiscoverFailed', data);
       //   this.setState({ buttonText: 'bluetoothSeviceDiscoverFailed :' + data });
     });
-    // this._s5 = BluetoothEvent.bluetoothCharacteristicDiscoverFailed.addListener((blut, data) => {
-    //   console.log('bluetoothCharacteristicDiscoverFailed', data);
-    //   //   this.setState({ buttonText: 'bluetoothCharacteristicDiscoverFailed:' + data });
-    // });
+    this._s5 = BluetoothEvent.bluetoothCharacteristicDiscoverFailed.addListener((blut, data) => {
+      console.log('bluetoothCharacteristicDiscoverFailed', data);
+      //   this.setState({ buttonText: 'bluetoothCharacteristicDiscoverFailed:' + data });
+    });
     this._s6 = BluetoothEvent.bluetoothConnectionStatusChanged.addListener((blut, isConnect) => {
       console.log('bluetoothConnectionStatusChanged', blut, isConnect);
       if (bt.mac === blut.mac) {
@@ -355,9 +375,9 @@ export default class CheckSelf extends React.Component {
 
       // this.addLog('JLDebug ----- peripheralID：' + mac);
       bt.connect(4, { did: Device.deviceID, timeout: 12000 })
-      // bt.connect(4, { peripheralID: '2269360F-2F82-8DD9-AB33-4154EDDACA88', timeout: 12000 })
-      // bt.connect(4, { peripheralID: mac, timeout: 120000 })
-      // bt.connect(4)
+        // bt.connect(4, { peripheralID: '2269360F-2F82-8DD9-AB33-4154EDDACA88', timeout: 12000 })
+        // bt.connect(4, { peripheralID: mac, timeout: 120000 })
+        // bt.connect(4)
         .then((ble) => {
 
           bt.startDiscoverServices();
@@ -368,8 +388,6 @@ export default class CheckSelf extends React.Component {
           this.setState({ checkStatus: '连接失败，请点击返回重试' });
           this.addLog(`JLDebug ----- 连接err${ JSON.stringify(err) }`);
         });
-
-
     }
   }
 
@@ -397,11 +415,52 @@ export default class CheckSelf extends React.Component {
       this.addLog('蓝牙尚未连接或者service未发现');
       return;
     }
+    // if (!this.state.testCharNotify) {
+    //   this.addLog('蓝牙通知尚未开启，请点击 开启数据交互 之后尝试写入测试数据');
+    //   return;
+    // }
+    // let text = this.state.testEncrptText;
+    // if (text === '' || text === undefined) {
+    //   text = '01010101';
+    // }
+
 
     bt.getService(UUID_SERVICE).getCharacteristic(UUID_BUTTON_READ_WRITE_NOTIFY).setNotify(true);
-    let text = '5849414f59494e';
+
+
+
+
+    // let text = 'ZIJIAN';
+    let text = '5A494A49414E';
     bt.getService(UUID_SERVICE).getCharacteristic(UUID_LED_READ_WRITE).writeWithoutResponse(text);
-    this.addLog('消音发送完成');
+    this.addLog('自检发送完成');
+    //  -1: 自动判断，0: 普通小米蓝牙协议设备，1: 安全芯片小米蓝牙设备（比如锁类产品），2: 分享的安全芯片小米蓝牙设备，3: 普通的BLE蓝牙设备(无 mibeacon，无小米 FE95 service)， 4: Standard Auth 标准蓝牙认证协议(通常2019.10.1之后上线的新设备，使用的都是该蓝牙协议，具体详情可以与设备端开发沟通)
+    // if (this.state.scType === 0) {
+    //   this.addLog('使用Token加密传输，' + text);
+    //   bt.securityLock.encryptMessageWithToken(text).then(res => {
+    //     const { result } = res;
+    //     bt.getService(UUID_SERVICE).getCharacteristic(UUID_LED_READ_WRITE).writeWithoutResponse(result);
+    //   })
+    //     .then(res => {
+    //       this.addLog('write res: ' + JSON.stringify(res));
+    //     })
+    //     .catch(err => {
+    //       this.addLog('write error: ' + JSON.stringify(err));
+    //     });
+    // }
+    // else {
+    //   this.addLog('使用Session加密传输，' + text);
+    //   bt.securityLock.encryptMessage(text)
+    //     .then(hex => {
+    //       bt.getService(UUID_SERVICE).getCharacteristic(UUID_LED_READ_WRITE).writeWithoutResponse(hex);
+    //     })
+    //     .then(res => {
+    //       this.addLog('write res: ' + JSON.stringify(res));
+    //     })
+    //     .catch(err => {
+    //       this.addLog('write error: ' + JSON.stringify(err));
+    //     });
+    // }
   }
 
   // `Modal` 隐藏了，父组件必须要同步更新状态，但不必用 `setState` 触发 `render`
@@ -469,7 +528,7 @@ export default class CheckSelf extends React.Component {
                   // display: this.state.buttonVisible
                   display: false
                 }}
-                title={'消音'}
+                title={'开始自检'}
                 color={'#32BAC0'}
                 onPress={() => {
                   this.sendTestText();
@@ -481,31 +540,47 @@ export default class CheckSelf extends React.Component {
               </View>
             )
           }
-          {/* <Button
-            style={{
-              // display: this.state.buttonVisible
-              display: false
-            }}
-            title={'开始自检'}
-            color={'#32BAC0'}
-            onPress={() => {
-              this.sendTestText();
-              this.setState({ visible0: true });
-            }} /> */}
+
         </View>
 
         <AbstractDialog
           visible={this.state.visible0}
-          title={'消音命令发送完成'}
+          title={'有蜂鸣声吗?'}
           buttons={[
             {
-              text: '好',
+              text: '没有',
+              style: { color: '#757575' },
+              callback: (_) => {
+
+                this.setState({
+                  visible0: false
+                });
+                navigation.navigate('checkSelfDone', { title: '自检失败', status: false, navKey: this.props.navigation.state.key });
+              }
+            },
+            {
+              text: '有',
               style: { color: '#32BAC0' },
               callback: (_) => {
                 this.setState({
                   visible0: false
                 });
-                // navigation.navigate('checkSelfDone', { title: '自检成功', status: true, navKey: this.props.navigation.state.key });
+
+                // 保存当前自检时间
+                let date = new Date();
+                let year = date.getFullYear().toString();
+                let month = (date.getMonth() + 1).toString();
+                let day = date.getDate().toString();
+
+                console.log(`${ year }年${ month }月${ day }日`);
+
+                Service.storage.setThirdUserConfigsForOneKey(Device.model, 100, month).then((res) => {
+                  console.log("res", res);
+                }).catch((error) => {
+                  console.log("error", error);
+                });
+
+                navigation.navigate('checkSelfDone', { title: '自检成功', status: true, navKey: this.props.navigation.state.key });
               }
             }
           ]}
@@ -519,6 +594,7 @@ export default class CheckSelf extends React.Component {
               justifyContent: 'center'
             }}
           >
+            {/* <Text>有蜂鸣声吗</Text> */}
           </View>
         </AbstractDialog>
 

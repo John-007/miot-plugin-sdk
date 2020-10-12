@@ -32,7 +32,8 @@ export default class SettingPage extends React.Component {
       ],
       extraOptions: {
         option: "",
-        showUpgrade: true
+        showUpgrade: true,
+        bleOtaAuthType: 4
       }
     };
   }
@@ -49,7 +50,7 @@ export default class SettingPage extends React.Component {
       });
     }).catch((error) => {
       // 错误信息上报， 通过米家app反馈可以上报到服务器
-      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${JSON.stringify(error)}`);
     });
   }
 
@@ -95,7 +96,7 @@ export default class SettingPage extends React.Component {
               this.openCountDownPage();
             }}
           />
-          <View style={{ height: 8 }}/>
+          <View style={{ height: 8 }} />
 
           <CommonSetting
             navigation={this.props.navigation}

@@ -1,8 +1,10 @@
 {
-    "name": "project-com-aigo-smokedetector",
-    "version": "1.0.40",
-    "scripts": {
-        "start": "node ../../bin/runProject.js"
-    },
-    "dependencies": {}
-}
+        "name": "project-com-aigo-smokedetector",
+        "version": "1.0.42",
+        "scripts":{
+            "start":"node ../../bin/runProject.js"
+        },
+        "dependencies":{
+            
+        }
+    }

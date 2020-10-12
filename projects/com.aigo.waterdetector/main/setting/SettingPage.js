@@ -31,16 +31,27 @@ export default class SettingPage extends React.Component {
 
     ];
   }
-
   initCommonSettingParams() {
     this.commonSettingParams = {
-
+      firstOptions: [
+        SETTING_KEYS.first_options.SHARE,
+        SETTING_KEYS.first_options.IFTTT,
+        SETTING_KEYS.first_options.FIRMWARE_UPGRADE,
+        SETTING_KEYS.first_options.MORE
+      ],
+      secondOptions: [
+        SETTING_KEYS.second_options.TIMEZONE,
+        SETTING_KEYS.second_options.SECURITY
+      ],
       extraOptions: {
         option: "",
-        showUpgrade: true
+        showUpgrade: true, // 跳转到 sdk 提供的固件升级页面
+        bleOtaAuthType: 4 // 蓝牙设备类型, 有哪些取值可以参考CommonSetting 注释
       }
     };
   }
+
+
 
   UNSAFE_componentWillMount() {
     this.initCommonSettingParams();
@@ -63,7 +74,7 @@ export default class SettingPage extends React.Component {
         console.log(this.hex2int(power));
         // var powerInt = this.hex2int(power)
         this.setState({
-          powerString: `${ this.hex2int(power) }%`
+          powerString: `${this.hex2int(power)}%`
         });
       }
 
@@ -84,7 +95,7 @@ export default class SettingPage extends React.Component {
       a[i] = code;
     }
 
-    return a.reduce(function(acc, c) {
+    return a.reduce(function (acc, c) {
       acc = 16 * acc + c;
       return acc;
     }, 0);
@@ -97,7 +108,7 @@ export default class SettingPage extends React.Component {
       });
     }).catch((error) => {
       // 错误信息上报， 通过米家app反馈可以上报到服务器
-      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${JSON.stringify(error)}`);
     });
   }
 
@@ -124,6 +135,7 @@ export default class SettingPage extends React.Component {
     // 然后我想在「更多设置」二级页面显示「设备时区」
     const secondOptions = [
     ];
+
 
     return (
       <ScrollView
@@ -167,6 +179,7 @@ export default class SettingPage extends React.Component {
           navigation={this.props.navigation} // 插件的路由导航，必填！！！
           firstOptions={firstOptions}
           secondOptions={secondOptions}
+          extraOptions={this.commonSettingParams.extraOptions}
           containerStyle={{ marginTop: 24 }}
         />
       </ScrollView>

@@ -36,9 +36,20 @@ export default class SettingPage extends React.Component {
   initCommonSettingParams() {
     this.commonSettingParams = {
 
+      firstOptions: [
+        SETTING_KEYS.first_options.SHARE,
+        SETTING_KEYS.first_options.IFTTT,
+        SETTING_KEYS.first_options.FIRMWARE_UPGRADE,
+        SETTING_KEYS.first_options.MORE
+      ],
+      secondOptions: [
+        SETTING_KEYS.second_options.TIMEZONE,
+        SETTING_KEYS.second_options.SECURITY
+      ],
       extraOptions: {
         option: "",
-        showUpgrade: true
+        showUpgrade: true,
+        bleOtaAuthType: 4
       }
     };
   }
@@ -74,7 +85,7 @@ export default class SettingPage extends React.Component {
 
     Device.getBluetoothLE().getVersion(true, true).then((version) => {
       Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then((data) => {
-        console.log(`设备版本为：${ version }, 解析结果：${ JSON.stringify(data) }`);
+        console.log(`设备版本为：${version}, 解析结果：${JSON.stringify(data)}`);
       });
       console.log(version);
     }).catch((err) => {
@@ -95,7 +106,7 @@ export default class SettingPage extends React.Component {
       });
     }).catch((error) => {
       // 错误信息上报， 通过米家app反馈可以上报到服务器
-      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${JSON.stringify(error)}`);
     });
   }
 
@@ -181,11 +192,17 @@ export default class SettingPage extends React.Component {
 
         <View style={[styles.blank, { borderTopWidth: 0 }]} />
 
-        <CommonSetting
+        {/* <CommonSetting
           navigation={this.props.navigation} // 插件的路由导航，必填！！！
           firstOptions={firstOptions}
           secondOptions={secondOptions}
           containerStyle={{ marginTop: 24 }}
+        /> */}
+        <CommonSetting
+          navigation={this.props.navigation}
+          firstOptions={this.commonSettingParams.firstOptions}
+          secondOptions={this.commonSettingParams.secondOptions}
+          extraOptions={this.commonSettingParams.extraOptions}
         />
       </ScrollView>
     );

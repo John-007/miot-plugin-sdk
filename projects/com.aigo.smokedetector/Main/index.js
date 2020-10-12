@@ -1,16 +1,17 @@
-
 import React from 'react';
-import { Entrance, Package } from 'miot';
-import NavigationBar from 'miot/ui/NavigationBar';
+import { Package, Entrance, Service, Device, Host, PackageEvent } from 'miot';
 import { createStackNavigator } from 'react-navigation';
+import { FirmwareUpgrade, MoreSetting } from 'miot/ui/CommonSetting';
 
-// 首页引用
-import Home from './Home';
+import MainPage from './MainPage';
+import SettingPage from './setting/SettingPage';
+import ScenePage from './scene/ScenePage';
+import NavigationBar from 'miot/ui/NavigationBar';
+import Protocol from '../resources/protocol';
+import CheckSelf from './checkself/CheckSelf';
+import CheckSelfDone from './checkself/CheckSelfDone';
+import Silencer from './checkself/Silencer';
 import DeviceLog from './DeviceLog';
-import MoreMenu from './MoreMenu';
-import CheckSelf from './CheckSelf';
-import CheckSelfDone from './CheckSelfDone';
-import Silencer from './Silencer';
 
 export default class App extends React.Component {
 
@@ -29,6 +30,9 @@ export default class App extends React.Component {
       case Entrance.Main:
         this.initPage = 'home';
         break;
+      case Entrance.Scene:
+        this.initPage = 'ScenePage';
+        break;
       default:
         this.initPage = 'home';
         break;
@@ -42,7 +46,7 @@ export default class App extends React.Component {
      * 具体文档可以查看：
      * https://iot.mi.com/new/doc/app-development/extension-development/law-info.html
      */
-    // this.checkToAlertLegalInformationAuthorization();
+    this.checkToAlertLegalInformationAuthorization();
   }
 
   render() {
@@ -50,16 +54,71 @@ export default class App extends React.Component {
     return <RootStack />;
   }
 
+  /**
+   * 检查是否需要弹出隐私协议弹出
+   */
+  checkToAlertLegalInformationAuthorization() {
+    Service.smarthome.batchGetDeviceDatas([{ did: Device.deviceID, props: ["prop.s_auth_config"] }]).then((res) => {
+      let alreadyAuthed = true;
+      let result = res[Device.deviceID];
+      let config;
+      if (result && result['prop.s_auth_config']) {
+        config = result['prop.s_auth_config'];
+      }
+      if (config) {
+        try {
+          let authJson = JSON.parse(config);
+          alreadyAuthed = authJson.privacyAuthed && true;
+        } catch (err) {
+          // json解析失败，不处理
+        }
+      } else {
+        alreadyAuthed = false;
+      }
+      if (alreadyAuthed) {
+        return;
+      }
+      // 需要弹出隐私弹出
+      this.alertLegalInformationAuthorization();
+
+    }).catch((error) => {
+      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${ JSON.stringify(error) }`);
+    });
+  }
+
+  /**
+   * 弹出隐私弹窗
+   */
+  alertLegalInformationAuthorization() {
+
+    Protocol.getProtocol().then((protocol) => {
+      Host.ui.alertLegalInformationAuthorization(protocol).then((res) => {
+        if (res === 'ok' || res === true || res === 'true') {
+          Service.smarthome.batchSetDeviceDatas([{ did: Device.deviceID, props: { "prop.s_auth_config": JSON.stringify({ 'privacyAuthed': true }) } }]);
+          PackageEvent.packageAuthorizationAgreed.emit();
+        }
+      }).catch((error) => {
+        // 打开弹出过程中出现了意外错误, 进行上报
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
+      });
+    }).catch((error) => {
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
+    });
+
+  }
 }
 
 function createRootStack(initPage) {
   return createStackNavigator(
     {
+      home: MainPage,
+      moreMenu: SettingPage,
+      ScenePage: ScenePage,
+      FirmwareUpgrade: FirmwareUpgrade,
+      MoreSetting: MoreSetting,
       deviceLog: DeviceLog,
-      moreMenu: MoreMenu,
       checkSelf: CheckSelf,
       checkSelfDone: CheckSelfDone,
-      home: Home,
       silencer: Silencer
     },
     {
@@ -90,110 +149,94 @@ function createRootStack(initPage) {
         return {
           header: <NavigationBar {...titleProps} />
         };
-      }
-      // // 控制页面切换的动画
-      // transitionConfig: () => ({
-      //   screenInterpolator: interpolator
-      // })
+      },
+      // 控制页面切换的动画
+      transitionConfig: () => ({
+        screenInterpolator: interpolator
+      })
     }
   );
 }
 
-// const RootStack = createStackNavigator(
-//   {
+function interpolator(props) {
+  const { layout, position, scene } = props;
 
-//     deviceLog: DeviceLog,
-//     moreMenu: MoreMenu,
-//     checkSelf: CheckSelf,
-//     checkSelfDone: CheckSelfDone,
-//     home: Home
-//     // home: {
-//     //   screen: Home,
-//     //   navigationOptions: ({ navigation }) => ({
+  if (!layout.isMeasured) {
+    return (props) => {
+      const { navigation, scene } = props;
 
-//     //     // headerBackImage: require("../resources/back.png"),
-//     //     // // headerBackImage: <BackImage />,
+      const focused = navigation.state.index === scene.index;
+      const opacity = focused ? 1 : 0;
+      // If not focused, move the scene far away.
+      const translate = focused ? 0 : 1000000;
+      return {
+        opacity,
+        transform: [{ translateX: translate }, { translateY: translate }]
+      };
+    };
+  }
+  const interpolate = (props) => {
+    const { scene, scenes } = props;
+    const index = scene.index;
+    const lastSceneIndexInScenes = scenes.length - 1;
+    const isBack = !scenes[lastSceneIndexInScenes].isActive;
 
-//     //     header: <NavigationBar
-//     //       left={[
-//     //         {
-//     //           key: NavigationBar.ICON.BACK,
-//     //           // key: '../resources/back.png',
-//     //           onPress: (_) => Package.exit()
-//     //         }
-//     //       ]}
-//     //       right={[
-//     //         {
-//     //           key: NavigationBar.ICON.MORE,
-//     //           // showDot: this.state.showDot,
-//     //           onPress: (_) => navigation.navigate('moreMenu', { title: '设置' })
-//     //         }
-//     //       ]}
-//     //       // title="烟雾传感器"
-//     //       backgroundColor="#F7F7F7"
-//     //     // backgroundColor="transparent"
-//     //     // translusent="true"
-//     //     // subtitle='副标题'
-//     //     // onPressTitle={_ => console.log('onPressTitle')}
-//     //     />,
-//     //     headerTransparent: true
-//     //   })
-//     // }
-//   },
+    if (isBack) {
+      const currentSceneIndexInScenes = scenes.findIndex((item) => item === scene);
+      const targetSceneIndexInScenes = scenes.findIndex((item) => item.isActive);
+      const targetSceneIndex = scenes[targetSceneIndexInScenes].index;
+      const lastSceneIndex = scenes[lastSceneIndexInScenes].index;
 
-//   {
-//     initialRouteName: 'home',
-//     navigationOptions: ({ navigation }) => {
+      if (
+        index !== targetSceneIndex &&
+        currentSceneIndexInScenes === lastSceneIndexInScenes
+      ) {
+        return {
+          first: Math.min(targetSceneIndex, index - 1),
+          last: index + 1
+        };
+      } else if (
+        index === targetSceneIndex &&
+        currentSceneIndexInScenes === targetSceneIndexInScenes
+      ) {
+        return {
+          first: index - 1,
+          last: Math.max(lastSceneIndex, index + 1)
+        };
+      } else if (
+        index === targetSceneIndex ||
+        currentSceneIndexInScenes > targetSceneIndexInScenes
+      ) {
+        return null;
+      } else {
+        return { first: index - 1, last: index + 1 };
+      }
+    } else {
+      return { first: index - 1, last: index + 1 };
+    }
+  };
 
-//       let { titleProps, title } = navigation.state.params || {};
-//       // 如果 titleProps和title 都为空， 则不显示页面header部分
-//       if (!titleProps && !title) return { header: null };
+  if (!interpolate) return { opacity: 0 };
+  const p = interpolate(props);
+  if (!p) return;
+  const { first, last } = p;
+  const index = scene.index;
+  const opacity = position.interpolate({
+    inputRange: [first, first + 0.01, index, last - 0.01, last],
+    outputRange: [0, 1, 1, 0.85, 0]
+  });
 
-//       // 如果titleProps为空， 则title肯定不为空， 初始化titleProps并赋值title
-//       if (!titleProps) {
-//         titleProps = {
-//           title: title
-//         };
-//       }
-//       if (!titleProps.left) {
-//         titleProps.left = [
-//           {
-//             key: NavigationBar.ICON.BACK,
-//             onPress: () => {
-//               navigation.goBack();
-//             }
-//           }
-//         ];
-//       }
-//       return {
-//         header: <NavigationBar {...titleProps} />
-//       };
+  const width = layout.initWidth;
+  const translateX = position.interpolate({
+    inputRange: [first, index, last],
+    // outputRange: false ? [-width, 0, width * 0.3] : [width, 0, width * -0.3]
+    outputRange: [width, 0, width * -0.3]
+  });
+  const translateY = 0;
 
-//       // return {
-//       //   header: <NavigationBar
-//       //     title={navigation.state.params ? navigation.state.params.title : ''}
-
-//       //     left={
-//       //       [
-//       //         {
-//       //           key: NavigationBar.ICON.BACK,
-//       //           onPress: (_) => navigation.goBack()
-//       //         }
-//       //       ]}
-//       //   />
-//       // };
-//     }
-//   }
-
-// );
-
-
-
-// export default class App extends React.Component {
-
-//   render() {
-//     return <RootStack />;
-//   }
-
-// }
+  return {
+    opacity,
+    transform: [{ translateX }, { translateY }]
+  };
+}
 

@@ -24,7 +24,7 @@ export default class CheckSelfDone extends React.Component {
     super(props);
 
     this.state = {
-      deviceStatus: '["01"]',
+      deviceStatus: '["00"]',
       recentLog: '暂无日志'
     };
   }
@@ -48,8 +48,8 @@ export default class CheckSelfDone extends React.Component {
   _createResultView() {
 
     let resultStatus = this.props.navigation.state.params.status;
-    let successImage = require('../resources/CheckSelf_Success.png');
-    let errorImage = require('../resources/CheckSelf_Error.png');
+    let successImage = require('../../resources/images/CheckSelf_Success.png');
+    let errorImage = require('../../resources/images/CheckSelf_Error.png');
     return (
 
       <View

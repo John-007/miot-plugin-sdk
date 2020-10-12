@@ -84,10 +84,10 @@ export default class DeviceLog extends React.Component {
           subData['imageType'] = 2;
           dayLogList.push(subData);
 
-          var subMap = this.state.logData;
-          subMap[lastDate] = dayLogList;
+          let subMap1 = this.state.logData;
+          subMap1[lastDate] = dayLogList;
           this.setState({
-            logData: subMap
+            logData: subMap1
           });
         } else {
           // 中间的元素
@@ -105,10 +105,10 @@ export default class DeviceLog extends React.Component {
           // 修改上一组组尾信息
           dayLogList[dayLogList.length - 1]['imageType'] = 2;
           // 添加到dataSource,并清空临时数组
-          var subMap = this.state.logData;
-          subMap[lastDate] = dayLogList;
+          let subMap2 = this.state.logData;
+          subMap2[lastDate] = dayLogList;
           this.setState({
-            logData: subMap
+            logData: subMap2
           });
           dayLogList = [];
 
@@ -134,11 +134,11 @@ export default class DeviceLog extends React.Component {
   }
 
 
-  formatDate(date) {
+  formatDate(rawDate) {
 
-    var date = new Date(parseInt(date) * 1000);
+    let date = new Date(parseInt(rawDate) * 1000);
     if (date.length == 13) {
-      date = new Date(parseInt(date));
+      date = new Date(parseInt(rawDate));
     }
 
     let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
@@ -180,22 +180,22 @@ export default class DeviceLog extends React.Component {
 
     switch (cellImageType) {
       case 0:
-        cellImage = require('../resources/DeviceLog_GrayTop.png');
+        cellImage = require('../resources/images/DeviceLog_GrayTop.png');
         break;
       case 1:
-        cellImage = require('../resources/DeviceLog_GrayMiddle.png');
+        cellImage = require('../resources/images/DeviceLog_GrayMiddle.png');
         break;
       case 2:
-        cellImage = require('../resources/DeviceLog_GrayBottom.png');
+        cellImage = require('../resources/images/DeviceLog_GrayBottom.png');
         break;
       case 3:
-        cellImage = require('../resources/DeviceLog_RedTop.png');
+        cellImage = require('../resources/images/DeviceLog_RedTop.png');
         break;
       case 4:
-        cellImage = require('../resources/DeviceLog_RedMiddle.png');
+        cellImage = require('../resources/images/DeviceLog_RedMiddle.png');
         break;
       case 5:
-        cellImage = require('../resources/DeviceLog_RedBottom.png');
+        cellImage = require('../resources/images/DeviceLog_RedBottom.png');
         break;
       default: break;
     }
