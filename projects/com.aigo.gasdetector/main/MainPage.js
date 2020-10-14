@@ -203,7 +203,7 @@ export default class MainPage extends React.Component {
         let date = (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24);
 
         console.log("事件对比", res['data']);
-        if (date > 30) {
+        if (date > 30 && date1 > 10) {
           // 弹窗提醒用户自检
 
           this.setState({

@@ -170,7 +170,7 @@ export default class MainPage extends React.Component {
 
         console.log("时间相差：", date1, date2, date);
 
-        if (date > 30) {
+        if (date > 30 && date1 > 10) {
           // 弹窗提醒用户自检
 
           this.setState({
