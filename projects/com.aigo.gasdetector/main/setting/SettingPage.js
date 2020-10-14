@@ -60,10 +60,10 @@ export default class SettingPage extends React.Component {
 
 
     // 获取自检提醒开关
-    Service.storage.getThirdUserConfigsForOneKey(Device.model, 101).then((res) => {
+    Service.storage.getThirdUserConfigsForOneKey(Device.model, 200).then((res) => {
 
       // alert(JSON.stringify(res))
-      console.log("res101", res);
+      console.log("res200", res);
       this.setState({
         switchOn: res['data'] === 'true' ? true : false
       });
@@ -178,7 +178,7 @@ export default class SettingPage extends React.Component {
             // this.setState({
             //   switchOn: value
             // });
-            Service.storage.setThirdUserConfigsForOneKey(Device.model, 101, value).then((res) => {
+            Service.storage.setThirdUserConfigsForOneKey(Device.model, 200, value).then((res) => {
               console.log("res", res);
               this.setState({
                 switchOn: value

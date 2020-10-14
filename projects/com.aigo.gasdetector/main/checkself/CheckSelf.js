@@ -106,7 +106,8 @@ export default class CheckSelf extends React.Component {
 
   UNSAFE_componentWillMount() {
 
-    console.log(bt.UUID);
+    console.log("UUID", bt.UUID);
+    console.log("deviceID", Device.deviceID);
   }
 
   componentDidMount() {
@@ -118,7 +119,7 @@ export default class CheckSelf extends React.Component {
     console.log(bt.isConnecting);
     let btMac = bt.mac;
     let strs = new Array(); // 定义一数组
-    this.addLog(`JLDebug ----- btMac${ JSON.stringify(btMac) }`);
+    this.addLog(`JLDebug ----- btMac${JSON.stringify(btMac)}`);
     strs = btMac.split(":"); // 字符分割
     macStr = strs[5] + strs[4] + strs[3] + strs[2] + strs[1] + strs[0];
 
@@ -183,7 +184,7 @@ export default class CheckSelf extends React.Component {
 
       if (result.advertisementData.kCBAdvDataServiceData.hasOwnProperty("FE95")) {
         let deviceServerDataStr = result.advertisementData.kCBAdvDataServiceData['FE95'];
-        this.addLog(`发现设备${ deviceServerDataStr }`);
+        this.addLog(`发现设备${deviceServerDataStr}`);
 
         // if (deviceServerDataStr.indexOf(macStr) != -1) {
 
@@ -217,7 +218,7 @@ export default class CheckSelf extends React.Component {
         return;
       }
       console.log('bluetoothSeviceDiscovered', blut.mac, services.map((s) => s.UUID), bt.isConnected);
-      this.addLog(`发现蓝牙服务更新：${ JSON.stringify(services.map((s) => s.UUID)) }`);
+      this.addLog(`发现蓝牙服务更新：${JSON.stringify(services.map((s) => s.UUID))}`);
 
       const s = services.map((s) => ({ uuid: s.UUID, char: [] }));
       this.setState({ services: s });
@@ -230,7 +231,7 @@ export default class CheckSelf extends React.Component {
       }
       Device.getBluetoothLE().getVersion(true, true).then((version) => {
         Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then((data) => {
-          this.addLog(`设备版本为：${ version }, 解析结果：${ JSON.stringify(data) }`);
+          this.addLog(`设备版本为：${version}, 解析结果：${JSON.stringify(data)}`);
         });
       }).catch((err) => {
         // console.log(err, '-------');
@@ -238,7 +239,7 @@ export default class CheckSelf extends React.Component {
     });
     this._s2 = BluetoothEvent.bluetoothCharacteristicDiscovered.addListener((bluetooth, service, characters) => {
       console.log('bluetoothCharacteristicDiscovered', characters.map((s) => s.UUID), bt.isConnected);
-      this.addLog(`${ service.UUID } 蓝牙特征值已扫描成功${ JSON.stringify(characters.map((s) => s.UUID)) }`);
+      this.addLog(`${service.UUID} 蓝牙特征值已扫描成功${JSON.stringify(characters.map((s) => s.UUID))}`);
       const { services } = this.state;
       services.forEach((s) => {
         if (s.uuid === service.UUID) {
@@ -273,12 +274,12 @@ export default class CheckSelf extends React.Component {
         console.log('bluetoothCharacteristicValueChanged', character.UUID, value);// 刷新界面
       }
       if (character.UUID.toUpperCase() === UUID_LED_READ_WRITE) {
-        this.addLog(`收到原始回复：${ value }`);
+        this.addLog(`收到原始回复：${value}`);
         bt.securityLock.decryptMessage(value).then((res) => {
-          this.addLog(`解密之后回复：${ res }`);
+          this.addLog(`解密之后回复：${res}`);
         });
       }
-      this.addLog(`bluetoothCharacteristicValueChanged:${ character.UUID }>${ value }`);
+      this.addLog(`bluetoothCharacteristicValueChanged:${character.UUID}>${value}`);
     });
     this._s4 = BluetoothEvent.bluetoothSeviceDiscoverFailed.addListener((blut, data) => {
       console.log('bluetoothSeviceDiscoverFailed', data);
@@ -292,7 +293,7 @@ export default class CheckSelf extends React.Component {
       console.log('bluetoothConnectionStatusChanged', blut, isConnect);
       if (bt.mac === blut.mac) {
         this.setState({ checkStatus: isConnect ? '正在连接，请稍候。。。' : '未连接，请返回重试' });
-        this.addLog(`蓝牙${ JSON.stringify(blut) }状态变化${ isConnect }`);
+        this.addLog(`蓝牙${JSON.stringify(blut)}状态变化${isConnect}`);
         this.addLog('蓝牙连接已断开');
         if (!isConnect) {
           this.setState({
@@ -307,7 +308,7 @@ export default class CheckSelf extends React.Component {
       }
     });
     this._s8 = DeviceEvent.bleDeviceFirmwareNeedUpgrade.addListener((device) => {
-      this.addLog(`bleDeviceFirmwareNeedUpgrade ${ device.needUpgrade },${ device.latestVersion },${ device.lastVersion }`);
+      this.addLog(`bleDeviceFirmwareNeedUpgrade ${device.needUpgrade},${device.latestVersion},${device.lastVersion}`);
     });
   }
 
@@ -349,7 +350,7 @@ export default class CheckSelf extends React.Component {
     // }
     Bluetooth.stopScan();
     // this.setState({ blueConnecting: true, connectState: '连接中。。。' });
-    this.addLog(`准备开始蓝牙连接${ bt.isConnected }${ bt.isConnecting }`);
+    this.addLog(`准备开始蓝牙连接${bt.isConnected}${bt.isConnecting}`);
     if (bt.isConnected) {
       // this.addLog('开始搜索');
       // console.log();
@@ -381,12 +382,12 @@ export default class CheckSelf extends React.Component {
         .then((ble) => {
 
           bt.startDiscoverServices();
-          this.addLog(`JLDebug ----- 连接成功${ JSON.stringify(ble) }`);
+          this.addLog(`JLDebug ----- 连接成功${JSON.stringify(ble)}`);
         })
         .catch((err) => {
 
           this.setState({ checkStatus: '连接失败，请点击返回重试' });
-          this.addLog(`JLDebug ----- 连接err${ JSON.stringify(err) }`);
+          this.addLog(`JLDebug ----- 连接err${JSON.stringify(err)}`);
         });
     }
   }
@@ -396,17 +397,17 @@ export default class CheckSelf extends React.Component {
       this.addLog('蓝牙尚未连接或者service未发现');
       return Promise.reject('蓝牙尚未连接或者service未发现');
     }
-    this.addLog(`switch${ val }`);
+    this.addLog(`switch${val}`);
     // bt.getService(UUID_SERVICE).getCharacteristic(UUID_BUTTON_READ_WRITE_NOTIFY).setNotify(val)
     bt.getService(UUID_SERVICE).getCharacteristic(UUID_LED_READ_WRITE).setNotify(val)
 
       .then((res) => {
         this.setState({ testCharNotify: val });
-        this.addLog(`${ val ? '开启' : '关闭' }特征值通知成功`);
+        this.addLog(`${val ? '开启' : '关闭'}特征值通知成功`);
       })
       .catch((err) => {
         this.setState({ testCharNotify: !val });
-        this.addLog(`${ val ? '开启' : '关闭' }特征值通知失败：${ JSON.stringify(err) }`);
+        this.addLog(`${val ? '开启' : '关闭'}特征值通知失败：${JSON.stringify(err)}`);
       });
   }
 
@@ -468,7 +469,7 @@ export default class CheckSelf extends React.Component {
 
 
     this.setState({
-      [`visible${ index }`]: false
+      [`visible${index}`]: false
     });
 
 
@@ -535,10 +536,10 @@ export default class CheckSelf extends React.Component {
                   this.setState({ visible0: true });
                 }} />
             ) : (
-              <View>
+                <View>
 
-              </View>
-            )
+                </View>
+              )
           }
 
         </View>
@@ -572,7 +573,7 @@ export default class CheckSelf extends React.Component {
                 let month = (date.getMonth() + 1).toString();
                 let day = date.getDate().toString();
 
-                console.log(`${ year }年${ month }月${ day }日`);
+                console.log(`${year}年${month}月${day}日`);
 
                 Service.storage.setThirdUserConfigsForOneKey(Device.model, 100, month).then((res) => {
                   console.log("res", res);
