@@ -115,7 +115,7 @@ export default class MainPage extends React.Component {
           let timeMap = this.formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
-            recentLog: `${this.judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(data[0]['value'])}`
+            recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(data[0]['value']) }`
           });
 
         }
@@ -153,7 +153,7 @@ export default class MainPage extends React.Component {
       this.alertLegalInformationAuthorization();
 
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${ JSON.stringify(error) }`);
     });
 
 
@@ -176,7 +176,7 @@ export default class MainPage extends React.Component {
         let timeMap = this.formatDate(model['time']);
 
         this.setState({
-          recentLog: `${this.judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(model['value'])}`
+          recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(model['value']) }`
         });
 
       }
@@ -235,11 +235,11 @@ export default class MainPage extends React.Component {
       }).catch((error) => {
         console.log(error);
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
       });
     }).catch((error) => {
       console.log(error);
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
     });
 
   }
@@ -259,11 +259,11 @@ export default class MainPage extends React.Component {
       }).catch((error) => {
         console.log(error);
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
       });
     }).catch((error) => {
       console.log(error);
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
     });
 
   }
@@ -313,12 +313,12 @@ export default class MainPage extends React.Component {
       date = new Date(parseInt(date));
     }
 
-    let MM = (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
-    let hh = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`;
-    let mm = (date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes());
+    let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
+    let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
+    let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
+    let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
     // return MM + '月' + DD + '日' + '_' + hh + mm;
-    return { 'date': `${MM}月${DD}日`, 'time': hh + mm };
+    return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
   }
 
 
@@ -487,7 +487,7 @@ export default class MainPage extends React.Component {
           // width: null,
           // height: null,
         }}
-          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
+        source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 

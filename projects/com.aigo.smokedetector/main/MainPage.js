@@ -107,7 +107,7 @@ export default class MainPage extends React.Component {
           this.setState({
             deviceStatus: data[0]['value'],
 
-            recentLog: `${this.judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(data[0]['value'])}`
+            recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(data[0]['value']) }`
           });
         }
       });
@@ -130,7 +130,7 @@ export default class MainPage extends React.Component {
 
         let timeMap = this.formatDate(model['time']);
         this.setState({
-          recentLog: `${this.judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(model['value'])}`
+          recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(model['value']) }`
         });
       }
 
@@ -229,12 +229,12 @@ export default class MainPage extends React.Component {
       date = new Date(parseInt(rawDate));
     }
 
-    let MM = (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
-    let hh = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`;
-    let mm = (date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes());
+    let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
+    let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
+    let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
+    let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
     // return MM + '月' + DD + '日' + '_' + hh + mm;
-    return { 'date': `${MM}月${DD}日`, 'time': hh + mm };
+    return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
   }
 
   // 创建状态页面
@@ -387,7 +387,7 @@ export default class MainPage extends React.Component {
           // width: null,
           // height: null,
         }}
-          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
+        source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 
