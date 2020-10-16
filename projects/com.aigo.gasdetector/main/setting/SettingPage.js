@@ -61,7 +61,6 @@ export default class SettingPage extends React.Component {
 
     // 获取自检提醒开关
     Service.storage.getThirdUserConfigsForOneKey(Device.model, 200).then((res) => {
-
       // alert(JSON.stringify(res))
       console.log("res200", res);
       this.setState({
@@ -75,9 +74,7 @@ export default class SettingPage extends React.Component {
 
     // 固件更新相关
     Service.smarthome.getLatestVersionV2(Device.deviceID).then((res) => {
-
       console.log(res);
-
     }).catch((err) => {
       console.log(err);
     });
@@ -85,7 +82,7 @@ export default class SettingPage extends React.Component {
 
     Device.getBluetoothLE().getVersion(true, true).then((version) => {
       Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then((data) => {
-        console.log(`设备版本为：${ version }, 解析结果：${ JSON.stringify(data) }`);
+        console.log(`设备版本为：${version}, 解析结果：${JSON.stringify(data)}`);
       });
       console.log(version);
     }).catch((err) => {
@@ -106,7 +103,7 @@ export default class SettingPage extends React.Component {
       });
     }).catch((error) => {
       // 错误信息上报， 通过米家app反馈可以上报到服务器
-      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${JSON.stringify(error)}`);
     });
   }
 

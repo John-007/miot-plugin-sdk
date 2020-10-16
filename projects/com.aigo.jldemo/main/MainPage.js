@@ -1,5 +1,5 @@
 import React from 'react';
-import { API_LEVEL, Package, Host, Device, PackageEvent, Service } from 'miot';
+import { Bluetooth, BluetoothEvent, API_LEVEL, Package, Host, Device, PackageEvent, Service } from 'miot';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import NavigationBar from 'miot/ui/NavigationBar';
 import Separator from 'miot/ui/Separator';
@@ -13,6 +13,9 @@ import PluginStrings from '../resources/strings';
  * SDK 支持的字体
  */
 import * as SdkFontStyle from 'miot/utils/fonts';
+
+
+let bt = Device.getBluetoothLE();
 
 export default class MainPage extends React.Component {
 
@@ -93,6 +96,31 @@ export default class MainPage extends React.Component {
       console.log(err);
     });
   }
+
+  // connect(mac = undefined, disconnectOntimeOut = true) {
+
+  //   Bluetooth.stopScan();
+  //   this.addLog(`准备开始蓝牙连接${bt.isConnected}${bt.isConnecting}`);
+  //   if (bt.isConnected) {
+  //     this.addLog('开始发现服务');
+  //     bt.startDiscoverServices();
+  //   } else if (bt.isConnecting) {
+  //     this.addLog('蓝牙正处于连接中，请等待连接结果后再试');
+  //   } else {
+
+  //     bt.connect(4, { did: Device.deviceID, timeout: 12000 })
+
+  //       .then((ble) => {
+  //         bt.startDiscoverServices();
+  //         this.addLog(`JLDebug ----- 连接成功${JSON.stringify(ble)}`);
+  //       })
+  //       .catch((err) => {
+
+  //         this.setState({ checkStatus: '连接失败，请点击返回重试' });
+  //         this.addLog(`JLDebug ----- 连接err${JSON.stringify(err)}`);
+  //       });
+  //   }
+  // }
 
   render() {
 
