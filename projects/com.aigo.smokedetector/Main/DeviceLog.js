@@ -49,7 +49,7 @@ export default class DeviceLog extends React.Component {
       key: "13", // Object ID 0x1004 温度 电量4106 烟感4117
       time_start: 0,
       time_end: Math.round(Date.now() / 1000),
-      limit: 50
+      limit: 999
     }).then((res) => {
 
       const a = res[0];

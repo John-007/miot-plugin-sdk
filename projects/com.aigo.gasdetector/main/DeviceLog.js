@@ -49,7 +49,7 @@ export default class DeviceLog extends React.Component {
       key: "14",
       time_start: 0,
       time_end: Math.round(Date.now() / 1000),
-      limit: 50
+      limit: 999
     }).then((res) => {
 
       console.log(res);
@@ -142,12 +142,12 @@ export default class DeviceLog extends React.Component {
       date = new Date(parseInt(date));
     }
 
-    let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
-    let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
-    let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
+    let MM = (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
+    let DD = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
+    let hh = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`;
+    let mm = (date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes());
     // return MM + '月' + DD + '日' + '_' + hh + mm;
-    return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
+    return { 'date': `${MM}月${DD}日`, 'time': hh + mm };
   }
 
 
@@ -229,7 +229,7 @@ export default class DeviceLog extends React.Component {
             height: 50,
             width: 50
           }}
-          source={cellImage}
+            source={cellImage}
           />
           <Text style={cellStatus == '燃气泄漏报警' ? styles.warningText : styles.normalText}>{cellStatus}</Text>
         </View >

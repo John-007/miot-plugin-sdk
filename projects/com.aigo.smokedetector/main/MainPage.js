@@ -102,7 +102,7 @@ export default class MainPage extends React.Component {
       (device, map, data) => {
         // alert(data[0]['key'] + ' ' + data[0]['value']);
         console.log('Device.addListener', device, map, data);
-        if (data[0].hasOwnProperty('vlaue')) {
+        if (data[0].hasOwnProperty('value')) {
           let timeMap = this.formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
@@ -344,9 +344,9 @@ export default class MainPage extends React.Component {
   render() {
     const { navigation } = this.props;
 
-    let cellStatusImage = '';
-    let cellLogIconImage = '';
-    let cellScenesIconImage = '';
+    let cellStatusImage = require('../resources/images/Home_StatusNormal.png');
+    let cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
+    let cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
     let bgNormalImage = require('../resources/images/Home_BG_Normal.jpg');
     let bgWarningImage = require('../resources/images/Home_BG_Warning.png');
 
