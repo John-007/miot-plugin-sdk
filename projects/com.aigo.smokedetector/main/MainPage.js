@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  Easing,
+  Animated,
   View,
   Image,
   Text,
@@ -30,6 +32,9 @@ export default class MainPage extends React.Component {
 
   constructor(props) {
     super(props);
+
+
+    this.spinValue = new Animated.Value(0)
 
     this.state = {
       deviceStatus: '00',
@@ -80,10 +85,13 @@ export default class MainPage extends React.Component {
 
     this.subcription.remove();
     this.deviceReceivedMessages.remove();
+
+
   }
 
   UNSAFE_componentWillMount() {
 
+    this.spin();
 
     console.log(Math.round(Date.now() / 1000));
 
@@ -107,7 +115,7 @@ export default class MainPage extends React.Component {
           this.setState({
             deviceStatus: data[0]['value'],
 
-            recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(data[0]['value']) }`
+            recentLog: `${this.judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(data[0]['value'])}`
           });
         }
       });
@@ -130,13 +138,15 @@ export default class MainPage extends React.Component {
 
         let timeMap = this.formatDate(model['time']);
         this.setState({
-          recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(model['value']) }`
+          recentLog: `${this.judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(model['value'])}`
         });
       }
 
     }).catch((err) => {
       console.log(err);
     });
+
+
 
 
     // 获取自检提醒开关
@@ -150,6 +160,16 @@ export default class MainPage extends React.Component {
       console.log("error", error);
     });
 
+  }
+
+  //旋转方法
+  spin = () => {
+    this.spinValue.setValue(0)
+    Animated.timing(this.spinValue, {
+      toValue: 1, // 最终值 为1，这里表示最大旋转 360度
+      duration: 4000,
+      easing: Easing.linear
+    }).start(() => this.spin())
   }
 
   judgeCheckSelf() {
@@ -229,18 +249,31 @@ export default class MainPage extends React.Component {
       date = new Date(parseInt(rawDate));
     }
 
-    let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
-    let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
-    let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
+    let MM = (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
+    let DD = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
+    let hh = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`;
+    let mm = (date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes());
     // return MM + '月' + DD + '日' + '_' + hh + mm;
-    return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
+    return { 'date': `${MM}月${DD}日`, 'time': hh + mm };
   }
 
   // 创建状态页面
   _createStatusView(image) {
 
+    const spin = this.spinValue.interpolate({
+      inputRange: [0, 1],//输入值
+      outputRange: ['0deg', '360deg'] //输出值
+    })
+
     return (
+
+      // <View style={{
+      //   flex: 1,
+      //   justifyContent: "center"
+      // }}>
+      //   <Animated.Image style={[styles.statusImage, { transform: [{ rotate: spin }] }]} source={image} />
+      //   {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
+      // </View>
 
       <View
         style={{
@@ -370,6 +403,9 @@ export default class MainPage extends React.Component {
       cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
     }
 
+
+
+
     return (
 
 
@@ -387,7 +423,7 @@ export default class MainPage extends React.Component {
           // width: null,
           // height: null,
         }}
-        source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
+          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 
@@ -489,6 +525,10 @@ const styles = StyleSheet.create({
   innersubTitle: {
     fontSize: 14,
     color: '#333'
+  },
+  circle: {
+    flex: 1,
+    justifyContent: "center"
   }
 });
 

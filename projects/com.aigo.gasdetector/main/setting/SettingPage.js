@@ -15,7 +15,7 @@ export default class SettingPage extends React.Component {
     this.state = {
       protocol: null,
       powerString: '暂无数据',
-      switchOn: ''
+      switchOn: true
     };
   }
 
@@ -182,6 +182,9 @@ export default class SettingPage extends React.Component {
               });
             }).catch((error) => {
               console.log("error", error);
+              this.setState({
+                switchOn: !value
+              });
             });
           }}
         />
