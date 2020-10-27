@@ -74,7 +74,7 @@ export default class SettingPage extends React.Component {
         console.log(this.hex2int(power));
         // var powerInt = this.hex2int(power)
         this.setState({
-          powerString: `${this.hex2int(power)}%`
+          powerString: `${ this.hex2int(power) }%`
         });
       }
 
@@ -95,7 +95,7 @@ export default class SettingPage extends React.Component {
       a[i] = code;
     }
 
-    return a.reduce(function (acc, c) {
+    return a.reduce(function(acc, c) {
       acc = 16 * acc + c;
       return acc;
     }, 0);
@@ -108,7 +108,7 @@ export default class SettingPage extends React.Component {
       });
     }).catch((error) => {
       // 错误信息上报， 通过米家app反馈可以上报到服务器
-      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${ JSON.stringify(error) }`);
     });
   }
 
@@ -160,10 +160,10 @@ export default class SettingPage extends React.Component {
           title="电池寿命"
           value={this.state.powerString}
           hideArrow={true}
-        // containerStyle={{ height: 44, backgroundColor: 'white' }}
-        // titleStyle={{ fontSize: 16 }}
-        // valueStyle={{ fontSize: 14 }}
-        // separator={<Separator />}
+          // containerStyle={{ height: 44, backgroundColor: 'white' }}
+          // titleStyle={{ fontSize: 16 }}
+          // valueStyle={{ fontSize: 14 }}
+          // separator={<Separator />}
 
         // onPress={() => {
         //   console.log('设置电量')

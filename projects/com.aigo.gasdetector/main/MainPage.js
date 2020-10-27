@@ -37,7 +37,7 @@ export default class MainPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.spinValue = new Animated.Value(0)
+    this.spinValue = new Animated.Value(0);
     this.state = {
       deviceStatus: '00',
       recentLog: '暂无日志',
@@ -120,7 +120,7 @@ export default class MainPage extends React.Component {
           let timeMap = this.formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
-            recentLog: `${this.judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(data[0]['value'])}`
+            recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(data[0]['value']) }`
           });
 
         }
@@ -158,7 +158,7 @@ export default class MainPage extends React.Component {
       this.alertLegalInformationAuthorization();
 
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${ JSON.stringify(error) }`);
     });
 
 
@@ -181,7 +181,7 @@ export default class MainPage extends React.Component {
         let timeMap = this.formatDate(model['time']);
 
         this.setState({
-          recentLog: `${this.judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(model['value'])}`
+          recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(model['value']) }`
         });
 
       }
@@ -191,14 +191,14 @@ export default class MainPage extends React.Component {
 
   }
 
-  //旋转方法
+  // 旋转方法
   spin = () => {
-    this.spinValue.setValue(0)
+    this.spinValue.setValue(0);
     Animated.timing(this.spinValue, {
       toValue: 1, // 最终值 为1，这里表示最大旋转 360度
       duration: 4000,
       easing: Easing.linear
-    }).start(() => this.spin())
+    }).start(() => this.spin());
   }
 
   judgeCheckSelf() {
@@ -250,11 +250,11 @@ export default class MainPage extends React.Component {
       }).catch((error) => {
         console.log(error);
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
       });
     }).catch((error) => {
       console.log(error);
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
     });
 
   }
@@ -274,11 +274,11 @@ export default class MainPage extends React.Component {
       }).catch((error) => {
         console.log(error);
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
       });
     }).catch((error) => {
       console.log(error);
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
     });
 
   }
@@ -328,12 +328,12 @@ export default class MainPage extends React.Component {
       date = new Date(parseInt(date));
     }
 
-    let MM = (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
-    let hh = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`;
-    let mm = (date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes());
+    let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
+    let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
+    let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
+    let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
     // return MM + '月' + DD + '日' + '_' + hh + mm;
-    return { 'date': `${MM}月${DD}日`, 'time': hh + mm };
+    return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
   }
 
 
@@ -341,9 +341,9 @@ export default class MainPage extends React.Component {
   _createStatusView(image) {
 
     const spin = this.spinValue.interpolate({
-      inputRange: [0, 1],//输入值
-      outputRange: ['0deg', '360deg'] //输出值
-    })
+      inputRange: [0, 1], // 输入值
+      outputRange: ['0deg', '360deg'] // 输出值
+    });
 
     return (
 
@@ -358,62 +358,62 @@ export default class MainPage extends React.Component {
         />
       </View >
 
-      // <View style={{
-      //   // flex: 1,
-      //   justifyContent: "center",
-      //   backgroundColor: 'red'
-      // }}>
+    // <View style={{
+    //   // flex: 1,
+    //   justifyContent: "center",
+    //   backgroundColor: 'red'
+    // }}>
 
-      //   <Animated.Image style={[styles.statusImage, { transform: [{ rotate: spin }] }]} source={image}>
+    //   <Animated.Image style={[styles.statusImage, { transform: [{ rotate: spin }] }]} source={image}>
 
-      //   </Animated.Image>
-      //   {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
+    //   </Animated.Image>
+    //   {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
 
-      //   {/* <Text style={{
-      //     marginTop: 25,
-      //     position: 'absolute',
-      //     fontSize: 17,
-      //     color: '#000'
-      //   }}>燃气触发报警</Text> */}
-      //   <View
-      //     style={{
-      //       // marginTop: 150,
-      //       // position: 'absolute',
-      //       backgroundColor: 'green',
-      //       // justifyContent: "center",
-      //       marginLeft: -125,
-      //       left: '50%',
-      //       // marginTop: -125,
-      //       // top: '50%',
-      //       // width: 120,
-      //       // alignItems: 'center'
-      //     }}>
-      //     <Text style={{
-      //       // marginTop: -25,
-      //       // position: 'absolute',
-      //       fontSize: 17,
-      //       color: '#000'
-      //     }}>燃气触发报警</Text>
+    //   {/* <Text style={{
+    //     marginTop: 25,
+    //     position: 'absolute',
+    //     fontSize: 17,
+    //     color: '#000'
+    //   }}>燃气触发报警</Text> */}
+    //   <View
+    //     style={{
+    //       // marginTop: 150,
+    //       // position: 'absolute',
+    //       backgroundColor: 'green',
+    //       // justifyContent: "center",
+    //       marginLeft: -125,
+    //       left: '50%',
+    //       // marginTop: -125,
+    //       // top: '50%',
+    //       // width: 120,
+    //       // alignItems: 'center'
+    //     }}>
+    //     <Text style={{
+    //       // marginTop: -25,
+    //       // position: 'absolute',
+    //       fontSize: 17,
+    //       color: '#000'
+    //     }}>燃气触发报警</Text>
 
-      //   </View >
+    //   </View >
 
-      // </View >
+    // </View >
 
 
 
-      // <View
-      //   style={{
-      //     flex: 1,
-      //     justifyContent: "center"
-      //   }}>
-      //   <Image
-      //     style={styles.statusImage}
-      //     source={image}
-      //   />
+    // <View
+    //   style={{
+    //     flex: 1,
+    //     justifyContent: "center"
+    //   }}>
+    //   <Image
+    //     style={styles.statusImage}
+    //     source={image}
+    //   />
 
-      //   {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
+    //   {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
 
-      // </View>
+    // </View>
     );
   }
 
@@ -561,7 +561,7 @@ export default class MainPage extends React.Component {
           // width: null,
           // height: null,
         }}
-          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
+        source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 
