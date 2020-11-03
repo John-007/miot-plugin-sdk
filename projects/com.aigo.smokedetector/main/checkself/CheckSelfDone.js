@@ -9,6 +9,7 @@ import {
   Button
 } from 'react-native';
 import PluginStrings from '../../resources/strings';
+import { Host } from 'miot';
 
 export default class CheckSelfDone extends React.Component {
 
@@ -46,9 +47,21 @@ export default class CheckSelfDone extends React.Component {
   // 创建状态页面
   _createResultView() {
 
+    let language = Host.locale.language
+
+
+
     let resultStatus = this.props.navigation.state.params.status;
     let successImage = require('../../resources/images/CheckSelf_Success.png');
     let errorImage = require('../../resources/images/CheckSelf_Error.png');
+
+    if (language != 'zh') {
+      successImage = require('../../resources/images/CheckSelf_Success_en.png');
+      errorImage = require('../../resources/images/CheckSelf_Error_en.png');
+    }
+    // let successImage = require('../../resources/images/CheckSelf_Success_en.png');
+    // let errorImage = require('../../resources/images/CheckSelf_Error_en.png');
+
     return (
 
       <View
@@ -58,8 +71,9 @@ export default class CheckSelfDone extends React.Component {
         }}>
         <Image
           style={{
+            resizeMode: 'contain',
             width: 292,
-            height: 292
+            height: 420
           }}
           source={resultStatus ? successImage : errorImage}
         />

@@ -37,17 +37,24 @@ export default class CheckSelfDone extends React.Component {
     let resultStatus = this.props.navigation.state.params.status;
     let successImage = require('../../resources/images/CheckSelf_Success.png');
     let errorImage = require('../../resources/images/CheckSelf_Error.png');
+
+    let language = Host.locale.language
+    if (language != 'zh') {
+      successImage = require('../../resources/images/CheckSelf_Success_en.png');
+      errorImage = require('../../resources/images/CheckSelf_Error_en.png');
+    }
     return (
 
       <View
         style={{
           flex: 1,
-          justifyContent: "center"
+          justifyContent: "center",
         }}>
         <Image
           style={{
+            resizeMode: 'contain',
             width: 292,
-            height: 292
+            height: 420
           }}
           source={resultStatus ? successImage : errorImage}
         />
