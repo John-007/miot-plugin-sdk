@@ -10,6 +10,9 @@ import Card from 'miot/ui/Card';
 
 import Protocol from '../resources/protocol';
 
+//全局方法
+import { formatDate, judgeDate } from './Global'
+
 /**
  * SDK 提供的多语言 和 插件提供的多语言
  */
@@ -40,7 +43,7 @@ export default class MainPage extends React.Component {
     this.spinValue = new Animated.Value(0);
     this.state = {
       deviceStatus: '00',
-      recentLog: '暂无日志',
+      recentLog: PluginStrings.noLogs,
       visibleRemindCheckSelf: false
     };
 
@@ -71,16 +74,20 @@ export default class MainPage extends React.Component {
       }
     });
   }
-  UNSAFE_componentWillUnmount() {
+
+  componentWillUnmount() {
 
 
     this.subcription.remove();
     this.deviceReceivedMessages.remove();
+    // 取消监听
+    this.packageAuthorizationAgreed && this.packageAuthorizationAgreed.remove();
   }
+
 
   UNSAFE_componentWillMount() {
 
-    this.spin();
+    // this.spin();
 
 
     this.packageAuthorizationAgreed = PackageEvent.packageAuthorizationAgreed.addListener(() => {
@@ -117,10 +124,10 @@ export default class MainPage extends React.Component {
         // console.log('Device.addListener', device, map, data);
         // console.log(data[0]['value'] + ' ' + this.state.deviceStatus);
         if (data[0].hasOwnProperty('value')) {
-          let timeMap = this.formatDate(data[0]['time']);
+          let timeMap = formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
-            recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(data[0]['value']) }`
+            recentLog: `${judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(data[0]['value'])}`
           });
 
         }
@@ -158,7 +165,7 @@ export default class MainPage extends React.Component {
       this.alertLegalInformationAuthorization();
 
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${JSON.stringify(error)}`);
     });
 
 
@@ -178,10 +185,10 @@ export default class MainPage extends React.Component {
 
       if (model.hasOwnProperty("value")) {
 
-        let timeMap = this.formatDate(model['time']);
+        let timeMap = formatDate(model['time']);
 
         this.setState({
-          recentLog: `${ this.judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(model['value']) }`
+          recentLog: `${judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(model['value'])}`
         });
 
       }
@@ -250,11 +257,11 @@ export default class MainPage extends React.Component {
       }).catch((error) => {
         console.log(error);
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
       });
     }).catch((error) => {
       console.log(error);
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
     });
 
   }
@@ -274,25 +281,13 @@ export default class MainPage extends React.Component {
       }).catch((error) => {
         console.log(error);
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
       });
     }).catch((error) => {
       console.log(error);
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
     });
 
-  }
-
-  judgeDate(dateStr) {
-
-    // 先判断是不是今天
-    let nowDate = Date.parse(new Date());
-    let nowDateStr = this.formatDate(parseInt(nowDate) / 1000);
-
-    if (dateStr == nowDateStr['date']) {
-      return '今天';
-    }
-    return dateStr;
   }
 
   subtitleString(typeStr) {
@@ -304,36 +299,21 @@ export default class MainPage extends React.Component {
     }
 
     if (typeString == '00') {
-      return '工作正常';
+      return PluginStrings.workNormally;
     } else if (typeString == '01') {
-      return '燃气泄漏报警';
+      return PluginStrings.alarm;
     } else if (typeString == '02') {
-      return '设备故障';
+      return PluginStrings.deviceFailure;
     } else if (typeString == '03') {
-      return '传感器寿命到期';
+      return PluginStrings.deviceEndOfLife;
     } else if (typeString == '04') {
-      return '传感器预热';
+      return PluginStrings.deviceWarmUp;
     } else if (typeString == '05') {
-      return '设备自检';
+      return PluginStrings.deviceSelfCheck;
     } else if (typeString == '06') {
-      return '模拟报警';
+      return PluginStrings.analogueAlarm;
     }
 
-  }
-
-  formatDate(date) {
-
-    var date = new Date(parseInt(date) * 1000);
-    if (date.length == 13) {
-      date = new Date(parseInt(date));
-    }
-
-    let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
-    let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
-    let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
-    // return MM + '月' + DD + '日' + '_' + hh + mm;
-    return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
   }
 
 
@@ -358,62 +338,6 @@ export default class MainPage extends React.Component {
         />
       </View >
 
-    // <View style={{
-    //   // flex: 1,
-    //   justifyContent: "center",
-    //   backgroundColor: 'red'
-    // }}>
-
-    //   <Animated.Image style={[styles.statusImage, { transform: [{ rotate: spin }] }]} source={image}>
-
-    //   </Animated.Image>
-    //   {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
-
-    //   {/* <Text style={{
-    //     marginTop: 25,
-    //     position: 'absolute',
-    //     fontSize: 17,
-    //     color: '#000'
-    //   }}>燃气触发报警</Text> */}
-    //   <View
-    //     style={{
-    //       // marginTop: 150,
-    //       // position: 'absolute',
-    //       backgroundColor: 'green',
-    //       // justifyContent: "center",
-    //       marginLeft: -125,
-    //       left: '50%',
-    //       // marginTop: -125,
-    //       // top: '50%',
-    //       // width: 120,
-    //       // alignItems: 'center'
-    //     }}>
-    //     <Text style={{
-    //       // marginTop: -25,
-    //       // position: 'absolute',
-    //       fontSize: 17,
-    //       color: '#000'
-    //     }}>燃气触发报警</Text>
-
-    //   </View >
-
-    // </View >
-
-
-
-    // <View
-    //   style={{
-    //     flex: 1,
-    //     justifyContent: "center"
-    //   }}>
-    //   <Image
-    //     style={styles.statusImage}
-    //     source={image}
-    //   />
-
-    //   {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
-
-    // </View>
     );
   }
 
@@ -561,7 +485,7 @@ export default class MainPage extends React.Component {
           // width: null,
           // height: null,
         }}
-        source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
+          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 
@@ -570,7 +494,7 @@ export default class MainPage extends React.Component {
             cardStyle={{ borderRadius: 10, height: 70 }}
             innerView={
               this._createCard({
-                mainTitleStr: '日志',
+                mainTitleStr: PluginStrings.logs,
                 subTitleStr: this.state.recentLog,
 
                 // iconImg: require("../resources/images/Home_LogIcon_Normal.png")
@@ -580,7 +504,7 @@ export default class MainPage extends React.Component {
 
 
             onPress={() => {
-              navigation.navigate('deviceLog', { title: '日志' });
+              navigation.navigate('deviceLog', { title: PluginStrings.logs });
 
             }}
           />
@@ -590,7 +514,7 @@ export default class MainPage extends React.Component {
             cardStyle={{ borderRadius: 10, height: 70 }}
             innerView={
               this._createCard({
-                mainTitleStr: '智能场景',
+                mainTitleStr: PluginStrings.smartScene,
                 // iconImg: require("../resources/images/Home_Scenes_Normal.png")
                 iconImg: cellScenesIconImage
               })
@@ -606,10 +530,10 @@ export default class MainPage extends React.Component {
 
         <AbstractDialog
           visible={this.state.visibleRemindCheckSelf}
-          title={'温馨提示：建议您进行设备自检'}
+          title={PluginStrings.selfCheckRemindStr}
           buttons={[
             {
-              text: '好',
+              text: PluginStrings.selfCheckRemindYesStr,
               style: { color: '#32BAC0' },
               callback: (_) => {
                 this.setState({
@@ -643,10 +567,7 @@ export default class MainPage extends React.Component {
     );
   }
 
-  componentWillUnmount() {
-    // 取消监听
-    this.packageAuthorizationAgreed && this.packageAuthorizationAgreed.remove();
-  }
+
 }
 
 const styles = StyleSheet.create({

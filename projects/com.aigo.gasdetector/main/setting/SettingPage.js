@@ -6,6 +6,7 @@ import Separator from 'miot/ui/Separator';
 import Protocol from '../../resources/protocol';
 import { strings as SdkStrings, Styles as SdkStyles } from "miot/resources";
 import { ListItem, ListItemWithSwitch } from "miot/ui/ListItem";
+import PluginStrings from '../../resources/strings';
 
 export default class SettingPage extends React.Component {
 
@@ -14,7 +15,7 @@ export default class SettingPage extends React.Component {
 
     this.state = {
       protocol: null,
-      powerString: '暂无数据',
+      powerString: PluginStrings.noLogs,
       switchOn: true
     };
   }
@@ -24,9 +25,9 @@ export default class SettingPage extends React.Component {
     this._menuData = [
 
       {
-        'name': '设备自检',
+        'name': PluginStrings.selfCheck,
         'func': () => {
-          navigation.navigate('checkSelf', { 'title': '设备自检' });
+          navigation.navigate('checkSelf', { 'title': PluginStrings.selfCheck });
         }
       }
 
@@ -82,7 +83,7 @@ export default class SettingPage extends React.Component {
 
     Device.getBluetoothLE().getVersion(true, true).then((version) => {
       Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then((data) => {
-        console.log(`设备版本为：${ version }, 解析结果：${ JSON.stringify(data) }`);
+        console.log(`设备版本为：${version}, 解析结果：${JSON.stringify(data)}`);
       });
       console.log(version);
     }).catch((err) => {
@@ -103,7 +104,7 @@ export default class SettingPage extends React.Component {
       });
     }).catch((error) => {
       // 错误信息上报， 通过米家app反馈可以上报到服务器
-      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${JSON.stringify(error)}`);
     });
   }
 
@@ -144,30 +145,30 @@ export default class SettingPage extends React.Component {
               fontSize: 11,
               color: '#7F7F7F',
               marginLeft: 24
-            }}>{"功能设置"}</Text>
+            }}>{PluginStrings.functionSettings}</Text>
           </View>
           <Separator style={{ marginLeft: 0 }} />
 
         </View>
 
         <ListItem
-          title="设备自检"
+          title={PluginStrings.selfCheck}
           // showDot={true}
-          onPress={() => navigation.navigate('checkSelf', { 'title': '设备自检' })}
+          onPress={() => navigation.navigate('checkSelf', { 'title': PluginStrings.selfCheck })}
           accessible={true}
           accessibilityHint="press title"
         />
 
         <ListItem
-          title="消音"
+          title={PluginStrings.silence}
           // showDot={true}
-          onPress={() => navigation.navigate('silencer', { 'title': '设备消音' })}
+          onPress={() => navigation.navigate('silencer', { 'title': PluginStrings.silence })}
           accessible={true}
           accessibilityHint="press title"
         />
 
         <ListItemWithSwitch
-          title="每月自检提醒"
+          title={PluginStrings.selfCheckReminder}
           value={this.state.switchOn}
           // value={false}
           onValueChange={(value) => {

@@ -13,7 +13,9 @@ import {
 import Separator from 'miot/ui/Separator';
 import { Device, Package, Host, Entrance, Service, DeviceEvent, PackageEvent } from 'miot';
 
-
+//全局方法
+import { formatDate, judgeDate } from './Global'
+import PluginStrings from '../resources/strings';
 
 
 export default class DeviceLog extends React.Component {
@@ -72,7 +74,7 @@ export default class DeviceLog extends React.Component {
 
       let model = resData[i];
       // 对比日期
-      let modelDate = this.formatDate(model['time']);
+      let modelDate = formatDate(model['time']);
       let subData = { 'time': modelDate['time'], 'logType': model['value'] };
 
 
@@ -133,20 +135,20 @@ export default class DeviceLog extends React.Component {
   }
 
 
-  formatDate(date) {
+  // formatDate(date) {
 
-    var date = new Date(parseInt(date) * 1000);
-    if (date.length == 13) {
-      date = new Date(parseInt(date));
-    }
+  //   var date = new Date(parseInt(date) * 1000);
+  //   if (date.length == 13) {
+  //     date = new Date(parseInt(date));
+  //   }
 
-    let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
-    let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
-    let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
-    // return MM + '月' + DD + '日' + '_' + hh + mm;
-    return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
-  }
+  //   let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
+  //   let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
+  //   let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
+  //   let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
+  //   // return MM + '月' + DD + '日' + '_' + hh + mm;
+  //   return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
+  // }
 
 
   // 渲染cell和header的方法
@@ -159,10 +161,10 @@ export default class DeviceLog extends React.Component {
 
     switch (rowData['logType']) {
       case '["00"]':
-        cellStatus = '工作正常';
+        cellStatus = PluginStrings.workNormally;
         break;
       case '["01"]':
-        cellStatus = '水浸报警';
+        cellStatus = PluginStrings.floodAlarm;
         cellImageType += 3;
         break;
       default: break;
@@ -212,9 +214,9 @@ export default class DeviceLog extends React.Component {
             height: 50,
             width: 50
           }}
-          source={cellImage}
+            source={cellImage}
           />
-          <Text style={cellStatus == '水浸报警' ? styles.warningText : styles.normalText}>{cellStatus}</Text>
+          <Text style={cellStatus == PluginStrings.floodAlarm ? styles.warningText : styles.normalText}>{cellStatus}</Text>
         </View >
       </View >
     );
@@ -222,13 +224,14 @@ export default class DeviceLog extends React.Component {
   _renderHeader(sectionData, sectionID) {
 
     // 先判断是不是今天
-    let dateStr = sectionID;
-    let nowDate = Date.parse(new Date());
-    let nowDateStr = this.formatDate(parseInt(nowDate) / 1000);
+    let dateStr = judgeDate(sectionID)
+    // let dateStr = sectionID;
+    // let nowDate = Date.parse(new Date());
+    // let nowDateStr = formatDate(parseInt(nowDate) / 1000);
 
-    if (dateStr == nowDateStr['date']) {
-      dateStr = '今天';
-    }
+    // if (dateStr == nowDateStr['date']) {
+    //   dateStr = '今天';
+    // }
 
 
     return (

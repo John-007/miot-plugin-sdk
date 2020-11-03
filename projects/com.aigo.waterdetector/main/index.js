@@ -3,6 +3,9 @@ import { Package, Entrance, Service, Device, Host, PackageEvent } from 'miot';
 import { createStackNavigator } from 'react-navigation';
 import { FirmwareUpgrade, MoreSetting } from 'miot/ui/CommonSetting';
 
+// import GlobalFunction from './Global'
+
+
 import MainPage from './MainPage';
 import SettingPage from './setting/SettingPage';
 import ScenePage from './scene/ScenePage';
@@ -14,9 +17,9 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.initData();
   }
+
 
   /**
    * 此处决定，进入插件需要进入到哪个页面
@@ -79,7 +82,7 @@ export default class App extends React.Component {
       this.alertLegalInformationAuthorization();
 
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${JSON.stringify(error)}`);
     });
   }
 
@@ -96,10 +99,10 @@ export default class App extends React.Component {
         }
       }).catch((error) => {
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
       });
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
     });
 
   }

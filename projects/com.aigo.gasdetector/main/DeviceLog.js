@@ -13,8 +13,9 @@ import {
 import Separator from 'miot/ui/Separator';
 import { Device, Package, Host, Entrance, Service, DeviceEvent, PackageEvent } from 'miot';
 
-
-
+import PluginStrings from '../resources/strings';
+//全局方法
+import { formatDate, judgeDate } from './Global'
 
 export default class DeviceLog extends React.Component {
 
@@ -73,7 +74,7 @@ export default class DeviceLog extends React.Component {
 
       let model = resData[i];
       // 对比日期
-      let modelDate = this.formatDate(model['time']);
+      let modelDate = formatDate(model['time']);
       let subData = { 'time': modelDate['time'], 'logType': model['value'] };
 
 
@@ -135,22 +136,6 @@ export default class DeviceLog extends React.Component {
   }
 
 
-  formatDate(date) {
-
-    var date = new Date(parseInt(date) * 1000);
-    if (date.length == 13) {
-      date = new Date(parseInt(date));
-    }
-
-    let MM = (date.getMonth() + 1 < 10 ? `0${ date.getMonth() + 1 }` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${ date.getDate() }` : date.getDate());
-    let hh = `${ date.getHours() < 10 ? `0${ date.getHours() }` : date.getHours() }:`;
-    let mm = (date.getMinutes() < 10 ? `0${ date.getMinutes() }` : date.getMinutes());
-    // return MM + '月' + DD + '日' + '_' + hh + mm;
-    return { 'date': `${ MM }月${ DD }日`, 'time': hh + mm };
-  }
-
-
   // 渲染cell和header的方法
 
   _renderRow(rowData, sectionID, rowID) {
@@ -161,26 +146,26 @@ export default class DeviceLog extends React.Component {
 
     switch (rowData['logType']) {
       case '["00"]':
-        cellStatus = '工作正常';
+        cellStatus = PluginStrings.workNormally;
         break;
       case '["01"]':
-        cellStatus = '燃气泄漏报警';
+        cellStatus = PluginStrings.alarm;
         cellImageType += 3;
         break;
       case '["02"]':
-        cellStatus = '设备故障';
+        cellStatus = PluginStrings.deviceFailure;
         break;
       case '["03"]':
-        cellStatus = '传感器寿命到期';
+        cellStatus = PluginStrings.deviceEndOfLife;
         break;
       case '["04"]':
-        cellStatus = '传感器预热';
+        cellStatus = PluginStrings.deviceWarmUp;
         break;
       case '["05"]':
-        cellStatus = '设备自检';
+        cellStatus = PluginStrings.deviceSelfCheck;
         break;
       case '["06"]':
-        cellStatus = '模拟报警';
+        cellStatus = PluginStrings.analogueAlarm;
         break;
       default: break;
     }
@@ -229,9 +214,9 @@ export default class DeviceLog extends React.Component {
             height: 50,
             width: 50
           }}
-          source={cellImage}
+            source={cellImage}
           />
-          <Text style={cellStatus == '燃气泄漏报警' ? styles.warningText : styles.normalText}>{cellStatus}</Text>
+          <Text style={cellStatus == PluginStrings.alarm ? styles.warningText : styles.normalText}>{cellStatus}</Text>
         </View >
       </View >
     );
@@ -239,13 +224,7 @@ export default class DeviceLog extends React.Component {
   _renderHeader(sectionData, sectionID) {
 
     // 先判断是不是今天
-    let dateStr = sectionID;
-    let nowDate = Date.parse(new Date());
-    let nowDateStr = this.formatDate(parseInt(nowDate) / 1000);
-
-    if (dateStr == nowDateStr['date']) {
-      dateStr = '今天';
-    }
+    let dateStr = judgeDate(sectionID)
 
 
     return (

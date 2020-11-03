@@ -6,6 +6,7 @@ import Separator from 'miot/ui/Separator';
 import Protocol from '../../resources/protocol';
 import { strings as SdkStrings, Styles as SdkStyles } from "miot/resources";
 import { ListItem } from "miot/ui/ListItem";
+import PluginStrings from '../../resources/strings';
 
 export default class SettingPage extends React.Component {
 
@@ -14,7 +15,7 @@ export default class SettingPage extends React.Component {
 
     this.state = {
       protocol: null,
-      powerString: '暂无数据'
+      powerString: PluginStrings.noBatteryData
     };
   }
 
@@ -51,7 +52,11 @@ export default class SettingPage extends React.Component {
     };
   }
 
+  UNSAFE_componentWillUnmount() {
 
+    this.subcription.remove();
+    this.deviceReceivedMessages.remove();
+  }
 
   UNSAFE_componentWillMount() {
     this.initCommonSettingParams();
@@ -74,7 +79,7 @@ export default class SettingPage extends React.Component {
         console.log(this.hex2int(power));
         // var powerInt = this.hex2int(power)
         this.setState({
-          powerString: `${ this.hex2int(power) }%`
+          powerString: `${this.hex2int(power)}%`
         });
       }
 
@@ -95,7 +100,7 @@ export default class SettingPage extends React.Component {
       a[i] = code;
     }
 
-    return a.reduce(function(acc, c) {
+    return a.reduce(function (acc, c) {
       acc = 16 * acc + c;
       return acc;
     }, 0);
@@ -108,7 +113,7 @@ export default class SettingPage extends React.Component {
       });
     }).catch((error) => {
       // 错误信息上报， 通过米家app反馈可以上报到服务器
-      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${JSON.stringify(error)}`);
     });
   }
 
@@ -150,20 +155,21 @@ export default class SettingPage extends React.Component {
               fontSize: 11,
               color: '#7F7F7F',
               marginLeft: 24
-            }}>{"功能设置"}</Text>
+            }}>{PluginStrings.functionSettings}</Text>
           </View>
           <Separator style={{ marginLeft: 0 }} />
 
         </View>
 
         <ListItem
-          title="电池寿命"
+          // title="电池寿命"
+          title={PluginStrings.battery}
           value={this.state.powerString}
           hideArrow={true}
-          // containerStyle={{ height: 44, backgroundColor: 'white' }}
-          // titleStyle={{ fontSize: 16 }}
-          // valueStyle={{ fontSize: 14 }}
-          // separator={<Separator />}
+        // containerStyle={{ height: 44, backgroundColor: 'white' }}
+        // titleStyle={{ fontSize: 16 }}
+        // valueStyle={{ fontSize: 14 }}
+        // separator={<Separator />}
 
         // onPress={() => {
         //   console.log('设置电量')
@@ -174,7 +180,7 @@ export default class SettingPage extends React.Component {
         />
 
 
-        <View style={[styles.blank, { borderTopWidth: 0 }]} />
+        < View style={[styles.blank, { borderTopWidth: 0 }]} />
 
         <CommonSetting
           navigation={this.props.navigation} // 插件的路由导航，必填！！！
