@@ -16,6 +16,9 @@ module.exports = {
   smartScene: '智能场景',
   selfCheckRemindStr: '温馨提示：建议您进行设备自检',
   selfCheckRemindYesStr: '好',
+  homeRemindStr1: '天然气触发报警',
+  homeRemindStr2: '请及时检查家庭情况',
+  homeRemindStr3: '传感器寿命到期',
   //事件
   workNormally: '工作正常',
   alarm: '燃气泄漏报警',

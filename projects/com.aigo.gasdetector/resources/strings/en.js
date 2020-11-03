@@ -17,6 +17,9 @@ module.exports = {
   smartScene: 'Smart Scene',
   selfCheckRemindStr: 'Tip: We recommend that you conduct a self-check of the equipment',
   selfCheckRemindYesStr: 'Okay',
+  homeRemindStr1: 'Natural gas trigger alarm',
+  homeRemindStr2: 'Please check on your family.',
+  homeRemindStr3: 'End of Sensor Life.',
 
   //事件
   workNormally: 'Work Normally',

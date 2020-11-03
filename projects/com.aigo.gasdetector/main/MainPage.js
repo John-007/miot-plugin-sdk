@@ -326,6 +326,10 @@ export default class MainPage extends React.Component {
           style={styles.statusImage}
           source={image}
         />
+
+        {this._createAlarmText()}
+        {/* {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>} */}
+
       </View >
 
     );
@@ -334,26 +338,54 @@ export default class MainPage extends React.Component {
   // 创建状态页面
   _createAlarmText() {
 
-    return (
+    if (this.state.deviceStatus == '01') {
 
-      <View
-        style={{
-          marginTop: 25,
-          justifyContent: "center",
-          alignItems: 'center'
-        }}>
-        <Text style={{
-          fontSize: 17,
-          color: '#fff'
-        }}>燃气触发报警</Text>
-        <Text style={{
-          marginTop: 5,
-          fontSize: 15,
-          color: '#fff'
-        }}>请及时检查家庭情况</Text>
+      return (
 
-      </View >
-    );
+        <View
+          style={{
+            marginTop: 25,
+            justifyContent: "center",
+            alignItems: 'center'
+          }}>
+          <Text style={{
+            fontSize: 17,
+            color: '#fff'
+          }}>PluginStrings.homeRemindStr1</Text>
+          <Text style={{
+            marginTop: 5,
+            fontSize: 15,
+            color: '#fff'
+          }}>PluginStrings.homeRemindStr2</Text>
+
+        </View >
+      );
+    } else if (this.state.deviceStatus == '03') {
+
+      return (
+
+        <View
+          style={{
+            marginTop: 25,
+            justifyContent: "center",
+            alignItems: 'center'
+          }}>
+          <Text style={{
+            fontSize: 17,
+            color: '#fff'
+          }}>PluginStrings.homeRemindStr1</Text>
+
+
+        </View >
+      );
+    } else {
+
+      return (
+
+        <Text></Text>
+      );
+    }
+
   }
 
   // 生成卡片
@@ -386,7 +418,7 @@ export default class MainPage extends React.Component {
             height: 40,
             marginRight: 15
           }}
-          // source={require("../resources/images/back.png")}
+
           source={cardProps.iconImg}
 
           resizeMode="contain"
@@ -417,8 +449,10 @@ export default class MainPage extends React.Component {
   render() {
 
     const { navigation } = this.props;
+    let language = Host.locale.language
+    // language == 'zh' ? 
 
-    let cellStatusImage = require('../resources/images/Home_StatusNormal.png');
+    let cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusNormal.png') : require('../resources/images/Home_StatusNormal_en.png');
     let cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
     let cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
     let bgNormalImage = require('../resources/images/Home_BG_Normal.jpg');
@@ -426,31 +460,31 @@ export default class MainPage extends React.Component {
 
     if (this.state.deviceStatus == '00') {
 
-      cellStatusImage = require('../resources/images/Home_StatusNormal.png');
+      cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusNormal.png') : require('../resources/images/Home_StatusNormal_en.png');
       cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
       cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
 
     } else if (this.state.deviceStatus == '01') {
 
-      cellStatusImage = require('../resources/images/Home_StatusAlarm.png');
+      cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusAlarm.png') : require('../resources/images/Home_StatusAlarm_en.png');
       cellLogIconImage = require('../resources/images/Home_LogIcon_Alarm.png');
       cellScenesIconImage = require('../resources/images/Home_Scenes_Alarm.png');
 
     } else if (this.state.deviceStatus == '02') {
 
-      cellStatusImage = require('../resources/images/Home_StatusBreakdown.png');
+      cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusBreakdown.png') : require('../resources/images/Home_StatusBreakdown_en.png');
       cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
       cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
 
     } else if (this.state.deviceStatus == '03') {
 
-      cellStatusImage = require('../resources/images/Home_StatusBreakdown.png');
+      cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusBreakdown.png') : require('../resources/images/Home_StatusBreakdown_en.png');
       cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
       cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
 
     } else if (this.state.deviceStatus == '04') {
 
-      cellStatusImage = require('../resources/images/Home_StatusWarmUp.png');
+      cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusWarmUp.png') : require('../resources/images/Home_StatusWarmUp_en.png');
       cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
       cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
 
@@ -464,9 +498,6 @@ export default class MainPage extends React.Component {
           backgroundColor: "#F7F7F7"
 
         }} >
-
-
-
 
         <ImageBackground style={{
           flex: 1,

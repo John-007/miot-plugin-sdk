@@ -344,8 +344,9 @@ export default class MainPage extends React.Component {
 
   render() {
     const { navigation } = this.props;
+    let language = Host.locale.language
 
-    let cellStatusImage = require('../resources/images/Home_StatusNormal.png');
+    let cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusNormal.png') : require('../resources/images/Home_StatusNormal_en.png');
     let cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
     let cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
     let bgNormalImage = require('../resources/images/Home_BG_Normal.jpg');
@@ -354,19 +355,19 @@ export default class MainPage extends React.Component {
 
     if (this.state.deviceStatus == '00') {
 
-      cellStatusImage = require('../resources/images/Home_StatusNormal.png');
+      cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusNormal.png') : require('../resources/images/Home_StatusNormal_en.png');
       cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
       cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
 
     } else if (this.state.deviceStatus == '01') {
 
-      cellStatusImage = require('../resources/images/Home_StatusAlarm.png');
+      cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusAlarm.png') : require('../resources/images/Home_StatusAlarm_en.png');
       cellLogIconImage = require('../resources/images/Home_LogIcon_Alarm.png');
       cellScenesIconImage = require('../resources/images/Home_Scenes_Alarm.png');
 
     } else if (this.state.deviceStatus == '02') {
 
-      cellStatusImage = require('../resources/images/Home_StatusBreakdown.png');
+      cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusBreakdown.png') : require('../resources/images/Home_StatusBreakdown_en.png');
       cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
       cellScenesIconImage = require('../resources/images/Home_Scenes_Normal.png');
     }
