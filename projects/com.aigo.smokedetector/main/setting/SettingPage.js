@@ -5,17 +5,10 @@ import { CommonSetting, SETTING_KEYS } from "miot/ui/CommonSetting";
 import Separator from 'miot/ui/Separator';
 import Protocol from '../../resources/protocol';
 import { ListItem, ListItemWithSlider, ListItemWithSwitch } from 'miot/ui/ListItem';
-
+import PluginStrings from '../../resources/strings';
 
 export default class SettingPage extends React.Component {
 
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     protocol: null
-  //   };
-  // }
 
   initCommonSettingParams() {
     this.commonSettingParams = {
@@ -37,10 +30,6 @@ export default class SettingPage extends React.Component {
     };
   }
 
-  // UNSAFE_componentWillMount() {
-  //   this.initCommonSettingParams();
-  //   this.initProtocol();
-  // }
 
   constructor(props) {
     super(props);
@@ -48,7 +37,7 @@ export default class SettingPage extends React.Component {
 
     this.state = {
       protocol: null,
-      powerString: '暂无数据',
+      powerString: PluginStrings.noLogs,
       switchOn: true
       // switchOn: this.props.navigation.state.params.checkSelfSwitchOn == "true" ? true : false
     };
@@ -60,10 +49,7 @@ export default class SettingPage extends React.Component {
   _createMenuData() {
     const { navigation } = this.props;
 
-    // this.state({
 
-    //   switchOn: this.props.navigation.state.params.checkSelfSwitchOn
-    // })
 
 
     console.log(this.props.navigation.state.params.checkSelfSwitchOn);
@@ -71,9 +57,9 @@ export default class SettingPage extends React.Component {
     this._menuData = [
 
       {
-        'name': '设备自检',
+        'name': PluginStrings.selfCheck,
         'func': () => {
-          navigation.navigate('checkSelf', { 'title': '设备自检' });
+          navigation.navigate('checkSelf', { 'title': PluginStrings.selfCheck });
         }
       }
 
@@ -95,7 +81,7 @@ export default class SettingPage extends React.Component {
       });
     }).catch((error) => {
       // 错误信息上报， 通过米家app反馈可以上报到服务器
-      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${ JSON.stringify(error) }`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${JSON.stringify(error)}`);
     });
   }
 
@@ -135,7 +121,7 @@ export default class SettingPage extends React.Component {
         console.log(this.hex2int(power));
         // var powerInt = this.hex2int(power)
         this.setState({
-          powerString: `${ this.hex2int(power) }%`
+          powerString: `${this.hex2int(power)}%`
         });
       }
 
@@ -161,7 +147,7 @@ export default class SettingPage extends React.Component {
       a[i] = code;
     }
 
-    return a.reduce(function(acc, c) {
+    return a.reduce(function (acc, c) {
       acc = 16 * acc + c;
       return acc;
     }, 0);
@@ -204,31 +190,31 @@ export default class SettingPage extends React.Component {
               fontSize: 11,
               color: '#7F7F7F',
               marginLeft: 24
-            }}>{"功能设置"}</Text>
+            }}>{PluginStrings.functionSettings}</Text>
           </View>
           <Separator style={{ marginLeft: 0 }} />
         </View>
 
         <ListItem
-          title="设备自检"
+          title={PluginStrings.selfCheck}
           // showDot={true}
-          onPress={() => navigation.navigate('checkSelf', { 'title': '设备自检' })}
+          onPress={() => navigation.navigate('checkSelf', { 'title': PluginStrings.selfCheck })}
           accessible={true}
           accessibilityHint="press title"
         // containerStyle={{ height: 44 }}
         />
 
         <ListItem
-          title="消音"
+          title={PluginStrings.silence}
           // showDot={true}
-          onPress={() => navigation.navigate('silencer', { 'title': '消音' })}
+          onPress={() => navigation.navigate('silencer', { 'title': PluginStrings.silence })}
           accessible={true}
           accessibilityHint="press title"
         // containerStyle={{ height: 44 }}
         />
 
         <ListItemWithSwitch
-          title="每月自检提醒"
+          title={PluginStrings.selfCheckReminder}
           value={this.state.switchOn}
           // value={false}
           onValueChange={(value) => {
@@ -252,13 +238,13 @@ export default class SettingPage extends React.Component {
 
 
         <ListItem
-          title="电池寿命"
+          title={PluginStrings.battery}
           value={this.state.powerString}
           hideArrow={true}
-          // containerStyle={{ height: 44, backgroundColor: 'white' }}
-          // titleStyle={{ fontSize: 16 }}
-          // valueStyle={{ fontSize: 14 }}
-          // separator={<Separator />}
+        // containerStyle={{ height: 44, backgroundColor: 'white' }}
+        // titleStyle={{ fontSize: 16 }}
+        // valueStyle={{ fontSize: 14 }}
+        // separator={<Separator />}
 
         // accessible={true}
         // accessibilityHint="press title"

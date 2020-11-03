@@ -44,6 +44,9 @@ module.exports = {
   selfCheckFail: '自检失败',
   selfCheckDone: '完成',
   selfCheckRetry: '重试',
-
+  //消音
+  silenceBtnStr: '消音',
+  silenceSuccessStr: '消音命令发送完成',
+  silenceOkayStr: '好',
 };
 

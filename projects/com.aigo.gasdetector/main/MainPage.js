@@ -120,9 +120,7 @@ export default class MainPage extends React.Component {
     this.deviceReceivedMessages = DeviceEvent.deviceReceivedMessages.addListener(
       (device, map, data) => {
         console.log(data);
-        // alert(data[0]['value'] + ' ' + this.state.deviceStatus);
-        // console.log('Device.addListener', device, map, data);
-        // console.log(data[0]['value'] + ' ' + this.state.deviceStatus);
+
         if (data[0].hasOwnProperty('value')) {
           let timeMap = formatDate(data[0]['time']);
           this.setState({
@@ -225,7 +223,7 @@ export default class MainPage extends React.Component {
         let date = (date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24);
 
         console.log("事件对比", res['data']);
-        if (date > 30 && date1 > 10) {
+        if (date > 30 && date1 > 1600000000) {
           // 弹窗提醒用户自检
 
           this.setState({
@@ -245,22 +243,18 @@ export default class MainPage extends React.Component {
 
   alertCheckSelf() {
 
-    console.log(333);
+
     Protocol.getProtocol().then((protocol) => {
-      console.log(protocol);
       Host.ui.alertLegalInformationAuthorization(protocol).then((res) => {
-        console.log(res);
         if (res === 'ok' || res === true || res === 'true') {
           Service.smarthome.batchSetDeviceDatas([{ did: Device.deviceID, props: { "prop.s_auth_config": JSON.stringify({ 'privacyAuthed': true }) } }]);
           PackageEvent.packageAuthorizationAgreed.emit();
         }
       }).catch((error) => {
-        console.log(error);
         // 打开弹出过程中出现了意外错误, 进行上报
         Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
       });
     }).catch((error) => {
-      console.log(error);
       Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
     });
 
@@ -271,20 +265,16 @@ export default class MainPage extends React.Component {
   alertLegalInformationAuthorization() {
 
     Protocol.getProtocol().then((protocol) => {
-      console.log(protocol);
       Host.ui.alertLegalInformationAuthorization(protocol).then((res) => {
-        console.log(res);
         if (res === 'ok' || res === true || res === 'true') {
           Service.smarthome.batchSetDeviceDatas([{ did: Device.deviceID, props: { "prop.s_auth_config": JSON.stringify({ 'privacyAuthed': true }) } }]);
           PackageEvent.packageAuthorizationAgreed.emit();
         }
       }).catch((error) => {
-        console.log(error);
         // 打开弹出过程中出现了意外错误, 进行上报
         Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
       });
     }).catch((error) => {
-      console.log(error);
       Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
     });
 
@@ -480,10 +470,7 @@ export default class MainPage extends React.Component {
 
         <ImageBackground style={{
           flex: 1,
-          // justifyContent: "center",
           alignItems: "center"
-          // width: null,
-          // height: null,
         }}
           source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
@@ -497,7 +484,6 @@ export default class MainPage extends React.Component {
                 mainTitleStr: PluginStrings.logs,
                 subTitleStr: this.state.recentLog,
 
-                // iconImg: require("../resources/images/Home_LogIcon_Normal.png")
                 iconImg: cellLogIconImage
               })
             }

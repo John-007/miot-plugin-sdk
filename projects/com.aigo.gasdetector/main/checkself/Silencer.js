@@ -16,12 +16,7 @@ import {
 import { Bluetooth, BluetoothEvent, Device, DeviceEvent, Host } from "miot";
 import { CommonSetting, SETTING_KEYS } from "miot/ui/CommonSetting";
 import { ActionSheetIOS, Button, Image, ListView, PixelRatio, StyleSheet, Text, ScrollView, TouchableHighlight, View } from 'react-native';
-let BUTTONS = [
-  '测试对话框',
-  '确定'
-];
-import NavigationBar from 'miot/ui/NavigationBar';
-import Service from 'miot/Service';
+
 import PluginStrings from '../../resources/strings';
 
 // 此ble对象，即为IBluetooth对象或者IBluetoothLock对象
@@ -439,29 +434,6 @@ export default class CheckSelf extends React.Component {
 
         < CheckStatusView text={this.state.checkStatus} />
 
-        {/* <Button
-          onPress={() => {
-            this.connect();
-          }}
-          title="connect"
-        />
-        <Button
-          onPress={() => {
-            this.sendTestText();
-          }}
-          title="send"
-        />
-
-        <Button
-          onPress={() => {
-            // this.sendTestText();
-            // Bluetooth.startScan(3000, 'FE95');
-            this.setState({ visible0: true });
-          }}
-          // disabled={!this.state.isHungry}bt.mac
-          title="alert"
-        /> */}
-
         <View style={{
           marginBottom: 0,
 
@@ -489,17 +461,6 @@ export default class CheckSelf extends React.Component {
                 </View>
               )
           }
-          {/* <Button
-            style={{
-              // display: this.state.buttonVisible
-              display: false
-            }}
-            title={'开始自检'}
-            color={'#32BAC0'}
-            onPress={() => {
-              this.sendTestText();
-              this.setState({ visible0: true });
-            }} /> */}
         </View>
 
         <AbstractDialog

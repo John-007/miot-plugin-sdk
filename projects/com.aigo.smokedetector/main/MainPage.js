@@ -16,8 +16,10 @@ import {
 import Card from 'miot/ui/Card';
 import { Device, Package, Host, Entrance, Service, DeviceEvent, PackageEvent } from 'miot';
 import NavigationBar from 'miot/ui/NavigationBar';
+import { strings as SdkStrings, Styles as SdkStyles } from 'miot/resources';
 import PluginStrings from '../resources/strings';
-
+//全局方法
+import { formatDate, judgeDate } from './Global'
 /**
  * 蓝牙模块 通用api使用
  */
@@ -38,7 +40,7 @@ export default class MainPage extends React.Component {
 
     this.state = {
       deviceStatus: '00',
-      recentLog: '暂无日志',
+      recentLog: PluginStrings.noLogs,
       visibleRemindCheckSelf: false
     };
 
@@ -62,7 +64,7 @@ export default class MainPage extends React.Component {
             key: NavigationBar.ICON.MORE,
             onPress: () => {
               // 跳转到设置页
-              this.props.navigation.navigate('moreMenu', { title: '设置', checkSelfSwitchOn: this.state.checkSelfSwitchOn });
+              this.props.navigation.navigate('moreMenu', { title: SdkStrings.setting, checkSelfSwitchOn: this.state.checkSelfSwitchOn });
             }
           }
         ]
@@ -111,11 +113,11 @@ export default class MainPage extends React.Component {
         // alert(data[0]['key'] + ' ' + data[0]['value']);
         console.log('Device.addListener', device, map, data);
         if (data[0].hasOwnProperty('value')) {
-          let timeMap = this.formatDate(data[0]['time']);
+          let timeMap = formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
 
-            recentLog: `${this.judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(data[0]['value'])}`
+            recentLog: `${judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(data[0]['value'])}`
           });
         }
       });
@@ -136,9 +138,9 @@ export default class MainPage extends React.Component {
 
       if (model.hasOwnProperty("value")) {
 
-        let timeMap = this.formatDate(model['time']);
+        let timeMap = formatDate(model['time']);
         this.setState({
-          recentLog: `${this.judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(model['value'])}`
+          recentLog: `${judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(model['value'])}`
         });
       }
 
@@ -190,7 +192,7 @@ export default class MainPage extends React.Component {
 
         console.log("时间相差：", date1, date2, date);
 
-        if (date > 30 && date1 > 10) {
+        if (date > 30 && date1 > 1600000000) {
           // 弹窗提醒用户自检
 
           this.setState({
@@ -208,18 +210,6 @@ export default class MainPage extends React.Component {
     });
   }
 
-  judgeDate(dateStr) {
-
-    // 先判断是不是今天
-    let nowDate = Date.parse(new Date());
-    let nowDateStr = this.formatDate(parseInt(nowDate) / 1000);
-
-    if (dateStr == nowDateStr['date']) {
-      return '今天';
-    }
-    return dateStr;
-  }
-
   subtitleString(typeStr) {
 
     let typeString = typeStr;
@@ -235,37 +225,13 @@ export default class MainPage extends React.Component {
     } else if (typeString == '02') {
       return PluginStrings.deviceFailure;
     } else if (typeString == '03') {
-      return '设备自检';
+      return PluginStrings.deviceSelfCheck;
     } else if (typeString == '04') {
-      return '模拟报警';
+      return PluginStrings.analogueAlarm;
     }
-
-
 
   }
 
-  formatDate(rawDate) {
-
-    let date = new Date(parseInt(rawDate) * 1000);
-    if (date.length == 13) {
-      date = new Date(parseInt(rawDate));
-    }
-
-    let MM = (date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1);
-    let DD = (date.getDate() < 10 ? `0${date.getDate()}` : date.getDate());
-    let hh = `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:`;
-    let mm = (date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes());
-
-    // return MM + '月' + DD + '日' + '_' + hh + mm;
-    let language = Host.locale.language
-    if (language === 'zh') {
-      console.log('中文')
-    } else if (language === 'en') {
-      console.log('英文')
-    }
-
-    return { 'date': `${MM}月${DD}日`, 'time': hh + mm };
-  }
 
   // 创建状态页面
   _createStatusView(image) {
@@ -276,14 +242,6 @@ export default class MainPage extends React.Component {
     })
 
     return (
-
-      // <View style={{
-      //   flex: 1,
-      //   justifyContent: "center"
-      // }}>
-      //   <Animated.Image style={[styles.statusImage, { transform: [{ rotate: spin }] }]} source={image} />
-      //   {this.state.deviceStatus == '01' ? this._createAlarmText() : <Text></Text>}
-      // </View>
 
       <View
         style={{
@@ -315,12 +273,12 @@ export default class MainPage extends React.Component {
         <Text style={{
           fontSize: 17,
           color: '#fff'
-        }}>烟雾触发报警</Text>
+        }}>PluginStrings.homeRemindStr1</Text>
         <Text style={{
           marginTop: 5,
           fontSize: 15,
           color: '#fff'
-        }}>请及时检查家庭情况</Text>
+        }}>PluginStrings.homeRemindStr2</Text>
 
       </View >
     );
@@ -443,7 +401,7 @@ export default class MainPage extends React.Component {
             cardStyle={{ borderRadius: 10, height: 70 }}
             innerView={
               this.createCard({
-                mainTitleStr: '日志',
+                mainTitleStr: PluginStrings.logs,
                 subTitleStr: this.state.recentLog,
                 // iconImg: require("../resources/Home_LogIcon_Normal.png")
                 iconImg: cellLogIconImage
@@ -462,7 +420,7 @@ export default class MainPage extends React.Component {
             cardStyle={{ borderRadius: 10, height: 70 }}
             innerView={
               this.createCard({
-                mainTitleStr: '智能场景',
+                mainTitleStr: PluginStrings.smartScene,
                 // iconImg: require("../resources/Home_Scenes_Normal.png")
                 iconImg: cellScenesIconImage
               })
@@ -479,10 +437,10 @@ export default class MainPage extends React.Component {
 
         <AbstractDialog
           visible={this.state.visibleRemindCheckSelf}
-          title={'温馨提示：建议您进行设备自检'}
+          title={PluginStrings.selfCheckRemindStr}
           buttons={[
             {
-              text: '好',
+              text: PluginStrings.selfCheckRemindYesStr,
               style: { color: '#32BAC0' },
               callback: (_) => {
                 this.setState({

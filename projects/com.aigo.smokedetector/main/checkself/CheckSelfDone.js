@@ -8,8 +8,7 @@ import {
   StatusBar,
   Button
 } from 'react-native';
-import Card from 'miot/ui/Card';
-import { Device, Package, Host, Entrance, Service, DeviceEvent, PackageEvent } from 'miot';
+import PluginStrings from '../../resources/strings';
 
 export default class CheckSelfDone extends React.Component {
 
@@ -24,8 +23,8 @@ export default class CheckSelfDone extends React.Component {
     super(props);
 
     this.state = {
-      deviceStatus: '["00"]',
-      recentLog: '暂无日志'
+      // deviceStatus: '["00"]',
+      // recentLog: '暂无日志'
     };
   }
 
@@ -100,7 +99,7 @@ export default class CheckSelfDone extends React.Component {
           borderRadius: 10
 
         }}>
-          <Button title={resultStatus ? '完成' : '重试'} color={'#32BAC0'} onPress={() => {
+          <Button title={resultStatus ? PluginStrings.selfCheckDone : PluginStrings.selfCheckRetry} color={'#32BAC0'} onPress={() => {
             // this.props.router.callBack('I am a Student');
             resultStatus ? this.props.navigation.goBack(this.props.navigation.state.params.navKey) : this.props.navigation.goBack();
           }} />
