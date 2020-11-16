@@ -13,8 +13,8 @@ import {
 import Separator from 'miot/ui/Separator';
 import { Device, Package, Host, Entrance, Service, DeviceEvent, PackageEvent } from 'miot';
 
-//全局方法
-import { formatDate, judgeDate } from './Global'
+// 全局方法
+import { formatDate, judgeDate } from './Global';
 import PluginStrings from '../resources/strings';
 
 
@@ -214,7 +214,7 @@ export default class DeviceLog extends React.Component {
             height: 50,
             width: 50
           }}
-            source={cellImage}
+          source={cellImage}
           />
           <Text style={cellStatus == PluginStrings.floodAlarm ? styles.warningText : styles.normalText}>{cellStatus}</Text>
         </View >
@@ -224,7 +224,7 @@ export default class DeviceLog extends React.Component {
   _renderHeader(sectionData, sectionID) {
 
     // 先判断是不是今天
-    let dateStr = judgeDate(sectionID)
+    let dateStr = judgeDate(sectionID);
     // let dateStr = sectionID;
     // let nowDate = Date.parse(new Date());
     // let nowDateStr = formatDate(parseInt(nowDate) / 1000);

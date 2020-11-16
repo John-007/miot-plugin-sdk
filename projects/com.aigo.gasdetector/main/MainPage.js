@@ -10,8 +10,8 @@ import Card from 'miot/ui/Card';
 
 import Protocol from '../resources/protocol';
 
-//全局方法
-import { formatDate, judgeDate } from './Global'
+// 全局方法
+import { formatDate, judgeDate } from './Global';
 
 /**
  * SDK 提供的多语言 和 插件提供的多语言
@@ -125,7 +125,7 @@ export default class MainPage extends React.Component {
           let timeMap = formatDate(data[0]['time']);
           this.setState({
             deviceStatus: data[0]['value'],
-            recentLog: `${judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(data[0]['value'])}`
+            recentLog: `${ judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(data[0]['value']) }`
           });
 
         }
@@ -163,7 +163,7 @@ export default class MainPage extends React.Component {
       this.alertLegalInformationAuthorization();
 
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${ JSON.stringify(error) }`);
     });
 
 
@@ -186,7 +186,7 @@ export default class MainPage extends React.Component {
         let timeMap = formatDate(model['time']);
 
         this.setState({
-          recentLog: `${judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(model['value'])}`
+          recentLog: `${ judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(model['value']) }`
         });
 
       }
@@ -252,10 +252,10 @@ export default class MainPage extends React.Component {
         }
       }).catch((error) => {
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
       });
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
     });
 
   }
@@ -272,10 +272,10 @@ export default class MainPage extends React.Component {
         }
       }).catch((error) => {
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
       });
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
     });
 
   }
@@ -449,7 +449,7 @@ export default class MainPage extends React.Component {
   render() {
 
     const { navigation } = this.props;
-    let language = Host.locale.language
+    let language = Host.locale.language;
     // language == 'zh' ? 
 
     let cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusNormal.png') : require('../resources/images/Home_StatusNormal_en.png');
@@ -503,7 +503,7 @@ export default class MainPage extends React.Component {
           flex: 1,
           alignItems: "center"
         }}
-          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
+        source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 

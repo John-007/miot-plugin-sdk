@@ -18,8 +18,8 @@ import { Device, Package, Host, Entrance, Service, DeviceEvent, PackageEvent } f
 import NavigationBar from 'miot/ui/NavigationBar';
 import { strings as SdkStrings, Styles as SdkStyles } from 'miot/resources';
 import PluginStrings from '../resources/strings';
-//全局方法
-import { formatDate, judgeDate } from './Global'
+// 全局方法
+import { formatDate, judgeDate } from './Global';
 /**
  * 蓝牙模块 通用api使用
  */
@@ -36,7 +36,7 @@ export default class MainPage extends React.Component {
     super(props);
 
 
-    this.spinValue = new Animated.Value(0)
+    this.spinValue = new Animated.Value(0);
 
     this.state = {
       deviceStatus: '00',
@@ -117,7 +117,7 @@ export default class MainPage extends React.Component {
           this.setState({
             deviceStatus: data[0]['value'],
 
-            recentLog: `${judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(data[0]['value'])}`
+            recentLog: `${ judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(data[0]['value']) }`
           });
         }
       });
@@ -140,7 +140,7 @@ export default class MainPage extends React.Component {
 
         let timeMap = formatDate(model['time']);
         this.setState({
-          recentLog: `${judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(model['value'])}`
+          recentLog: `${ judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(model['value']) }`
         });
       }
 
@@ -164,14 +164,14 @@ export default class MainPage extends React.Component {
 
   }
 
-  //旋转方法
+  // 旋转方法
   spin = () => {
-    this.spinValue.setValue(0)
+    this.spinValue.setValue(0);
     Animated.timing(this.spinValue, {
       toValue: 1, // 最终值 为1，这里表示最大旋转 360度
       duration: 4000,
       easing: Easing.linear
-    }).start(() => this.spin())
+    }).start(() => this.spin());
   }
 
   judgeCheckSelf() {
@@ -237,9 +237,9 @@ export default class MainPage extends React.Component {
   _createStatusView(image) {
 
     const spin = this.spinValue.interpolate({
-      inputRange: [0, 1],//输入值
-      outputRange: ['0deg', '360deg'] //输出值
-    })
+      inputRange: [0, 1], // 输入值
+      outputRange: ['0deg', '360deg'] // 输出值
+    });
 
     return (
 
@@ -344,7 +344,7 @@ export default class MainPage extends React.Component {
 
   render() {
     const { navigation } = this.props;
-    let language = Host.locale.language
+    let language = Host.locale.language;
 
     let cellStatusImage = language == 'zh' ? require('../resources/images/Home_StatusNormal.png') : require('../resources/images/Home_StatusNormal_en.png');
     let cellLogIconImage = require('../resources/images/Home_LogIcon_Normal.png');
@@ -392,7 +392,7 @@ export default class MainPage extends React.Component {
           // width: null,
           // height: null,
         }}
-          source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
+        source={this.state.deviceStatus == '01' ? bgWarningImage : bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 

@@ -5,8 +5,8 @@ import NavigationBar from 'miot/ui/NavigationBar';
 import Separator from 'miot/ui/Separator';
 import Card from 'miot/ui/Card';
 
-//全局方法
-import { formatDate, judgeDate } from './Global'
+// 全局方法
+import { formatDate, judgeDate } from './Global';
 
 /**
  * SDK 提供的多语言 和 插件提供的多语言
@@ -110,7 +110,7 @@ export default class MainPage extends React.Component {
           this.setState({
             deviceStatus: data[0]['value'],
 
-            recentLog: `${judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(data[0]['value'])}`
+            recentLog: `${ judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(data[0]['value']) }`
           });
         }
       });
@@ -143,7 +143,7 @@ export default class MainPage extends React.Component {
         let timeMap = formatDate(model['time']);
 
         this.setState({
-          recentLog: `${judgeDate(timeMap['date'])}  ${timeMap['time']}  ${this.subtitleString(model['value'])}`
+          recentLog: `${ judgeDate(timeMap['date']) }  ${ timeMap['time'] }  ${ this.subtitleString(model['value']) }`
         });
       }
 
@@ -155,7 +155,7 @@ export default class MainPage extends React.Component {
 
   }
 
-  //状态文字处理
+  // 状态文字处理
   subtitleString(typeStr) {
 
     let typeString = typeStr;
@@ -254,7 +254,7 @@ export default class MainPage extends React.Component {
   render() {
 
     const { navigation } = this.props;
-    let language = Host.locale.language
+    let language = Host.locale.language;
 
     let cellStatusImage = '';
     let cellLogIconImage = '';
@@ -295,7 +295,7 @@ export default class MainPage extends React.Component {
           // height: null,
         }}
 
-          source={bgNormalImage}>
+        source={bgNormalImage}>
 
           {this._createStatusView(cellStatusImage)}
 

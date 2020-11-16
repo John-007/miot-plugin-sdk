@@ -3,14 +3,14 @@ module.exports = {
   selfDefineScene: '自定义场景',
   timeSetting: '时间设置',
   countDownTime: '倒计时',
-  //设置页面
+  // 设置页面
   battery: '电池寿命',
   functionSettings: '功能设置',
   noBatteryData: '暂无数据',
   selfCheckReminder: '每月自检提醒',
   silence: '消音',
   selfCheck: '自检',
-  //首页
+  // 首页
   logs: '日志',
   noLogs: '暂无日志',
   smartScene: '智能场景',
@@ -19,7 +19,7 @@ module.exports = {
   homeRemindStr1: '天然气触发报警',
   homeRemindStr2: '请及时检查家庭情况',
   homeRemindStr3: '传感器寿命到期',
-  //事件
+  // 事件
   workNormally: '工作正常',
   alarm: '燃气泄漏报警',
   deviceFailure: '设备故障',
@@ -27,7 +27,7 @@ module.exports = {
   deviceWarmUp: '传感器预热',
   deviceSelfCheck: '设备自检',
   analogueAlarm: '模拟报警',
-  //自检蓝牙状态
+  // 自检蓝牙状态
   bleStr1: '正在搜索设备',
   bleStr2: '蓝牙已开启，准备搜索设备',
   bleStr3: '蓝牙未开启，请检查开启蓝牙后再试',
@@ -47,9 +47,9 @@ module.exports = {
   selfCheckFail: '自检失败',
   selfCheckDone: '完成',
   selfCheckRetry: '重试',
-  //消音
+  // 消音
   silenceBtnStr: '消音',
   silenceSuccessStr: '消音命令发送完成',
-  silenceOkayStr: '好',
+  silenceOkayStr: '好'
 };
 

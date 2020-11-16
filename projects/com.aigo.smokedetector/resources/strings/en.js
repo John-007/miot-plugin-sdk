@@ -3,7 +3,7 @@ module.exports = {
   selfDefineScene: 'custom scene',
   timeSetting: 'time setting',
   countDownTime: 'countdown time',
-  //设置页面
+  // 设置页面
   battery: 'Battery',
   functionSettings: 'Function settings',
   noBatteryData: 'No Data',
@@ -11,7 +11,7 @@ module.exports = {
   silence: 'Silence',
   selfCheck: 'Self-check',
 
-  //首页
+  // 首页
   logs: 'Logs',
   noLogs: 'No Logs',
   smartScene: 'Smart Scene',
@@ -19,13 +19,13 @@ module.exports = {
   selfCheckRemindYesStr: 'Okay',
   homeRemindStr1: 'Smoke trigger alarm',
   homeRemindStr2: 'Please check on your family.',
-  //事件
+  // 事件
   workNormally: 'Work Normally',
   alarm: 'Fire Alarm',
   deviceFailure: 'Device Failure',
   deviceSelfCheck: 'Sensor Self-check',
   analogueAlarm: 'Sensor Analog alarm',
-  //蓝牙状态
+  // 蓝牙状态
   bleStr1: 'Searching for equipment.',
   bleStr2: 'Bluetooth is up and ready to search the device.',
   bleStr3: 'Bluetooth is not on, please check to turn on Bluetooth and try again.',
@@ -47,8 +47,8 @@ module.exports = {
   selfCheckFail: 'Self-check failure',
   selfCheckDone: 'Complete',
   selfCheckRetry: 'Retry',
-  //消音
+  // 消音
   silenceBtnStr: 'Silence',
   silenceSuccessStr: 'Silencing command sent.',
-  silenceOkayStr: 'Okay',
+  silenceOkayStr: 'Okay'
 };

@@ -103,6 +103,7 @@
     "husky": "^4.2.5",
     "jsdoc-to-markdown": "^4.0.1",
     "metro": "0.28.0",
+    "pre-commit": "^1.2.2",
     "react-native-cli": "^2.0.1"
   }
 }
