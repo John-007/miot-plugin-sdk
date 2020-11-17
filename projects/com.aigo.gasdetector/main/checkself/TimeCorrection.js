@@ -380,10 +380,34 @@ export default class CheckSelf extends React.Component {
 
         bt.getService(UUID_SERVICE).getCharacteristic(UUID_BUTTON_READ_WRITE_NOTIFY).setNotify(true);
 
-        let text = '5849414f59494e';
+        // let text = '5849414f59494e';
+
+        //获取时间
+        var date = new Date();
+
+        let YY = this.prefixInteger(date.getFullYear().toString(16), 4);
+        let MM = this.prefixInteger((date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1), 2);
+        let DD = this.prefixInteger((date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()), 2);
+        let hh = this.prefixInteger((date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()), 2);
+        let mm = this.prefixInteger((date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()), 2);
+        let ss = this.prefixInteger((date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()), 2);
+
+        console.log(`${YY}年${MM}月${DD}日${hh}时${mm}分${ss}秒`)
+        console.log('990801' + YY + MM + DD + hh + mm + ss)
+        let text = '990801' + YY + MM + DD + hh + mm + ss
         bt.getService(UUID_SERVICE).getCharacteristic(UUID_LED_READ_WRITE).writeWithoutResponse(text);
         this.addLog('自检发送完成');
 
+    }
+    // fillZero(data,count){
+
+
+    //     if data.count != count{
+
+    //     }
+    // }
+    prefixInteger(num, n) {
+        return (Array(n).join(0) + num).slice(-n);
     }
 
     // `Modal` 隐藏了，父组件必须要同步更新状态，但不必用 `setState` 触发 `render`
