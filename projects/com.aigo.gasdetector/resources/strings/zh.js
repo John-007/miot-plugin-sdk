@@ -50,6 +50,9 @@ module.exports = {
   // 消音
   silenceBtnStr: '消音',
   silenceSuccessStr: '消音命令发送完成',
-  silenceOkayStr: '好'
+  silenceOkayStr: '好',
+  // 校时
+  timeCorrectionBtnStr: '时间校正',
+  timeCorrectionSuccessStr: '时间校正命令发送完成',
 };
 

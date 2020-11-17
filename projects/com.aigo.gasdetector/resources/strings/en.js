@@ -54,5 +54,8 @@ module.exports = {
   // 消音
   silenceBtnStr: 'Silence',
   silenceSuccessStr: 'Silencing command sent.',
-  silenceOkayStr: 'Okay'
+  silenceOkayStr: 'Okay',
+  // 校时
+  timeCorrectionBtnStr: 'Time correction',
+  timeCorrectionSuccessStr: 'Time correction command sent.',
 };
