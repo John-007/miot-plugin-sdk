@@ -48,6 +48,7 @@ module.exports = {
   selfCheckDone: '完成',
   selfCheckRetry: '重试',
   // 消音
+  bleStr6Silence: '已连接,请点击“消音”按钮',
   silenceBtnStr: '消音',
   silenceSuccessStr: '消音命令发送完成',
   silenceOkayStr: '好'

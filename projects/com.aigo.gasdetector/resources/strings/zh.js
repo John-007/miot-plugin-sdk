@@ -48,10 +48,12 @@ module.exports = {
   selfCheckDone: '完成',
   selfCheckRetry: '重试',
   // 消音
+  bleStr6Silence: '已连接,请点击“消音”按钮',
   silenceBtnStr: '消音',
   silenceSuccessStr: '消音命令发送完成',
   silenceOkayStr: '好',
   // 校时
+  bleStr6TimeCorrection: '已连接,请点击“时间校正”按钮',
   timeCorrectionBtnStr: '时间校正',
   timeCorrectionSuccessStr: '时间校正命令发送完成',
 };

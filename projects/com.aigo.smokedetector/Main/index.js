@@ -11,7 +11,6 @@ import Protocol from '../resources/protocol';
 import CheckSelf from './checkself/CheckSelf';
 import CheckSelfDone from './checkself/CheckSelfDone';
 import Silencer from './checkself/Silencer';
-import TimeCorrection from './checkself/TimeCorrection';
 import DeviceLog from './DeviceLog';
 
 export default class App extends React.Component {
@@ -121,7 +120,6 @@ function createRootStack(initPage) {
       checkSelf: CheckSelf,
       checkSelfDone: CheckSelfDone,
       silencer: Silencer,
-      timeCorrection: TimeCorrection
     },
     {
       initialRouteName: initPage,

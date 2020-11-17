@@ -38,7 +38,7 @@ module.exports = {
   bleStr10: 'Connection failed, click back to try again',
   bleStr11: 'connected',
   bleBtnStr: 'Start Self Check',
-  bleStr6Silence: 'Connected, click the "Silence" button.',
+
 
   isSuccess: 'Is there a beep?',
   yesStr: 'Yes',
@@ -48,10 +48,8 @@ module.exports = {
   selfCheckDone: 'Complete',
   selfCheckRetry: 'Retry',
   // 消音
+  bleStr6Silence: 'Connected, click the "Silence" button.',
   silenceBtnStr: 'Silence',
   silenceSuccessStr: 'Silencing command sent.',
-  silenceOkayStr: 'Okay',
-  // 校时
-  timeCorrectionBtnStr: 'Time correction',
-  timeCorrectionSuccessStr: 'Time correction command sent.',
+  silenceOkayStr: 'Okay'
 };

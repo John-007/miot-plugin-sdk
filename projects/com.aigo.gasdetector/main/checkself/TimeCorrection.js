@@ -237,7 +237,7 @@ export default class CheckSelf extends React.Component {
                 });
 
                 console.log('jl--连接成功');
-                this.setState({ checkStatus: PluginStrings.bleStr6Silence, buttonVisible: true });
+                this.setState({ checkStatus: PluginStrings.bleStr6TimeCorrection, buttonVisible: true });
             }
 
 
