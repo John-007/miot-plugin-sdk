@@ -79,7 +79,7 @@ export default class App extends React.Component {
       this.alertLegalInformationAuthorization();
 
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.smarthome.batchGetDeviceDatas error: ${ JSON.stringify(error) }`);
     });
   }
 
@@ -96,10 +96,10 @@ export default class App extends React.Component {
         }
       }).catch((error) => {
         // 打开弹出过程中出现了意外错误, 进行上报
-        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${JSON.stringify(error)}`);
+        Service.smarthome.reportLog(Device.model, `Host.ui.alertLegalInformationAuthorization error: ${ JSON.stringify(error) }`);
       });
     }).catch((error) => {
-      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName() error: ${ JSON.stringify(error) }`);
     });
 
   }

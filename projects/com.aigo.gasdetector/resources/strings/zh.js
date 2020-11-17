@@ -55,6 +55,6 @@ module.exports = {
   // 校时
   bleStr6TimeCorrection: '已连接,请点击“时间校正”按钮',
   timeCorrectionBtnStr: '时间校正',
-  timeCorrectionSuccessStr: '时间校正命令发送完成',
+  timeCorrectionSuccessStr: '时间校正命令发送完成'
 };
 

@@ -83,7 +83,7 @@ export default class SettingPage extends React.Component {
 
     Device.getBluetoothLE().getVersion(true, true).then((version) => {
       Device.getBluetoothLE().securityLock.decryptMessageWithToken(version).then((data) => {
-        console.log(`设备版本为：${version}, 解析结果：${JSON.stringify(data)}`);
+        console.log(`设备版本为：${ version }, 解析结果：${ JSON.stringify(data) }`);
       });
       console.log(version);
     }).catch((err) => {
@@ -104,7 +104,7 @@ export default class SettingPage extends React.Component {
       });
     }).catch((error) => {
       // 错误信息上报， 通过米家app反馈可以上报到服务器
-      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${JSON.stringify(error)}`);
+      Service.smarthome.reportLog(Device.model, `Service.getServerName error: ${ JSON.stringify(error) }`);
     });
   }
 

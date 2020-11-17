@@ -59,5 +59,5 @@ module.exports = {
   // 校时
   bleStr6TimeCorrection: 'Connected, click the "Time Correction" button.',
   timeCorrectionBtnStr: 'Time correction',
-  timeCorrectionSuccessStr: 'Time correction command sent.',
+  timeCorrectionSuccessStr: 'Time correction command sent.'
 };
